@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 
 var collegeSchema = new mongoose.Schema({
+    unitID: Number, //unique college id
     name: String,
     city: String,
     state: String, //2 letter
