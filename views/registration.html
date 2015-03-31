@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<form id="registrationForm" action="/registration" method="POST" autocomplete="on">
+    <fieldset>
+        <legend>Account Information</legend>
+        <label>Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="bigredhacks@example.com"
+               title="Please enter a valid email" required/><br>
+        <label>Password *</label>
+        <input type="password" id="password" name="password" placeholder="123456" required/><br>
+    </fieldset>
+    <fieldset>
+        <legend>Basic Information</legend>
+        <label>First Name *</label>
+        <input type="text" id="firstname" name="firstname" placeholder="First Name" required /><br>
+        <label>Last Name *</label>
+        <input type="text" id="lastname" name="lastname" placeholder="Last Name" required /><br>
+        <label>Gender *</label>
+        <select name="genderDropdown">
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+        </select>
+    </fieldset>
+    <fieldset>
+        <legend>School</legend>
+        <label>College *</label>
+        <input type="text" id="university" name="university" placeholder="Your School Name" required /><br>
+        <label>Class Year *</label>
+        <select name="yearDropdown">
+            <option value="other">Other</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+        </select><br>
+        <label>Major *</label>
+        <input type="text" id="major" name="major" placeholder="Major" required /><br>
+    </fieldset>
+    <fieldset>
+        <legend>Background</legend>
+        <label>Resume(PDF) *</label>
+        <input type="file" name="resume" accept=".pdf/*" required /><br>
+        <label>Essay Question *</label>
+        <input type="file" name="resume" required /><br>
+        <label>GitHub Profile  </label>
+        <input type="url" name="url" placeholder="https://github.com/"required /><br>
+        <label>LinkedIn Profile  </label>
+        <input type="url" name="url" placeholder="https://www.linkedin.com/profile/"required /><br>
+    </fieldset>
+    <fieldset>
+        <legend>Preferences</legend>
+        <label>Diet *</label>
+        <select name="dietDropdown">
+            <option value="None">None</option>
+            <option value="Vegetarian">None</option>
+            <option value="Vegan">None</option>
+        </select><br>
+        <label>T-shirt size *</label>
+        <select name="shirtDropdown">
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+        </select>
+    </fieldset>
+
+    <input type="button" id="submit" value="Submit">
+
+</form>
+</body>
+</html>
