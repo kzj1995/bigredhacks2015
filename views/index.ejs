@@ -1,11 +1,238 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>BigRed//Hacks</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/css/custom.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic"
+          rel="stylesheet" type="text/css">
+
+    <!--TODO: Icon-->
+    <link rel="shortcut icon" href="">
+
+</head>
+
+<body>
+<!--
+  ____  _       _____          _     _____    _            _        
+ |  _ \(_)     |  __ \        | |   / / / |  | |          | |       
+ | |_) |_  __ _| |__) |___  __| |  / / /| |__| | __ _  ___| | _____ 
+ |  _ <| |/ _` |  _  // _ \/ _` | / / / |  __  |/ _` |/ __| |/ / __|
+ | |_) | | (_| | | \ \  __/ (_| |/ / /  | |  | | (_| | (__|   <\__ \
+ |____/|_|\__, |_|  \_\___|\__,_/_/_/   |_|  |_|\__,_|\___|_|\_\___/
+           __/ |                                                    
+          |___/                                                     
+
+-->
+
+<!-- Navigation -->
+<a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
+<nav id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+        <li class="sidebar-brand">
+            <a href="#top"></a>
+        </li>
+        <li>
+            <a href="#top">Home</a>
+        </li>
+        <li>
+            <a href="#about">About</a>
+        </li>
+        <li>
+            <a href="#faq">FAQ</a>
+        </li>
+        <li>
+            <a href="#schedule">Schedule</a>
+        </li>
+        <li>
+            <a href="#sponsors">Sponsors</a>
+        </li>
+        <li>
+            <a href="#tools">Tools</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Header -->
+<header id="top" class="header">
+    <div class="text-vertical-center">
+        <h1>BigRed//Hacks</h1>
+
+        <h3>September XX-XX 2015</h3>
+        <br>
+        <a href="#reg" class="btn btn-dark btn-lg">Get Started</a>
+    </div>
+</header>
+
+<!-- Register -->
+<section id="reg" class="padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Get Started</h2><br>
+                <!--TODO: Add links-->
+                <a href="" class="btn btn-dark btn-lg">Register</a>
+                <a href="" class="btn btn-dark btn-lg">Login</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About -->
+<section id="about" class="padding bg-danger">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h2>About</h2>
+
+                <p>-content-</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FAQ -->
+<section id="faq" class="padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>FAQ</h2>
+
+                <p>-content</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Schedule -->
+<section id="schedule" class="padding bg-danger">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Schedule</h2><br>
+                <br>
+                <table>
+                    <tr>
+                        <td width="400">Friday</td>
+                        <td width="400">Saturday</td>
+                        <td width="400">Sunday</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Sponsors -->
+<section id="sponsors" class="padding">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h2>Sponsors</h2>
+
+                <p>-content-</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Tools -->
+<section id="tools" class="padding bg-danger">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h2>Tools</h2>
+
+                <p>-Content-</p>
+
+                <p>(Contains hardware provided and a link to download the mobile app)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
+                <h4><strong>Footer</strong>
+                </h4>
+
+                <p>Content</p>
+                <br>
+                <ul class="list-inline">
+                    <li>
+                        <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+                    </li>
+                </ul>
+                <hr class="small">
+                <p class="text-muted">&copy; </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script>
+    // Closes the sidebar menu
+    $("#menu-close").click(function (e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+
+    // Opens the sidebar menu
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+
+    // Scrolls to the selected menu item on the page
+    $(function () {
+        $('a[href*=#]:not([href=#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+</body>
+
 </html>
