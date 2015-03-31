@@ -1,9 +1,16 @@
+"use strict";
 var Converter = require("csvtojson").core.Converter; //converter class
 var fs = require("fs");
 var college = require('../models/college.js');
 
 //load colleges into database
 //@todo optimize - don't load if records exist
+/**
+ * Load a list of colleges in /data into the database
+ * This should be done before the app enters production
+ * Invalidating and reloading list won't affect associations
+ * @param callback
+ */
 var load  = function (callback) {
 
     var fileStream = fs.createReadStream("./data/us-colleges-2014.csv");

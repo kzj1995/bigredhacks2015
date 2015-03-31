@@ -4,8 +4,8 @@ var mongoose = require('mongoose');
 var schemaOptions = {
     toObject: {
         virtuals: true
-    }
-    ,toJSON: {
+    },
+    toJSON: {
         virtuals: true
     }
 };
@@ -29,6 +29,17 @@ collegeSchema.virtual('display').get(function () {
     return this.name + " - " + this.state;
 });
 
+/**
+ * add a single college entry
+ * @param unitid
+ * @param name
+ * @param city
+ * @param state
+ * @param zip
+ * @param lon
+ * @param lat
+ * @param callback
+ */
 collegeSchema.statics.add = function (unitid, name, city, state, zip, lon, lat, callback) {
     var college = new this({
         _id: unitid,
@@ -52,6 +63,11 @@ collegeSchema.statics.add = function (unitid, name, city, state, zip, lon, lat, 
     });
 };
 
+/**
+ * get all college entries, limiting by fields
+ * @param callback
+ * @todo limit field selection
+ */
 collegeSchema.statics.getAll = function (callback) {
     this.find({}, function (err, res) {
         console.log(res);
