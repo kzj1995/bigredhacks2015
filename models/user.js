@@ -5,7 +5,7 @@ var _ = require('underscore');
 var college = require("./college.js");
 
 //generate enums
-var en = {
+const en = {
     year: (function () {
         var other = "HS".split(" "); //specify other years, i.e. hs, grad, etc
         var year = new Date().getFullYear;
@@ -26,7 +26,7 @@ var userSchema = new mongoose.Schema({
     email: {type: String, required: true, lowercase: true, trim: true, index: true},
     password: {type: String, required: true},
     phone: {type: String, required: true},
-    college: {type: mongoose.Schema.Types.ObjectId, ref: "College", required: true},
+    college: {type: mongoose.Schema.Types.String, ref: "College", required: true},
     year: {type: String, enum: en.year, required: true},
     major: String,
     jobInterest: String,
@@ -46,8 +46,7 @@ var userSchema = new mongoose.Schema({
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
         response: {type: String, enum: en.response}
-    },
-    timestamp: {type: Date, default: Date.now()}
+    }
 });
 
 userSchema.virtual('name.full').get(function() {

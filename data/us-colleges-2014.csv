@@ -1,4 +1,4 @@
-UnitID,Institution Name,State abbreviation (HD2013),ZIP code (HD2013),City location of institution (HD2013),Longitude location of institution (HD2013),Latitude location of institution (HD2013)
+unitid,name,state,zip,city,longitude,latitude
 457590,A & W Healthcare Educators,LA,70126,New Orleans,-90.011931,30.0275
 177834,A T Still University of Health Sciences,MO,63501,Kirksville,-92.589183,40.193648
 436526,A.B.I. School of Barbering & Cosmetology of Chelsea Inc.,NY,10001-5271,New York,-73.99538,40.7487
