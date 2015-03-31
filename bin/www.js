@@ -88,8 +88,3 @@ function onListening() {
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
 }
-
-var college = require('../models/college.js');
-college.getAll(function(err, res){
-    console.log(res)
-});

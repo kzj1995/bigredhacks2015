@@ -1,7 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
 var _ = require('underscore');
-
 var college = require("./college.js");
 
 //generate enums

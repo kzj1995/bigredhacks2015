@@ -1,6 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
-
+var cache = null;
 var schemaOptions = {
     toObject: {
         virtuals: true
@@ -69,19 +69,22 @@ collegeSchema.statics.add = function (unitid, name, city, state, zip, lon, lat, 
  * @todo limit field selection
  */
 collegeSchema.statics.getAll = function (callback) {
-    this.find({}, function (err, res) {
-        console.log(res);
-        if (err) {
-            callback(err);
+        if (cache == null) {
+            this.find({}, function (err, res) {
+                if (err) {
+                    callback(err);
+                }
+                res = res.map(function (x) {
+                    return {
+                        id: x._id,
+                        name: x.display
+                    }
+                });
+                cache = res;
+                callback(null, res);
+            });
         }
-        res = res.map(function (x) {
-            return {
-                id: x._id,
-                name: x.display
-            }
-        });
-        callback(null, res);
-    });
+    else callback(null, cache);
 };
 
 
