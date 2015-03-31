@@ -14,3 +14,10 @@ var collegeSchema = new mongoose.Schema({
     _distance: Number //internal param for use in geonear
 });
 collegeSchema.index({loc: '2dsphere'});
+
+
+userSchema.virtual('name.display').get(function() {
+    return this.name + " " + this.state;
+});
+
+module.exports = mongoose.model("College", collegeSchema);

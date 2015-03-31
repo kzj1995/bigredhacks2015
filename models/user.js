@@ -13,17 +13,21 @@ var en = {
     })(),
     dietary: "none vegan".split(" "),//@todo complete list
     tshirt: "S M L XL".split(" "),//@todo complete list
-    status: "incomplete submitted rejected waitlisted accepted declined going".split(" ") //@todo consider separating declined and going
+    status: "incomplete submitted rejected waitlisted accepted".split(" "),
+    response: "going declined".split(" ")
 };
 
 //general user info
 var userSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    email: {type: String, lowercase: true, trim: true, index: true},
-    phone: String,
-    college: {type: mongoose.Schema.Types.ObjectId, ref: "College"},
-    year: {type: String, enum: en.year},
+    name: {
+        first: {type: String, required: true},
+        last: {type: String, required: true}
+    },
+    email: {type: String, required: true, lowercase: true, trim: true, index: true},
+    password: {type: String, required: true},
+    phone: {type: String, required: true},
+    college: {type: mongoose.Schema.Types.ObjectId, ref: "College", required: true},
+    year: {type: String, enum: en.year, required: true},
     major: String,
     jobInterest: String,
     application: {
@@ -39,7 +43,15 @@ var userSchema = new mongoose.Schema({
         busid: String, //@todo implement later
         dietary: {type: String, enum: en.dietary},
         tshirt: {type: String, enum: en.tshirt},
-        status: {type: String, enum: en.status}
+        rating: {type: Number, min: 0, max: 5, default: 0},
+        status: {type: String, enum: en.status},
+        response: {type: String, enum: en.response}
     },
     timestamp: {type: Date, default: Date.now()}
 });
+
+userSchema.virtual('name.full').get(function() {
+    return this.name.first + " " + this.name.last;
+});
+
+module.exports = mongoose.model("User", userSchema);

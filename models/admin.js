@@ -2,9 +2,14 @@
 var mongoose = require("mongoose");
 var user = require("./user.js");
 
-//generic admin stuff
+//admin stuff (document-attribute)
+//@todo cache these in a globally scoped var on each save
 var admin = new mongoose.Schema({
     adminUsers: {type: [mongoose.Schema.Types.ObjectId], ref: "User"}
+    states: {
+        acceptApps: {type: bool},
+        releaseStatus: {type: bool}
+    }
     //@todo moar stuff
 });
 
