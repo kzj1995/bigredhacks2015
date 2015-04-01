@@ -28,7 +28,6 @@ var userSchema = new mongoose.Schema({
     college: {type: mongoose.Schema.Types.String, ref: "College", required: true},
     year: {type: String, enum: en.year, required: true},
     major: String,
-    jobInterest: String,
     application: {
         github: String,
         linkedin: String,
