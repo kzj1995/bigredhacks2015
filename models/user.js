@@ -1,13 +1,16 @@
 "use strict";
 var mongoose = require('mongoose');
 var _ = require('underscore');
+var bcrypt = require('bcrypt-nodejs');
+
 var college = require("./college.js");
 
 //generate enums
-const en = {
+var en = {
     year: (function () {
         var other = "HS".split(" "); //specify other years, i.e. hs, grad, etc
-        var year = new Date().getFullYear;
+        var year = new Date().getFullYear();
+        console.log(_.range(year, year + 4));
         return other.concat(_.range(year, year + 4));
     })(),
     dietary: "none vegetarian vegan".split(" "),//@todo complete list
@@ -25,7 +28,7 @@ var userSchema = new mongoose.Schema({
     email: {type: String, required: true, lowercase: true, trim: true, index: true},
     password: {type: String, required: true},
     phone: {type: String, required: true},
-    college: {type: mongoose.Schema.Types.String, ref: "College", required: true},
+    college: {type: String, ref: "College", required: true},
     year: {type: String, enum: en.year, required: true},
     major: String,
     jobInterest: String,
@@ -51,5 +54,32 @@ var userSchema = new mongoose.Schema({
 userSchema.virtual('name.full').get(function() {
     return this.name.first + " " + this.name.last;
 });
+
+userSchema.pre('save', function(next) {
+    var user = this;
+
+    if(!user.isModified('password')) return next();
+
+    bcrypt.genSalt(function(err, salt) {
+        if(err) return next(err);
+
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            if(err) return next(err);
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+userSchema.methods.comparePassword = function(candidatePassword, callback) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if(err) return callback(err);
+        callback(null, isMatch);
+    });
+};
+
+userSchema.statics.create = function() {
+
+};
 
 module.exports = mongoose.model("User", userSchema);

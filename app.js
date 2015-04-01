@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,12 +6,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
+var session = require('express-session')
+
+var config = require('./config.js');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var api = require('./routes/api');
+var apiRoute = require('./routes/api');
+var authRoute = require('./routes/auth');
 
 var app = express();
+
+var passport = require("passport");
 
 //mongoose setup
 var mongoose = require('mongoose');
@@ -26,13 +33,24 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ secret: config.setup.cookie_secret }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use(expressValidator);
 
+
+function requireAuthentication(req,res, next) {
+    if (req.user) {
+        next();
+    }
+    else res.status(401).send("User is not logged in.");
+}
+
 app.use('/', routes);
-app.use('/users', users);
-app.use('/api', api);
+app.use('/users', requireAuthentication, users);
+app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

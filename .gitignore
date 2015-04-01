@@ -2,6 +2,7 @@
 .DS_Store
 Thumbs.db
 style.css
+config.json
 
 # Logs
 logs
