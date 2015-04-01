@@ -49,6 +49,7 @@ function requireAuthentication(req,res, next) {
 }
 
 app.use('/', routes);
+app.use('/',authRoute);
 app.use('/users', requireAuthentication, users);
 app.use('/api', apiRoute);
 
