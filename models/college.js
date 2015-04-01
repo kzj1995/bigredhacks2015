@@ -1,6 +1,7 @@
 "use strict";
 var mongoose = require('mongoose');
 var cache = null;
+
 var schemaOptions = {
     toObject: {
         virtuals: true

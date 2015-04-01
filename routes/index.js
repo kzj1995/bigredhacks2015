@@ -5,7 +5,11 @@ var userController = require('../controllers/controller.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+<<<<<<< HEAD
     res.render('index', { title: 'Express' });
+=======
+  res.render('index', { title: 'Home' });
+>>>>>>> FETCH_HEAD
 });
 
 router.get('/registration', function(req, res, next) {

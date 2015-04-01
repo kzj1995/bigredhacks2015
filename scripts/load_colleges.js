@@ -12,7 +12,6 @@ var college = require('../models/college.js');
  * @param callback
  */
 var load  = function (callback) {
-
     var fileStream = fs.createReadStream("./data/us-colleges-2014.csv");
     //new converter instance
     var csvConverter = new Converter({constructResult: true});
