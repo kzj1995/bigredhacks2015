@@ -12,7 +12,7 @@
         <input type="email" id="email" name="email" placeholder="bigredhacks@example.com"
                title="Please enter a valid email" required/><br>
         <label>Password *</label>
-        <input type="password" id="password" name="password" placeholder="123456" required/><br>
+        <input type="password" id="password" name="password" placeholder="password" required/><br>
     </fieldset>
     <fieldset>
         <legend>Basic Information</legend>
@@ -29,7 +29,7 @@
     <fieldset>
         <legend>School</legend>
         <label>College</label>
-        <input type="text" id="university" name="university" placeholder="Your School Name" required /><br>
+        <input class="typeahead" type="text" id="university" name="university" placeholder="Your School Name" required /><br>
         <label>Class Year</label>
         <select name="yearDropdown">
             <option value="other">Other</option>
@@ -73,5 +73,7 @@
     <input type="button" id="submit" value="Submit">
 
 </form>
+<script src="/js/typeahead.bundle.min.js"></script>
+<script src="/js/register.js"></script>
 </body>
 </html>

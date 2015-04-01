@@ -65,5 +65,14 @@ app.use(function(err, req, res, next) {
   });
 });
 
+//@todo move to setup
+//@todo force synchronous
+//loading colleges
+require('./scripts/load_colleges.js')(function(err, res) {
+    if (err) {
+        console.log(err);
+    }
+    console.log(res);
+});
 
 module.exports = app;

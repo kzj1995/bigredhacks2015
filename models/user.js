@@ -10,7 +10,7 @@ const en = {
         var year = new Date().getFullYear;
         return other.concat(_.range(year, year + 4));
     })(),
-    dietary: "none vegan".split(" "),//@todo complete list
+    dietary: "none vegetarian vegan".split(" "),//@todo complete list
     tshirt: "S M L XL".split(" "),//@todo complete list
     status: "incomplete submitted rejected waitlisted accepted".split(" "),
     response: "going declined".split(" ")
