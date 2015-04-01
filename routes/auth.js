@@ -46,12 +46,52 @@ exports.loginCallback = function (req, res) {
 
 
 router.get('/register', function (req, res) {
-    res.render("register");
+    res.render("register", {title: "Register"});
 });
 
 router.post('/register', function (req, res) {
     console.log(req.body);
-    //todo implement new user creation
+    //todo check new user creation
+    //todo might make sense to move creation to model in event of schema changes
+    //todo cleanup xD
+    var newUser = new User({
+        name: {
+            first: req.body.firstname,
+            last: req.body.lastname
+        },
+        email: req.body.email,
+        password: req.body.password,
+        gender: req.body.genderDropdown,
+        phone: req.body.phonenumber,
+        college: req.body.college,
+        year: req.body.yearDropdown,
+        major: req.body.major,
+        application: {
+            github: req.body.github,
+            linkedin: req.body.linkedin,
+            resume: req.body.resume,
+            question: {
+                q1: req.body.q1,
+                q2: req.body.q2
+            }
+        },
+        internal: {
+            dietary: req.body.dietary,
+            tshirt: req.body.tshirt
+        }
+    });
+
+
+    newUser.save(function (err,doc){
+        if (err) {
+            // If it failed, return error
+            res.send("There was a problem adding the information to the database.");
+        }
+        else {
+            //redirect to home page
+            res.redirect(301, "/");
+        }
+    });
     //var user = new User({ email: req.body.email, password: req.body.password, name: req.body.name });
     throw new Error('Implement me!');
     user.save(function (err) {
