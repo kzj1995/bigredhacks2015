@@ -1,22 +1,9 @@
 "use strict";
 var mongoose = require('mongoose');
-var _ = require('underscore');
 var bcrypt = require('bcrypt-nodejs');
 
 var college = require("./college.js");
-
-//generate enums
-var en = {
-    year: (function () {
-        var other = "HS".split(" "); //specify other years, i.e. hs, grad, etc
-        var year = new Date().getFullYear();
-        return other.concat(_.range(year, year + 4));
-    })(),
-    dietary: "none vegetarian vegan".split(" "),//@todo complete list
-    tshirt: "S M L XL".split(" "),//@todo complete list
-    status: "incomplete submitted rejected waitlisted accepted".split(" "),
-    response: "going declined".split(" ")
-};
+var en = require("./enum.js");
 
 //general user info
 var userSchema = new mongoose.Schema({
@@ -45,7 +32,7 @@ var userSchema = new mongoose.Schema({
         tshirt: {type: String, enum: en.tshirt},
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
-        response: {type: String, enum: en.response}
+        going: {type: Boolean}
     }
 });
 

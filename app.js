@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var session = require('express-session')
+var session = require('express-session');
 
 var config = require('./config.js');
 
@@ -41,12 +41,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(expressValidator);
 
 
-function requireAuthentication(req,res, next) {
+var requireAuthentication = function(req,res, next) {
     if (req.user) {
         next();
     }
     else res.status(401).send("User is not logged in.");
-}
+};
 
 app.use('/', routes);
 app.use('/',authRoute);

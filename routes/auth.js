@@ -4,6 +4,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var user = require('../models/user.js');
 
+var enums = require('../models/enum.js');
+
 passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password'
@@ -46,7 +48,7 @@ exports.loginCallback = function (req, res) {
 
 
 router.get('/register', function (req, res) {
-    res.render("register", {title: "Register"});
+    res.render("register", {title: "Register", enums: enums});
 });
 
 router.post('/register', function (req, res) {
