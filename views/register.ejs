@@ -1,3 +1,78 @@
 <% include partials/header%>
-    <% include register.html %>
+<% var en = enums.user; %>
+<%= message %>
+<form id="registrationForm" action="/register" method="POST" autocomplete="on">
+    <fieldset>
+        <legend>Account Information</legend>
+        <label>Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="bigredhacks@example.com"
+               title="Please enter a valid email" required/><br>
+        <label>Password *</label>
+        <input type="password" id="password" name="password" placeholder="password" required/><br>
+    </fieldset>
+    <fieldset>
+        <legend>Basic Information</legend>
+        <label>First Name *</label>
+        <input type="text" id="firstname" name="firstname" placeholder="First Name" required /><br>
+        <label>Last Name *</label>
+        <input type="text" id="lastname" name="lastname" placeholder="Last Name" required /><br>
+        <label>Phone Number *</label>
+        <input type="text" id="phonenumber" name="phonenumber" placeholder="2058675309" required /><br>
+        <label>Gender *</label>
+        <select name="genderDropdown">
+            <option value="">Select</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+        </select>
+    </fieldset>
+    <fieldset>
+        <legend>School</legend>
+        <label>College *</label>
+        <input class="typeahead" type="text" id="college" name="college" placeholder="Your School Name" required /><br>
+        <label>Class Year *</label>
+        <select name="yearDropdown">
+            <option value="other">Select</option>
+            <%for (var i = 0; i < en.year.length; i++) {%>
+                <option value="<%=en.year[i]%>"><%=en.year[i]%></option>
+            <%}%>
+        </select><br>
+        <label>Major</label>
+        <input type="text" id="major" name="major" placeholder="Major" required /><br>
+    </fieldset>
+    <fieldset>
+        <legend>Background</legend>
+        <label>Resume(PDF)</label>
+        <input type="file" name="resume" accept=".pdf/*" required /><br>
+        <label>Essay Question 1 *</label>
+        <textarea name="q1" rows="5" cols="60"></textarea><br>
+        <label>Essay Question 2 *</label>
+        <textarea name="q1" rows="5" cols="60"></textarea><br>
+        <label>GitHub Profile  </label>
+        <input type="text" name="github" placeholder="https://github.com/"required /><br>
+        <label>LinkedIn Profile  </label>
+        <input type="text" name="linkedin" placeholder="https://www.linkedin.com/profile/"required /><br>
+    </fieldset>
+    <fieldset>
+        <legend>Preferences</legend>
+        <label>Dietary Restrictions *</label>
+        <select name="dietary">
+            <option value="">Select</option>
+            <%for (var i = 0; i < en.dietary.length; i++) {%>
+            <option value="<%=en.dietary[i]%>"><%=en.dietary[i]%></option>
+            <%}%>
+        </select><br>
+        <label>T-shirt size *</label>
+        <select name="tshirt">
+            <option value="">Select</option>
+            <%for (var i = 0; i < en.tshirt.length; i++) {%>
+            <option value="<%=en.tshirt[i]%>"><%=en.tshirt[i]%></option>
+            <%}%>
+        </select>
+    </fieldset>
+
+    <input type="submit" id="submit" value="Submit">
+
+</form>
+<script src="/js/typeahead.bundle.min.js"></script>
+<script src="/js/register.js"></script>
 <% include partials/footer%>

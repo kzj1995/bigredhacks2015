@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var session = require('express-session');
+var flash = require('connect-flash');
 
 var config = require('./config.js');
 
@@ -33,6 +34,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash());
 app.use(session({ secret: config.setup.cookie_secret }));
 app.use(passport.initialize());
 app.use(passport.session());
