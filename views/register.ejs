@@ -29,6 +29,7 @@
         <legend>School</legend>
         <label>College *</label>
         <input class="typeahead" type="text" id="college" name="college" placeholder="Your School Name" required /><br>
+        <input type="hidden" name="collegeid" id="collegeid">
         <label>Class Year *</label>
         <select name="yearDropdown">
             <option value="other">Select</option>
@@ -42,7 +43,7 @@
     <fieldset>
         <legend>Background</legend>
         <label>Resume(PDF)</label>
-        <input type="file" name="resume" accept=".pdf/*" required /><br>
+        <input type="file" name="resume" required /><br>
         <label>Essay Question 1 *</label>
         <textarea name="q1" rows="5" cols="60"></textarea><br>
         <label>Essay Question 2 *</label>
