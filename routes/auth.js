@@ -2,23 +2,22 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var user = require('../models/user.js');
+var User = require('../models/user.js');
+
+var enums = require('../models/enum.js');
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'password',
+        passReqToCallback: true
     },
-    function (email, password, done) {
+    function (req, email, password, done) {
         User.findOne({email: email}, function (err, user) {
             if (err) {
                 return done(err);
             }
-            //@todo: change to incorrect email/password
-            if (!user) {
-                return done(null, false, {message: 'Incorrect email.'});
-            }
-            if (!user.comparePassword(password)) {
-                return done(null, false, {message: 'Incorrect password.'});
+            if (user == null || !user.validPassword(password)) {
+                return done(null, false, req.flash('info', 'Incorrect email/password.'));
             }
             return done(null, user);
         });
@@ -35,25 +34,14 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
-//todo don't think this gets used
-exports.loginCallback = function (req, res) {
-    passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login',
-        failureFlash: true
-    })(req, res);
-};
-
 
 router.get('/register', function (req, res) {
-    res.render("register", {title: "Register"});
+    res.render("register", {title: "Register", enums: enums, message: req.flash('info')});
 });
 
 router.post('/register', function (req, res) {
     console.log(req.body);
-    //todo check new user creation
     //todo might make sense to move creation to model in event of schema changes
-    //todo cleanup xD
     var newUser = new User({
         name: {
             first: req.body.firstname,
@@ -66,6 +54,8 @@ router.post('/register', function (req, res) {
         college: req.body.college,
         year: req.body.yearDropdown,
         major: req.body.major,
+        dietary: req.body.dietary,
+        tshirt: req.body.tshirt,
         application: {
             github: req.body.github,
             linkedin: req.body.linkedin,
@@ -74,78 +64,41 @@ router.post('/register', function (req, res) {
                 q1: req.body.q1,
                 q2: req.body.q2
             }
-        },
-        internal: {
-            dietary: req.body.dietary,
-            tshirt: req.body.tshirt
         }
     });
 
 
-    newUser.save(function (err,doc){
+    newUser.save(function (err, doc) {
         if (err) {
             // If it failed, return error
-            res.send("There was a problem adding the information to the database.");
+            console.log(err);
+            req.flash("info", "An error occurred.");
         }
         else {
             //redirect to home page
-            res.redirect(301, "/");
-        }
-    });
-    //var user = new User({ email: req.body.email, password: req.body.password, name: req.body.name });
-    throw new Error('Implement me!');
-    user.save(function (err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('user: ' + user.email + " saved.");
-            req.login(user, function (err) {
+            req.login(newUser, function (err) {
                 if (err) {
                     console.log(err);
                 }
-                //todo redirect
-                //return res.redirect('/dashboard');
-            });
+                res.redirect(301, "/");
+            })
         }
     });
 });
 
 router.get('/login', function (req, res, next) {
-    res.render('login', {user: req.user, message: req.session.messages});
+    res.render('login', {user: req.user, message: req.flash('info')});
 });
 
 router.post('/login',
-    passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}),
-    function (req, res) {
-        res.redirect('/');
-    });
-/*
-router.post('/login', function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) {
-            return next(err)
-        }
-        if (!user) {
-            req.session.messages = [info.message];
-            return res.redirect('/login')
-        }
-        req.logIn(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            return res.redirect('/');
-        });
-    })(req, res, next);
-});
-*/
+    passport.authenticate('local', { successRedirect: '/users',
+        failureRedirect: '/login',
+        failureFlash: true })
+);
+
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });
-
-exports.logout = function (req, res) {
-    req.logout();
-    res.redirect('/');
-};
 
 module.exports = router;

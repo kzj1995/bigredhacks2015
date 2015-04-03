@@ -1,22 +1,11 @@
 "use strict";
 var mongoose = require('mongoose');
-var _ = require('underscore');
 var bcrypt = require('bcrypt-nodejs');
 
-var college = require("./college.js");
+var College = require("./college.js");
+var en = require("./enum.js");
 
-//generate enums
-var en = {
-    year: (function () {
-        var other = "HS".split(" "); //specify other years, i.e. hs, grad, etc
-        var year = new Date().getFullYear();
-        return other.concat(_.range(year, year + 4));
-    })(),
-    dietary: "none vegetarian vegan".split(" "),//@todo complete list
-    tshirt: "S M L XL".split(" "),//@todo complete list
-    status: "incomplete submitted rejected waitlisted accepted".split(" "),
-    response: "going declined".split(" ")
-};
+var SALT_WORK_FACTOR = 10;
 
 //general user info
 var userSchema = new mongoose.Schema({
@@ -28,8 +17,10 @@ var userSchema = new mongoose.Schema({
     password: {type: String, required: true},
     phone: {type: String, required: true},
     college: {type: String, ref: "College", required: true},
-    year: {type: String, enum: en.year, required: true},
+    year: {type: String, enum: en.user.year, required: true},
     major: String,
+    dietary: {type: String, enum: en.user.dietary},
+    tshirt: {type: String, enum: en.user.tshirt},
     application: {
         github: String,
         linkedin: String,
@@ -41,11 +32,9 @@ var userSchema = new mongoose.Schema({
     },
     internal: {
         busid: String, //@todo implement later
-        dietary: {type: String, enum: en.dietary},
-        tshirt: {type: String, enum: en.tshirt},
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
-        response: {type: String, enum: en.response}
+        going: {type: Boolean}
     }
 });
 
@@ -58,10 +47,10 @@ userSchema.pre('save', function(next) {
 
     if(!user.isModified('password')) return next();
 
-    bcrypt.genSalt(function(err, salt) {
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if(err) return next(err);
 
-        bcrypt.hash(user.password, salt, function(err, hash) {
+        bcrypt.hash(user.password, salt, null, function(err, hash) {
             if(err) return next(err);
             user.password = hash;
             next();
@@ -69,11 +58,8 @@ userSchema.pre('save', function(next) {
     });
 });
 
-userSchema.methods.comparePassword = function(candidatePassword, callback) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if(err) return callback(err);
-        callback(null, isMatch);
-    });
+userSchema.methods.validPassword = function(candidatePassword) {
+    return bcrypt.compareSync(candidatePassword, this.password);
 };
 
 userSchema.statics.create = function() {

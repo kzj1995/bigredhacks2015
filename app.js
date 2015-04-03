@@ -6,7 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var session = require('express-session')
+var session = require('express-session');
+var flash = require('connect-flash');
 
 var config = require('./config.js');
 
@@ -33,6 +34,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash());
 app.use(session({ secret: config.setup.cookie_secret }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,12 +43,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(expressValidator);
 
 
-function requireAuthentication(req,res, next) {
+var requireAuthentication = function(req,res, next) {
     if (req.user) {
         next();
     }
     else res.status(401).send("User is not logged in.");
-}
+};
 
 app.use('/', routes);
 app.use('/',authRoute);
