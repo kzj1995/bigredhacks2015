@@ -18,7 +18,7 @@ var userSchema = new mongoose.Schema({
     phone: {type: String, required: true},
     college: {type: String, ref: "College", required: true},
     year: {type: String, enum: en.user.year, required: true},
-    major: String,
+    major: {type: String, required: true},
     dietary: {type: String, enum: en.user.dietary},
     tshirt: {type: String, enum: en.user.tshirt},
     application: {
