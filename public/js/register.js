@@ -20,6 +20,8 @@ $('document').ready(function () {
     }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
         //TODO set hidden field
         //TODO Mark field as complete
+        console.log(datum.id)
+        $("#collegeid").val(datum.id)
         console.log((datum)); // contains datum value, tokens and custom fields
 
     });

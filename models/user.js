@@ -16,7 +16,7 @@ var userSchema = new mongoose.Schema({
     email: {type: String, required: true, lowercase: true, trim: true, index: true},
     password: {type: String, required: true},
     phone: {type: String, required: true},
-    college: {type: String, ref: "College", required: true},
+    collegeid: {type: String, ref: "College", required: true},
     year: {type: String, enum: en.user.year, required: true},
     major: String,
     dietary: {type: String, enum: en.user.dietary},

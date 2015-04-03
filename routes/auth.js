@@ -51,7 +51,7 @@ router.post('/register', function (req, res) {
         password: req.body.password,
         gender: req.body.genderDropdown,
         phone: req.body.phonenumber,
-        college: req.body.college,
+        collegeid: req.body.collegeid,
         year: req.body.yearDropdown,
         major: req.body.major,
         dietary: req.body.dietary,
