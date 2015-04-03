@@ -34,7 +34,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
->>>>>>> FETCH_HEAD
 app.use(cookieParser());
 app.use(flash());
 app.use(session({ secret: config.setup.cookie_secret }));

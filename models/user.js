@@ -42,6 +42,7 @@ userSchema.virtual('name.full').get(function() {
     return this.name.first + " " + this.name.last;
 });
 
+//todo validate existence of college
 userSchema.pre('save', function(next) {
     var user = this;
 

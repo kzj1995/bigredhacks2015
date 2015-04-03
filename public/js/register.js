@@ -19,11 +19,7 @@ $('document').ready(function () {
         displayKey: 'name', // if not set, will default to 'value',
         source: engine.ttAdapter()
     }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-        //TODO set hidden field
-        //TODO Mark field as complete
-        console.log(datum.id)
-        $("#collegeid").val(datum.id)
-        console.log((datum)); // contains datum value, tokens and custom fields
+        $("#collegeid").val(datum.id);
 
     });
 

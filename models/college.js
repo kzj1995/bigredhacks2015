@@ -88,5 +88,15 @@ collegeSchema.statics.getAll = function (callback) {
     else callback(null, cache);
 };
 
+collegeSchema.statics.exists = function (callback) {
+    this.findOne({_id: unitid}, function (err, res) {
+        if (err) callback(err);
+        if (res === null) {
+            //entry does not exist
+            callback(null, false);
+        }
+        return callback(null, true);
+    })
+};
 
 module.exports = mongoose.model("College", collegeSchema);
