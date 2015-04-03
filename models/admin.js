@@ -7,8 +7,8 @@ var user = require("./user.js");
 var admin = new mongoose.Schema({
     adminUsers: {type: [mongoose.Schema.Types.ObjectId], ref: "User"},
     states: {
-        acceptApps: {type: bool},
-        releaseStatus: {type: bool}
+        acceptApps: {type: Boolean},
+        releaseStatus: {type: Boolean}
     }
     //@todo moar stuff
 });

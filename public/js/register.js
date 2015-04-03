@@ -1,4 +1,5 @@
 $('document').ready(function () {
+    //TODO: match from start of string
     var engine = new Bloodhound({
         name: 'colleges',
         prefetch: '/api/colleges',
