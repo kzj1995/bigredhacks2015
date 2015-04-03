@@ -5,7 +5,7 @@
     <title>Registration</title>
 </head>
 <body>
-<form id="registrationForm" action="/adduser" method="POST" autocomplete="on">
+<form id="registrationForm" action="/register" method="POST" autocomplete="on">
     <fieldset>
         <legend>Account Information</legend>
         <label>Email Address *</label>
@@ -32,6 +32,7 @@
         <legend>School</legend>
         <label>College *</label>
         <input class="typeahead" type="text" id="college" name="college" placeholder="Your School Name" required /><br>
+        <input text="hidden"
         <label>Class Year *</label>
         <select name="yearDropdown">
             <option value="other">Other</option>
