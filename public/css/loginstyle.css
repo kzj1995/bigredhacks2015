@@ -120,6 +120,10 @@ body {
   width: 640px;
 }
 
+.error{
+    color: #ff0000;
+}
+
 .login {
   position: relative;
   margin: 0 auto;
