@@ -72,7 +72,8 @@ router.post('/register', function (req, res) {
         if (err) {
             // If it failed, return error
             console.log(err);
-            req.flash("info", "An error occurred.");
+            req.flash("info", "An error occurred."); //todo persist fields
+            res.redirect("/register");
         }
         else {
             //redirect to home page
@@ -90,6 +91,7 @@ router.get('/login', function (req, res, next) {
     res.render('login', {user: req.user, message: req.flash('info')});
 });
 
+//todo persist fields
 router.post('/login',
     passport.authenticate('local', { successRedirect: '/user',
         failureRedirect: '/login',
