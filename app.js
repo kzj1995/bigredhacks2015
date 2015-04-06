@@ -12,7 +12,7 @@ var flash = require('connect-flash');
 var config = require('./config.js');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 var apiRoute = require('./routes/api');
 var authRoute = require('./routes/auth');
 
@@ -47,12 +47,15 @@ var requireAuthentication = function(req,res, next) {
     if (req.user) {
         next();
     }
-    else res.status(401).send("User is not logged in.");
+    else {
+        req.flash('info', 'Please login first.');
+        res.redirect('/login');
+    }
 };
 
 app.use('/', routes);
 app.use('/',authRoute);
-app.use('/users', requireAuthentication, users);
+app.use('/user', requireAuthentication, user);
 app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler
