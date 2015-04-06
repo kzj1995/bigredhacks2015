@@ -18,11 +18,8 @@
     "express-session": "^1.10.4",
     "express-validator": "^2.9.0",
     "less-middleware": "1.0.x",
-<<<<<<< HEAD
-    "mongoose": "^3.8.25",
-=======
+    "mailchimp": "^1.1.0",
     "mongoose": "^4.0.1",
->>>>>>> FETCH_HEAD
     "morgan": "~1.5.1",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
