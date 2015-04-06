@@ -1,5 +1,7 @@
 <% include partials/header%>
-<% var en = enums.user; %>
+<% var en = enums.user;
+    var errors = errors || [];
+%>
 <%= message %>
 <form id="registrationForm" action="/register" method="POST" autocomplete="on">
     <fieldset>
@@ -77,7 +79,7 @@
         <label><%=message%></label>
         <ul>
             <%for (var i = 0; i < errors.length; i++){%>
-            <li><%=i.msg%></li>
+            <li><%=errors[i].msg%></li>
             <%}%>
         </ul>
         <%}%>
