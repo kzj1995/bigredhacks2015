@@ -72,6 +72,16 @@
     </fieldset>
 
     <input type="submit" id="submit" value="Submit">
+    <h1>
+        <%if (errors) {%>
+        <label><%=message%></label>
+        <ul>
+            <%for (var i = 0; i < errors.length; i++){%>
+            <li><%=i.msg%></li>
+            <%}%>
+        </ul>
+        <%}%>
+    </h1>
 
 </form>
 <script src="/js/typeahead.bundle.min.js"></script>

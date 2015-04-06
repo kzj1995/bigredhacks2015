@@ -36,11 +36,36 @@ passport.deserializeUser(function (id, done) {
 
 
 router.get('/register', function (req, res) {
-    res.render("register", {title: "Register", enums: enums, message: req.flash('info')});
+    res.render("register",
+        {title: "Register", enums: enums, message: req.flash('info')});
 });
 
 router.post('/register', function (req, res) {
     console.log(req.body);
+    req.assert('firstname', 'First name is required').notEmpty();
+    req.assert('lastname', 'Last name is required').notEmpty();
+    req.assert('email', 'Email address is not valid').isEmail();
+    req.assert('password', '6 to 20 characters required').len(6,20);
+    req.assert('phone', 'Phone number is not valid').isMobilePhone();
+    req.assert('major', 'Major is required').notEmpty();
+    req.assert('github', 'GitHub URL is not valid').isURL();
+    req.assert('linkedin'),'LinkedIn URL is not valid'.isURL();
+
+    //todo check the minlength of the essays
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.render('register', {
+            title: 'Register', message: 'The following errors occurred', errors: errors
+        });
+    }
+    else {
+        res.render('dashboard'), {
+            title: 'Dashboard', message: '', errors: {}
+        };
+    };
+
+
     //todo might make sense to move creation to model in event of schema changes
     var newUser = new User({
         name: {
