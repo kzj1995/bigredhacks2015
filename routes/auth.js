@@ -42,29 +42,6 @@ router.get('/register', function (req, res) {
 
 router.post('/register', function (req, res) {
     console.log(req.body);
-    req.assert('firstname', 'First name is required').notEmpty();
-    req.assert('lastname', 'Last name is required').notEmpty();
-    req.assert('email', 'Email address is not valid').isEmail();
-    req.assert('password', '6 to 20 characters required').len(6,20);
-    req.assert('phone', 'Phone number is not valid').isMobilePhone();
-    req.assert('major', 'Major is required').notEmpty();
-    req.assert('github', 'GitHub URL is not valid').isURL();
-    req.assert('linkedin'),'LinkedIn URL is not valid'.isURL();
-
-    //todo check the minlength of the essays
-
-    var errors = req.validationErrors();
-    if (errors) {
-        res.render('register', {
-            title: 'Register', message: 'The following errors occurred', errors: errors
-        });
-    }
-    else {
-        res.render('dashboard'), {
-            title: 'Dashboard', message: '', errors: {}
-        };
-    };
-
 
     //todo might make sense to move creation to model in event of schema changes
     var newUser = new User({
@@ -92,25 +69,48 @@ router.post('/register', function (req, res) {
         }
     });
 
+    req.assert('firstname', 'First name is required').notEmpty();
+    req.assert('lastname', 'Last name is required').notEmpty();
+    req.assert('email', 'Email address is not valid').isEmail();
+    req.assert('password', '6 to 20 characters required').len(6, 20);
+    req.assert('phone', 'Phone number is not valid').isMobilePhone();
+    req.assert('major', 'Major is required').notEmpty();
+    req.assert('github', 'GitHub URL is not valid').isURL();
+    req.assert('linkedin', 'LinkedIn URL is not valid').isURL();
 
-    newUser.save(function (err, doc) {
-        if (err) {
-            // If it failed, return error
-            console.log(err);
-            req.flash("info", "An error occurred."); //todo persist fields
-            res.redirect("/register");
-        }
-        else {
-            //redirect to home page
-            req.login(newUser, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                res.redirect(301, "/");
-            })
-        }
-    });
+    //todo check the minlength of the essays
+
+    var errors = req.validationErrors();
+    console.log(errors);
+
+    if (errors) {
+        res.render('register', {
+            title: 'Register', message: 'The following errors occurred', errors: errors, enums: enums
+        });
+    }
+    else {
+        newUser.save(function (err, doc) {
+            if (err) {
+                // If it failed, return error
+                console.log(err);
+                req.flash("info", "An error occurred."); //todo persist fields
+                res.redirect("/register");
+            }
+            else {
+                //redirect to home page
+                req.login(newUser, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.render('dashboard'), {
+                        title: 'Dashboard', message: '', errors: {}
+                    };
+                })
+            }
+        });
+    };
 });
+
 
 router.get('/login', function (req, res, next) {
     res.render('login', {user: req.user, message: req.flash('info')});
