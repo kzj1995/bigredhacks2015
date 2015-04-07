@@ -1,6 +1,7 @@
 <% include partials/header %>
 <% var en = enums.user;
-var errors = errors || [];
+var errors = errors || null;
+var message = message || "";
 
 //string format function
 if (!String.prototype.format) {
@@ -21,16 +22,17 @@ var generateOptions = function generateOptions(array, options) {
     return array.join('');
 };
 %>
-<label><%=message%></label>
+<% if (errors) {%>
+<label><%= message %></label>
 <p>
-    <%if (errors) {%>
-    <ul>
-        <%for (var i = 0; i < errors.length; i++){%>
-        <li><%=errors[i].msg%></li>
-        <%}%>
-    </ul>
-    <%}%>
+    <%
+        for (var i = 0; i < errors.length; i++){
+            errors[i] = '<li>' + errors[i].msg + '</li>'
+        }
+%>
+<ul> <%- errors.join("") %> </ul>
 </p>
+<%} %>
 <form id="registrationForm" action="/register" method="POST" autocomplete="on">
     <fieldset>
         <legend>Account Information</legend>
@@ -51,13 +53,7 @@ var generateOptions = function generateOptions(array, options) {
         <label>Gender *</label>
         <select name="genderDropdown">
             <option value="">Select</option>
-<<<<<<< HEAD
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-            <option value="Other">Male</option>
-=======
             <%- generateOptions(en.gender); %>
->>>>>>> FETCH_HEAD
         </select>
     </fieldset>
     <fieldset>
@@ -101,20 +97,6 @@ var generateOptions = function generateOptions(array, options) {
     </fieldset>
 
     <input type="submit" id="submit" value="Submit">
-
-<<<<<<< HEAD
-=======
-    <h1>
-        <% if (errors) { %>
-        <label><%= message %></label>
-        <ul>
-            <% for (var i = 0; i < errors.length; i++){ %>
-            <li><%= errors[i].msg %></li>
-            <% } %>
-        </ul>
-        <% } %>
-    </h1>
->>>>>>> FETCH_HEAD
 
 </form>
 <script src="/js/typeahead.bundle.min.js"></script>
