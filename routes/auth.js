@@ -84,6 +84,7 @@ router.post('/register', function (req, res) {
     console.log(errors);
 
     if (errors) {
+        //todo persist fields
         res.render('register', {
             title: 'Register', message: 'The following errors occurred', errors: errors, enums: enums
         });
