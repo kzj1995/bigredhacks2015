@@ -46,8 +46,8 @@ router.post('/register', function (req, res) {
     //todo might make sense to move creation to model in event of schema changes
     var newUser = new User({
         name: {
-            first: req.body.firstname,
-            last: req.body.lastname
+            firstname: req.body.firstname,
+            lastname: req.body.lastname
         },
         email: req.body.email,
         password: req.body.password,
@@ -72,13 +72,13 @@ router.post('/register', function (req, res) {
     req.assert('firstname', 'First name is required').notEmpty();
     req.assert('lastname', 'Last name is required').notEmpty();
     req.assert('email', 'Email address is not valid').isEmail();
-    req.assert('password', '6 to 20 characters required').len(6, 20);
-    req.assert('phone', 'Phone number is not valid').isMobilePhone();
+    req.assert('password', 'Password is not valid. 6 to 20 characters required').len(6, 20);
     req.assert('major', 'Major is required').notEmpty();
     req.assert('github', 'GitHub URL is not valid').isURL();
     req.assert('linkedin', 'LinkedIn URL is not valid').isURL();
 
-    //todo check the minlength of the essays
+    //todo validation of phone number currently not working
+    //req.assert('phone','en_US', 'Phone number is not valid').isMobilePhone();
 
     var errors = req.validationErrors();
     console.log(errors);

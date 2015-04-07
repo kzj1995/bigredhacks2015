@@ -2,7 +2,16 @@
 <% var en = enums.user;
     var errors = errors || [];
 %>
-<%= message %>
+<label><%=message%></label>
+<p>
+    <%if (errors) {%>
+    <ul>
+        <%for (var i = 0; i < errors.length; i++){%>
+        <li><%=errors[i].msg%></li>
+        <%}%>
+    </ul>
+    <%}%>
+</p>
 <form id="registrationForm" action="/register" method="POST" autocomplete="on">
     <fieldset>
         <legend>Account Information</legend>
@@ -25,6 +34,7 @@
             <option value="">Select</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
+            <option value="Other">Male</option>
         </select>
     </fieldset>
     <fieldset>
@@ -74,16 +84,7 @@
     </fieldset>
 
     <input type="submit" id="submit" value="Submit">
-    <h1>
-        <%if (errors) {%>
-        <label><%=message%></label>
-        <ul>
-            <%for (var i = 0; i < errors.length; i++){%>
-            <li><%=errors[i].msg%></li>
-            <%}%>
-        </ul>
-        <%}%>
-    </h1>
+
 
 </form>
 <script src="/js/typeahead.bundle.min.js"></script>
