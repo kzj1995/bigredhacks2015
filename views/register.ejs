@@ -30,7 +30,11 @@ var generateOptions = function generateOptions(array, options) {
             errors[i] = '<li>' + errors[i].msg + '</li>'
         }
 %>
+<<<<<<< HEAD
+    <ul> <%- errors.join("") %> </ul>
+=======
 <ul> <%- errors.join("") %> </ul>
+>>>>>>> FETCH_HEAD
 </p>
 <%} %>
 <form id="registrationForm" action="/register" method="POST" autocomplete="on">
