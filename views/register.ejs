@@ -13,7 +13,8 @@ if (!String.prototype.format) {
     };
 }
 //todo maybe put in a helper file
-var generateOptions = function generateOptions(array, options) {
+var generateOptions = function (arr, options) {
+    var array = arr.slice(); //clone the array
     options = options || "";
     var tag = '<option ' + options + ' value="{0}">{0}</option>';
     for (var i = 0; i < array.length; i++) {
@@ -22,87 +23,134 @@ var generateOptions = function generateOptions(array, options) {
     return array.join('');
 };
 %>
-<% if (errors) {%>
-<label><%= message %></label>
-<p>
-    <%
-        for (var i = 0; i < errors.length; i++){
-            errors[i] = '<li>' + errors[i].msg + '</li>'
-        }
-%>
-<<<<<<< HEAD
-    <ul> <%- errors.join("") %> </ul>
-=======
-<ul> <%- errors.join("") %> </ul>
->>>>>>> FETCH_HEAD
-</p>
-<%} %>
-<form id="registrationForm" action="/register" method="POST" autocomplete="on">
-    <fieldset>
-        <legend>Account Information</legend>
-        <label>Email Address *</label>
-        <input type="email" id="email" name="email" placeholder="bigredhacks@example.com"
-               title="Please enter a valid email" required/><br>
-        <label>Password *</label>
-        <input type="password" id="password" name="password" placeholder="password" required/><br>
-    </fieldset>
-    <fieldset>
-        <legend>Basic Information</legend>
-        <label>First Name *</label>
-        <input type="text" id="firstname" name="firstname" placeholder="First Name" required/><br>
-        <label>Last Name *</label>
-        <input type="text" id="lastname" name="lastname" placeholder="Last Name" required/><br>
-        <label>Phone Number *</label>
-        <input type="text" id="phonenumber" name="phonenumber" placeholder="2058675309" required/><br>
-        <label>Gender *</label>
-        <select name="genderDropdown">
-            <option value="">Select</option>
-            <%- generateOptions(en.gender); %>
-        </select>
-    </fieldset>
-    <fieldset>
-        <legend>School</legend>
-        <label>College *</label>
-        <input class="typeahead" type="text" id="college" name="college" placeholder="Your School Name" required/><br>
-        <input type="hidden" name="collegeid" id="collegeid">
-        <label>Class Year *</label>
-        <select name="yearDropdown">
-            <option value="other">Select</option>
-            <%- generateOptions(en.year); %>
-        </select><br>
-        <label>Major</label>
-        <input type="text" id="major" name="major" placeholder="Major" required/><br>
-    </fieldset>
-    <fieldset>
-        <legend>Background</legend>
-        <label>Resume(PDF)</label>
-        <input type="file" name="resume" required/><br>
-        <label>Essay Question 1 *</label>
-        <textarea name="q1" rows="5" cols="60"></textarea><br>
-        <label>Essay Question 2 *</label>
-        <textarea name="q1" rows="5" cols="60"></textarea><br>
-        <label>GitHub Profile </label>
-        <input type="text" name="github" placeholder="https://github.com/" required/><br>
-        <label>LinkedIn Profile </label>
-        <input type="text" name="linkedin" placeholder="https://www.linkedin.com/profile/" required/><br>
-    </fieldset>
-    <fieldset>
-        <legend>Preferences</legend>
-        <label>Dietary Restrictions *</label>
-        <select name="dietary">
-            <option value="">Select</option>
-            <%- generateOptions(en.dietary); %>
-        </select><br>
-        <label>T-shirt size *</label>
-        <select name="tshirt">
-            <option value="">Select</option>
-            <%- generateOptions(en.tshirt); %>
-        </select>
-    </fieldset>
+<% if (errors) {
+    for (var i = 0; i < errors.length; i++) {
+        errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg + '</div>'
+    }
 
-    <input type="submit" id="submit" value="Submit">
+}
+else errors = [];%>
+<div class="container">
+    <%- errors.join("") %>
+    <!--todo remove novalidate for production-->
+    <form id="registrationForm" action="/register" method="POST" autocomplete="on" novalidate>
+        <fieldset>
+            <legend>Account Information</legend>
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="bigredhacks@example.com"
+                       title="Please enter a valid email" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                       required/>
+            </div>
+        </fieldset>
+        <br/>
+        <fieldset>
+            <legend>Basic Information</legend>
+            <div class="form-group">
+                <label for="firstname">First Name *</label>
+                <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name *</label>
+                <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Last Name"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="phonenumber">Phone Number *</label>
+                <input type="text" id="phonenumber" name="phonenumber" class="form-control" placeholder="2058675309"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="genderDropdown">Gender *</label>
+                <select class="form-control" id="genderDropdown" name="genderDropdown">
+                    <option value="">Select</option>
+                    <%- generateOptions(en.gender); %>
+                </select>
+            </div>
+        </fieldset>
+        <br/>
+        <fieldset>
+            <legend>School</legend>
+            <input type="hidden" name="collegeid" id="collegeid">
 
-</form>
+            <div class="form-group">
+                <label for="college">School Name *</label>
+                <input type="text" id="college" name="college" class="form-control typeahead" placeholder="School Name"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="yearDropdown">Graduation Year *</label>
+                <select class="form-control" id="yearDropdown" name="yearDropdown">
+                    <option value="">Select</option>
+                    <%- generateOptions(en.year); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="major">Major *</label>
+                <input type="text" id="major" name="major" class="form-control typeahead" placeholder="Major"
+                       required/>
+            </div>
+        </fieldset>
+        <br/>
+        <fieldset>
+            <legend>Background</legend>
+            <label>Resume(PDF)</label>
+            <input type="file" name="resume" accept=".pdf" required/><br>
+
+            <div class="form-group">
+                <label>Essay Question 1 *</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Essay Question 2 *</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="github">Github Profile </label>
+
+                <div class="input-group">
+                    <div class="input-group-addon">@</div>
+                    <input type="text" class="form-control" id="github" name="github" placeholder="johndoe">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="linkedin">LinkedIn Profile</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon">http://</div>
+                    <input type="text" class="form-control" id="linkedin" name="linkedin"
+                           placeholder="www.linkedin.com/">
+                </div>
+            </div>
+        </fieldset>
+        <br/>
+        <fieldset>
+            <legend>Preferences</legend>
+            <div class="form-group">
+                <label for="dietary">Dietary Restrictions *</label>
+                <select class="form-control" id="dietary" name="dietary">
+                    <option value="">Select</option>
+                    <%- generateOptions(en.dietary); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tshirt">T-Shirt Size *</label>
+                <select class="form-control" id="tshirt" name="tshirt">
+                    <option value="">Select</option>
+                    <%- generateOptions(en.tshirt); %>
+                </select>
+            </div>
+        </fieldset>
+
+        <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+</div>
 <script src="/js/typeahead.bundle.min.js"></script>
 <script src="/js/register.js"></script>
 <% include partials/footer %>
