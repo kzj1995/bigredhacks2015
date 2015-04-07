@@ -46,8 +46,8 @@ router.post('/register', function (req, res) {
     //todo might make sense to move creation to model in event of schema changes
     var newUser = new User({
         name: {
-            firstname: req.body.firstname,
-            lastname: req.body.lastname
+            first: req.body.firstname,
+            last: req.body.lastname
         },
         email: req.body.email,
         password: req.body.password,
@@ -102,9 +102,7 @@ router.post('/register', function (req, res) {
                     if (err) {
                         console.log(err);
                     }
-                    res.render('dashboard'), {
-                        title: 'Dashboard', message: '', errors: {}
-                    };
+                    res.redirect('/user/dashboard');
                 })
             }
         });
