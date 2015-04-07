@@ -16,6 +16,7 @@ var userSchema = new mongoose.Schema({
         firstname: {type: String, required: true},
         lastname: {type: String, required: true}
     },
+    gender: {type: String, enum: en.user.gender}, //FIXME add validations
     email: {type: String, required: true, lowercase: true, trim: true, index: {unique: true}},
     password: {type: String, required: true},
     phone: {type: String, required: true},

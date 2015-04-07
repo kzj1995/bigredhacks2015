@@ -5,12 +5,16 @@ var _ = require('underscore');
 var en = {
     user: {
         year: (function () {
-            var other = "HS".split(" "); //specify other years, i.e. hs, grad, etc
+            var other = "".split(" "); //specify other years, i.e. hs, grad, etc
+            if (other == "") {
+                other = [];
+            }
             var year = new Date().getFullYear();
             return other.concat(_.range(year, year + 4));
         })(),
-        dietary: "None Vegetarian Vegan".split(" "),//@todo complete list
-        tshirt: "S M L XL".split(" "),//@todo complete list
+        dietary: "None Vegetarian Gluten-free".split(" "),
+        gender: "Female Male Other".split(" "),
+        tshirt: "S M L XL".split(" "),
         status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" ")
     }
 };
