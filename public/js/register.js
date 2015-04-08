@@ -8,19 +8,27 @@ $('document').ready(function () {
         },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         limit: 5,
-        sorter:function(a, b) {
+        sorter: function (a, b) {
 
             //get input text
-            var InputString=   $('#college').val();
+            var InputString = $('#college').val();
             //move exact matches to top
-            if(InputString==a.name){ return -1;}
-            if(InputString==b.name){return 1;}
+            if (InputString == a.name) {
+                return -1;
+            }
+            if (InputString == b.name) {
+                return 1;
+            }
 
             //close match without case matching
-            if(InputString.toLowerCase() ==a.name.toLowerCase()){ return -1;}
-            if(InputString.toLowerCase()==b.name.toLowerCase()){return 1;}
+            if (InputString.toLowerCase() == a.name.toLowerCase()) {
+                return -1;
+            }
+            if (InputString.toLowerCase() == b.name.toLowerCase()) {
+                return 1;
+            }
 
-            if( (InputString!=a.name) && (InputString!=b.name)){
+            if ((InputString != a.name) && (InputString != b.name)) {
 
                 if (a.name < b.name) {
                     return -1;

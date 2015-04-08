@@ -23,13 +23,16 @@ var generateOptions = function (arr, options) {
     return array.join('');
 };
 %>
+
+
 <% if (errors) {
     for (var i = 0; i < errors.length; i++) {
         errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg + '</div>'
     }
-
 }
-else errors = [];%>
+else errors = [];
+%>
+
 <div class="container">
     <%- errors.join("") %>
     <!--todo remove novalidate for production-->
@@ -79,7 +82,7 @@ else errors = [];%>
 
 
             <div class="form-group">
-                <label for="college">School Name *</label>
+                <label for="college">School Name *</label><br/>
                 <input type="text" id="college" name="college" class="form-control typeahead" placeholder="School Name"
                        required/>
             </div>
