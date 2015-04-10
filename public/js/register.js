@@ -1,5 +1,4 @@
 $('document').ready(function () {
-    //TODO: improve sorting when lots of similar matches found
     var engine = new Bloodhound({
         name: 'colleges',
         prefetch: '/api/colleges',
@@ -10,33 +9,25 @@ $('document').ready(function () {
         limit: 5,
         sorter: function (a, b) {
 
-            //get input text
-            var InputString = $('#college').val();
+            //case insensitive matching
+            var input = $('#college').val().toLowerCase();
+            a = a.name.toLowerCase();
+            b = b.name.toLowerCase();
+
             //move exact matches to top
-            if (InputString == a.name) {
+            if (input === a) {
                 return -1;
             }
-            if (InputString == b.name) {
+            if (input === b) {
                 return 1;
             }
 
-            //close match without case matching
-            if (InputString.toLowerCase() == a.name.toLowerCase()) {
+            //move beginning matches to top
+            if (a.lastIndexOf(input, 0) === 0){
                 return -1;
             }
-            if (InputString.toLowerCase() == b.name.toLowerCase()) {
+            if (b.lastIndexOf(input, 0) === 0){
                 return 1;
-            }
-
-            if ((InputString != a.name) && (InputString != b.name)) {
-
-                if (a.name < b.name) {
-                    return -1;
-                }
-                else if (a.name > b.name) {
-                    return 1;
-                }
-                else return 0;
             }
         }
     });
@@ -47,7 +38,7 @@ $('document').ready(function () {
         hint: true,
         highlight: true,
         autoselect: false,
-        minLength: 1
+        minLength: 3
     }, {
         displayKey: 'name', // if not set, will default to 'value',
         source: engine.ttAdapter()
