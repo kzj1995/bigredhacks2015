@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 /* GET user panel of logged in user */
 router.get('/dashboard', function(req, res, next) {
     //todo populate user team info
-    res.render('dashboard', { firstname: req.user.name.first, lastname: req.user.name.last });
+    res.render('dashboard', { firstname: req.user.name.first, lastname: req.user.name.last, title: "Dashboard" });
 });
 
 /* POST add a user to team */
