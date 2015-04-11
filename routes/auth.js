@@ -74,8 +74,8 @@ router.post('/register', function (req, res) {
     req.assert('email', 'Email address is not valid').isEmail();
     req.assert('password', 'Password is not valid. 6 to 20 characters required').len(6, 20);
     req.assert('major', 'Major is required').notEmpty();
-    req.assert('github', 'GitHub URL is not valid').isURL();
-    req.assert('linkedin', 'LinkedIn URL is not valid').isURL();
+    //todo validate presence of essay
+    //todo other field validations
 
     //todo validation of phone number currently not working
     //req.assert('phone','en_US', 'Phone number is not valid').isMobilePhone();
@@ -84,6 +84,7 @@ router.post('/register', function (req, res) {
     console.log(errors);
 
     if (errors) {
+        //todo persist fields
         res.render('register', {
             title: 'Register', message: 'The following errors occurred', errors: errors, enums: enums
         });

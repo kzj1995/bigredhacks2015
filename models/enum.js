@@ -14,7 +14,7 @@ var en = {
         })(),
         dietary: "None Vegetarian Gluten-free".split(" "),
         gender: "Female Male Other".split(" "),
-        tshirt: "S M L XL".split(" "),
+        tshirt: "XS S M L XL".split(" "),
         status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" ")
     }
 };

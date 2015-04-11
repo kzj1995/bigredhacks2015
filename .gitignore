@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 Thumbs.db
+main.css
 style.css
 config.json
 

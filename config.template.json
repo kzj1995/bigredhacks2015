@@ -2,7 +2,6 @@
     "setup": {
       "_comment": "Secret api keys.",
       "mailchimp_apikey": "",
-      "cookie_secret": "",
-      "url": "http://localhost:3000"
+      "cookie_secret": ""
     }
 }
