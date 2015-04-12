@@ -72,9 +72,11 @@ router.post('/register', function (req, res) {
     req.assert('firstname', 'First name is required').notEmpty();
     req.assert('lastname', 'Last name is required').notEmpty();
     req.assert('email', 'Email address is not valid').isEmail();
-    req.assert('password', 'Password is not valid. 6 to 20 characters required').len(6, 20);
-    req.assert('major', 'Major is required').notEmpty();
-    //todo validate presence of essay
+    req.assert('password', 'Password is not valid. 6 to 25 characters required').len(6, 25);
+    req.assert('major', 'Major is required').len(1,50);
+    req.assert('linkedin', 'LinkedIn URL is not valid').optional().isURL();
+    req.assert('q1', 'Question 1 cannot be blank').notEmpty();
+    req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
     //todo other field validations
 
     //todo validation of phone number currently not working
