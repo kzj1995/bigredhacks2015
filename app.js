@@ -36,7 +36,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(flash());
-app.use(session({ secret: config.setup.cookie_secret }));
+app.use(session({
+    secret: config.setup.cookie_secret,
+    saveUninitialized: false,
+    resave: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
@@ -55,7 +59,8 @@ var requireAuthentication = function(req,res, next) {
 
 app.use('/', routes);
 app.use('/',authRoute);
-app.use('/user', requireAuthentication, user);
+app.use('/user', user);
+//app.use('/user', requireAuthentication, user); //fixme add back requireAuthentication for production
 app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler

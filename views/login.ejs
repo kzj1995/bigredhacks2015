@@ -5,7 +5,7 @@
     <div class="login center-block col-lg-5 col-md-5 col-sm-10">
         <h2>Login to BigRed//Hacks</h2>
         <br/>
-        if (message.length > 0) { %>
+        <% if (message.length > 0) { %>
         <%- '<div class="alert alert-danger" role="alert">' + message[0] + '</div>';%>
         <%}%>
         <form action="/login" method="post">
