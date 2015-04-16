@@ -34,7 +34,6 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
-
 router.get('/register', function (req, res) {
     res.render("register",
         {title: "Register", enums: enums, message: req.flash('info')});

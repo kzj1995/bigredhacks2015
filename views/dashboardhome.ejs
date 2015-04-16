@@ -1,0 +1,38 @@
+<% include partials/_header %>
+<% var firstname = firstname || '';
+var lastname = lastname || ''; %>
+<!-- Custom CSS -->
+<link href="/css/dashboard.css" rel="stylesheet">
+
+<div class="container-fluid">
+    <div class="row">
+        <% include partials/_dashboardside.ejs %>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
+
+            <h2>Dashboard of <%= firstname %> <%= lastname %> </h2>
+            <p>
+                Welcome to your BigRed//Hacks user panel! Using this page and the buttons on the side, you can
+                edit your application, change and set up your team members, and check on the status
+                of your application. Shoot us an email if you have any questions!
+            </p>
+            <h2>Team Information</h2>
+            <p>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <label>Input ID <input type="text" name="idforteam"></label>
+                <br>
+                <input type="submit" value="Add Team Member">
+            </p>
+            <h2>Application Status</h2>
+            <p>
+                Registration Process Is Still Open
+            </p>
+        </div>
+    </div>
+</div>
+
+<% include partials/_footer %>
