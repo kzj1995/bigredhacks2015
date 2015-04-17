@@ -18,19 +18,24 @@ if (!String.prototype.format) {
 /**
  * generate a list of HTML <option> items for a dropdown
  * @param arr array to generate options on
- * @param {string} options tag options to inject
+ * @param {object}  options valid: selected (string of default value)
  * @returns {string}
  */
 _export.generateOptions = function (arr, options) {
     var array = arr.slice(); //clone the array
-    options = options || "";
-    var tag = '<option ' + options + ' value="{0}">{0}</option>';
+    options = options || {};
+    options.selected = options.selected || "";
+
     for (var i = 0; i < array.length; i++) {
+        var params="";
+        if (options.selected === array[i]+""){
+            params +='selected="selected" '
+        }
+        var tag = '<option ' + params + ' value="{0}">{0}</option>';
         array[i] = tag.format(array[i]);
     }
     return array.join('');
 };
-
 
 _export.require = function(arr, options) {
 

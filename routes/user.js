@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var enums = require('../models/enum.js');
+var _ = require('underscore');
 
 router.get('/', function(req, res, next) {
     res.redirect('/user/dashboard'); //todo there should be some relative redirect
@@ -10,35 +11,28 @@ router.get('/', function(req, res, next) {
 /* GET user panel of logged in user */
 router.get('/dashboard', function(req, res, next) {
     //todo populate user team info
-    res.render('dashboardhome', {
-        firstname: req.user.name.first,
-        lastname: req.user.name.last,
-        title: "Dashboard" });
+    req.user.populate("internal.teamid", function(err, team) {
+        if (err) {
+            team = [];
+        }
+        res.render('dashboard/index', {
+            firstname: req.user.name.first,
+            lastname: req.user.name.last,
+            team: team,
+            title: "Dashboard"
+        });
+    })
 });
 
 /* GET edit registration page of logged in user */
-router.get('/dashboard/editregistration', function(req, res, next) {
+router.get('/dashboard/edit', function(req, res, next) {
     //todo populate user team info
-    res.render('dashboardeditreg',{
-        firstname: req.user.name.first,
-        lastname: req.user.name.last,
-        gender: req.user.gender,
-        email: req.user.email,
-        password: req.user.password,
-        phone: req.user.phone,
-        collegeid: req.user.collegeid,
-        year: req.user.year,
-        major: req.user.major,
-        dietary: req.user.dietary,
-        tshirt: req.user.tshirt,
-        github: req.user.application.github,
-        linkedin: req.user.application.linkedin,
-        resume: req.user.application.resume,
-        q1: req.user.application.questions.q1,
-        q2: req.user.application.questions.q2,
+    var user = _.omit(req.user, 'password'.split(' '));
+    res.render('dashboard/edit_app',{
+        user: user,
         enums: enums,
         message: req.flash('info'),
-        title: "Dashboard | Edit Registration" });
+        title: "Dashboard | Edit Application" });
 });
 
 /* POST add a user to team */

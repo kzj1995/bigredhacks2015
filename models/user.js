@@ -25,7 +25,7 @@ var userSchema = new mongoose.Schema({
     major: {type: String, required: true},
     dietary: {type: String, enum: en.user.dietary},
     tshirt: {type: String, enum: en.user.tshirt},
-    application: {
+    app: {
         github: String,
         linkedin: String,
         resume: String,

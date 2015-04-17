@@ -57,7 +57,7 @@ router.post('/register', function (req, res) {
         major: req.body.major,
         dietary: req.body.dietary,
         tshirt: req.body.tshirt,
-        application: {
+        app: {
             github: req.body.github,
             linkedin: req.body.linkedin,
             resume: req.body.resume,
