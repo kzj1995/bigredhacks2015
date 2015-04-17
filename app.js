@@ -94,6 +94,11 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+//app.locals definitions
+app.locals.viewHelper = require("./views/helper.js");
+
+
 //@todo move to setup
 //@todo force synchronous
 //loading colleges

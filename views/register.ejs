@@ -3,25 +3,7 @@
 var errors = errors || null;
 var message = message || "";
 
-//string format function
-if (!String.prototype.format) {
-    String.prototype.format = function () {
-        var args = arguments;
-        return this.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] != 'undefined' ? args[number] : match;
-        });
-    };
-}
-//todo maybe put in a helper file
-var generateOptions = function (arr, options) {
-    var array = arr.slice(); //clone the array
-    options = options || "";
-    var tag = '<option ' + options + ' value="{0}">{0}</option>';
-    for (var i = 0; i < array.length; i++) {
-        array[i] = tag.format(array[i]);
-    }
-    return array.join('');
-};
+var helper = viewHelper;
 %>
 
 
@@ -72,7 +54,7 @@ else errors = [];
                 <label for="genderDropdown">Gender *</label>
                 <select class="form-control" id="genderDropdown" name="genderDropdown">
                     <option value="">Select</option>
-                    <%- generateOptions(en.gender); %>
+                    <%- helper.generateOptions(en.gender); %>
                 </select>
             </div>
         </fieldset>
@@ -90,7 +72,7 @@ else errors = [];
                 <label for="yearDropdown">Graduation Year *</label>
                 <select class="form-control" id="yearDropdown" name="yearDropdown">
                     <option value="">Select</option>
-                    <%- generateOptions(en.year); %>
+                    <%- helper.generateOptions(en.year); %>
                 </select>
             </div>
             <div class="form-group">
@@ -138,14 +120,14 @@ else errors = [];
                 <label for="dietary">Dietary Restrictions *</label>
                 <select class="form-control" id="dietary" name="dietary">
                     <option value="">Select</option>
-                    <%- generateOptions(en.dietary); %>
+                    <%- helper.generateOptions(en.dietary); %>
                 </select>
             </div>
             <div class="form-group">
                 <label for="tshirt">T-Shirt Size *</label>
                 <select class="form-control" id="tshirt" name="tshirt">
                     <option value="">Select</option>
-                    <%- generateOptions(en.tshirt); %>
+                    <%- helper.generateOptions(en.tshirt); %>
                 </select>
             </div>
         </fieldset>
@@ -154,6 +136,6 @@ else errors = [];
 
     </form>
 </div>
-<script src="/js/typeahead.bundle.min.js"></script>
+<script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/register.js"></script>
 <% include partials/_footer %>
