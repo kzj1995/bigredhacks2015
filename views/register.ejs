@@ -18,7 +18,7 @@ else errors = [];
 <div class="container">
     <%- errors.join("") %>
     <!--todo remove novalidate for production-->
-    <form id="registrationForm" action="/register" method="POST" autocomplete="on" novalidate>
+    <form id="registrationForm" action="/register" name = 'form' method="POST" autocomplete="on" novalidate>
         <fieldset>
             <legend>Account Information</legend>
             <div class="form-group">
@@ -29,6 +29,11 @@ else errors = [];
             <div class="form-group">
                 <label for="password">Password *</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="confirmpassword">Confirm Password *</label>
+                <input type="password" id="confirmpassword" name="confirmpassword" class="form-control" placeholder="Password"
                        required/>
             </div>
         </fieldset>
@@ -137,6 +142,7 @@ else errors = [];
 
     </form>
 </div>
+
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/register.js"></script>
 <% include partials/_footer %>

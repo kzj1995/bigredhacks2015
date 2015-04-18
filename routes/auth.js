@@ -61,7 +61,7 @@ router.post('/register', function (req, res) {
     req.assert('collegeid','Please specify a school.').notEmpty();
     req.assert('q1', 'Question 1 cannot be blank').notEmpty();
     req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
-    //todo chack that validations are complete
+    //todo check that validations are complete
 
 
 
