@@ -66,7 +66,7 @@ var requireAuthentication = function (req, res, next) {
         next();
     }
     else {
-        req.flash('info', 'Please login first.');
+        req.flash('error', 'Please login first.');
         res.redirect('/login');
     }
 };

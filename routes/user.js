@@ -67,9 +67,9 @@ router.post('/team/add', function(req, res, next) {
 
 });
 
-/* POST leave current team */
-router.post('/team/leave', function(req, res, next) {
-    user.leaveTeam(function(err, res) {
+/* GET leave current team */
+router.get('/team/leave', function(req, res, next) {
+    req.user.leaveTeam(function(err, resMsg) {
         if (err) {
             console.log(err);
             req.flash("info", "An error occurred. Please try again later.");
@@ -82,6 +82,7 @@ router.post('/team/leave', function(req, res, next) {
                 req.flash("success", "Successfully left team.")
             }
         }
+        res.redirect('/user/dashboard');
     })
 });
 

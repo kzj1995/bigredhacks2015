@@ -26,11 +26,11 @@ teamSchema.statics.findTeam = function(user_id, callback) {
 };
 
 teamSchema.methods.addUser = function(user_id, name, callback) {
-    var pos = this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
+    var index = this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
     if (this.members.length == MAX_TEAM_SIZE ) {
         return callback(null, "Your team is full. The current team limit is " + MAX_TEAM_SIZE + " members.");
     }
-    else if (pos != -1) {
+    else if (index != -1) {
         return callback(null, "User is already in your team!");
     }
     else this.members.push({
@@ -44,26 +44,28 @@ teamSchema.methods.addUser = function(user_id, name, callback) {
 };
 
 teamSchema.methods.removeUser = function(user_id, callback) {
-    var index = this.members.indexOf(user_id);
+    var _this = this;
+    var index = _this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
     if (index != -1) {
-        this.members.splice(this.members.indexOf(), 1);
-        this.save(function(err){
+        _this.members.splice(_this.members.indexOf(), 1);
+        _this.save(function(err, team){
             if (err){
                 return callback(err);
             }
             //delete team if empty
-            else if (this.members.length == 0) {
-                this.remove(function(err) {
+            else if (_this.members.length == 0) {
+                _this.remove(function(err) {
                     if (err) return callback(err);
-                    else return callback(null, true);
+                    else return callback(null, team);
                 })
             }
-            else return callback(null, true);
+            else return callback(null, team);
         })
     }
     else{
         //if this happens often, indicative of larger issue.
         console.log("Noncritical invariant error in team.removeUser for ", user_id);
+        return callback(null,_this);
     }
 
 };

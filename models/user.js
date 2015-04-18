@@ -93,9 +93,13 @@ userSchema.methods.addToTeam = function (pubid, callback) {
         if (other === null) {
             return callback(null, "User does not exist.");
         }
-        else if (pubid == _this.pubid  || other.internal.teamid == _this.internal.teamid) {
+        else if (pubid == _this.pubid) {
             //user can't add himself
             return callback(null, "User is already in your team!");
+        }
+        else if (other.internal.teamid == _this.internal.teamid && _this.internal.teamid !== null){
+            //same team, but both not null
+            return callback(null, "User is already in your team");
         }
         else if (other.internal.teamid !== null && _this.internal.teamid !== null && other.internal.teamid !== _this.internal.teamid) {
             return callback(null, "User is already part of a team.");
@@ -196,25 +200,64 @@ userSchema.methods.addToTeam = function (pubid, callback) {
 userSchema.methods.leaveTeam = function (callback) {
     var user = this;
     if (typeof user.internal.teamid === null) {
-        return callback(null, "Currently not in a team.");
+        return callback(null, "You are currently not in a team.");
     }
     else {
-        user.populate("internal.teamid", function (err, team) {
+        user.populate("internal.teamid", function (err, user) {
             if (err) {
                 return callback(err);
             }
-            team.removeUser(user._id, function (err, team) {
+            user.internal.teamid.removeUser(user._id, function (err, team) {
                 if (err) {
                     return callback(err);
                 }
                 user.internal.teamid = null;
                 user.save(function (err) {
                     if (err) return callback(err);
-                    else return callback(null, true);
+                    else {
+                        return callback(null, true);
+                    }
                 });
             })
         })
     }
+};
+
+/**
+ * Remove a user from a team by user_id
+ * @param user_id
+ * @param callback
+ */
+userSchema.statics.removeFromTeam = function(user_id, callback) {
+    User.findById(user_id, function(err, user) {
+        if (err) {
+            return callback(err);
+        }
+        else {
+            if (user.internal.teamid === null) {
+                return callback();
+            }
+            user.populate("internal.teamid", function(err, user) {
+                if (err) {
+                    return callback(err);
+                }
+                else {
+                    user.internal.teamid.removeUser(user_id, function(err) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        else {
+                            user.internal.teamid = null;
+                            user.save(function(err) {
+                                if (err) return callback(err);
+                                else return callback(true);
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
 };
 
 module.exports = mongoose.model("User", userSchema);

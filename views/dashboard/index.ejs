@@ -25,15 +25,12 @@ var team = team || [];
                 Registration Process Is Still Open
             </p>
 
-            <h2>My Team</h2>
+            <h2>My Team</h2><%- team.length > 0 ? ' <a href="/user/team/leave">(leave)</a>' : ''%>
             <div>
-                <p>ID: <%= userid %></p>
+                <p>You can create a team with up to 5 people. ID: <%= userid %></p>
                 <ul>
                     <% if(team.length == 0) { %>
-                        <li><%= firstname %> <%= lastname %></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+
                     <%
                     }
                     else for (var i=0; i<team.length;i++) { %>
