@@ -41,6 +41,10 @@ app.use(expressValidator({
     customValidators: {
         isMobilePhone: function (value, locale) {
             return validator.isMobilePhone(value, locale);
+        },
+        //optional only checks undefined, not truthiness
+        optionalOrisURL: function(value) {
+            return !value || validator.isURL(value);
         }
     }
 }));

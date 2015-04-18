@@ -57,7 +57,7 @@ router.post('/register', function (req, res) {
     req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
 
     req.assert('major', 'Major is required').len(1,50);
-    req.assert('linkedin', 'LinkedIn URL is not valid').optional().isURL();
+    req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
     req.assert('collegeid','Please specify a school.').notEmpty();
     req.assert('q1', 'Question 1 cannot be blank').notEmpty();
     req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
