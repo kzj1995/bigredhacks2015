@@ -10,17 +10,25 @@ router.get('/', function(req, res, next) {
 
 /* GET user panel of logged in user */
 router.get('/dashboard', function(req, res, next) {
-    //todo populate user team info
-    req.user.populate("internal.teamid", function(err, team) {
+
+    req.user.populate("internal.teamid", function(err, user) {
+        var members = [];
         if (err) {
             console.log(err);
-            team = [];
         }
+
+        //initialize members
+        if (user.internal.teamid !== null) {
+            members = user.internal.teamid.members;
+        }
+
         res.render('dashboard/index', {
             firstname: req.user.name.first,
             lastname: req.user.name.last,
-            team: team,
+            team: members,
             userid: req.user.pubid,
+            message: req.flash('info'),
+            success: req.flash('success'), //fixme cleanup
             title: "Dashboard"
         });
     })
@@ -38,21 +46,23 @@ router.get('/dashboard/edit', function(req, res, next) {
 
 /* POST add a user to team */
 router.post('/team/add', function(req, res, next) {
-    var pubid = req.newuserid; //todo implement
+    var pubid = req.body.userid;
     var user = req.user;
-    user.addToTeam(pubid, function(err, res) {
+
+    user.addToTeam(pubid, function(err, resMsg) {
         if (err) {
             console.log(err);
             req.flash("info", "An error occurred. Please try again later"); //todo standardize error messages
         }
         else {
-            if (typeof res === "string") {
-                req.flash("info", res);
+            if (typeof resMsg === "string") {
+                req.flash("info", resMsg);
             }
             else {
-                req.flash("info", "Successfully added user to group."); //todo substitute user with name
+                req.flash("success", "Successfully joined team."); //todo substitute user with name
             }
         }
+        res.redirect('/user/dashboard');
     })
 
 });
@@ -69,7 +79,7 @@ router.post('/team/leave', function(req, res, next) {
                 req.flash("info", res);
             }
             else {
-                req.flash("info", "Successfully left group.")
+                req.flash("success", "Successfully left team.")
             }
         }
     })

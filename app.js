@@ -59,8 +59,7 @@ var requireAuthentication = function(req,res, next) {
 
 app.use('/', routes);
 app.use('/',authRoute);
-app.use('/user', user);
-//app.use('/user', requireAuthentication, user); //fixme add back requireAuthentication for production
+app.use('/user', requireAuthentication, user);
 app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler

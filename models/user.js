@@ -43,12 +43,12 @@ var userSchema = new mongoose.Schema({
     }
 });
 
-userSchema.virtual('name.full').get(function() {
+userSchema.virtual('name.full').get(function () {
     return this.name.first + " " + this.name.last;
 });
 
 //todo validate existence of college
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
     var user = this;
 
     //add a public uid for the user
@@ -58,87 +58,137 @@ userSchema.pre('save', function(next) {
     }
 
     //verify password is present
-    if(!user.isModified('password')) return next();
+    if (!user.isModified('password')) return next();
 
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-        if(err) return next(err);
+    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+        if (err) return next(err);
 
-        bcrypt.hash(user.password, salt, null, function(err, hash) {
-            if(err) return next(err);
+        bcrypt.hash(user.password, salt, null, function (err, hash) {
+            if (err) return next(err);
             user.password = hash;
             next();
         });
     });
 });
 
-userSchema.methods.validPassword = function(candidatePassword) {
+userSchema.methods.validPassword = function (candidatePassword) {
     return bcrypt.compareSync(candidatePassword, this.password);
 };
 
-userSchema.statics.create = function() {
+userSchema.statics.create = function () {
 
 };
 
 //todo cleanup with async library
-userSchema.addToTeam = function(pubid, callback) {
-    var user = this;
-    var other = user.findOne({pubid: pubid}, function(err, res) {
+userSchema.methods.addToTeam = function (pubid, callback) {
+    var _this = this;
+    var userModel = mongoose.model("User"); //reference the static model
+    userModel.findOne({pubid: pubid}, function (err, other) {
         if (err) {
             return callback(err);
         }
-        if (res === null) {
+        if (other === null) {
             return callback(null, "User does not exist.");
         }
-        else if (res.internal.teamid !== null) {
+        else if (pubid == _this.pubid) {
+            //user can't add himself
             return callback(null, "User already belongs to a team!");
         }
-        //current user doesn't have a team
-        if (user.internal.teamid === null) {
-            var team = new Team();
-            team.addUser(user._id, function(err, newteam){
-                if (err) return callback(err);
-                if (typeof newteam == 'string') {
-                    return callback(null, newteam);
+        //other user has a team
+        if (other.internal.teamid !== null) {
+            Team.findTeam(other._id, function(err, team) {
+                if(err) {
+                    return callback(err);
                 }
-                else user.save(function(err) {
-                    if (err) return callback(err);
-                    else newteam.addUser(other._id, function(err, res) {
-                        if (err) return callback(err);
-                        return callback(null, res);
-                    });
-                });
-            });
+                else {
+                    team.addUser(_this._id, _this.name, function(err, newteam) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        if (typeof newteam == 'string') {
+                            return callback(null, newteam);
+                        }
+                        else {
+                            _this.internal.teamid = other.internal.teamid;
+                            _this.save(function(err, res) {
+                                if (err) {
+                                    return callback(err);
+                                }
+                                else {
+                                    return callback(null,res);
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         }
-        else {
-            user.populate("internal.teamid", function (err, team) {
+        //current user doesn't have a team
+        else if (_this.internal.teamid === null) {
+            var team = new Team();
+            team.addUser(_this._id, _this.name, function (err, newteam) {
                 if (err) {
                     return callback(err);
                 }
-                else team.addUser(other._id, function(err, res){
-                    return callback(err, res);
-                });
+                if (typeof newteam == 'string') {
+                    return callback(null, newteam);
+                }
+                else {
+                    newteam.addUser(other._id, other.name, function (err, res) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        if (typeof newteam == 'string') {
+                            return callback(null, newteam);
+                        }
+                        else {
+                            _this.internal.teamid = newteam._id;
+                            _this.save(function (err) {
+                                if (err) {
+                                    return callback(err);
+                                }
+                                else {
+                                    return callback(null, res);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        //current user has a team
+        else {
+            _this.populate("internal.teamid", function (err, user) {
+                if (err) {
+                    return callback(err);
+                }
+                else {
+                    user.internal.teamid.addUser(other._id, other.name, function (err, res) {
+                        return callback(err, res);
+                    });
+                }
             })
         }
     });
 };
 
 //todo cleanup with async library
-userSchema.leaveTeam = function(callback) {
+userSchema.methods.leaveTeam = function (callback) {
     var user = this;
     if (typeof user.internal.teamid === null) {
         return callback(null, "Currently not in a team.");
     }
     else {
-        user.populate("internal.teamid", function(err, team) {
+        user.populate("internal.teamid", function (err, team) {
             if (err) {
                 return callback(err);
             }
-            team.removeUser(user._id, function(err, team) {
-                if (err){
+            team.removeUser(user._id, function (err, team) {
+                if (err) {
                     return callback(err);
                 }
                 user.internal.teamid = null;
-                user.save(function(err) {
+                user.save(function (err) {
                     if (err) return callback(err);
                     else return callback(null, true);
                 });

@@ -28,7 +28,7 @@ collegeLoader.loadOnce = function loadOnce(callback) {
                 return _loadFromFile(callback);
             }
             else { //college table populated
-                console.log("Skipped adding colleges: Switch to load() to force load, or invalidate the table first.");
+                console.log("Skipped adding colleges: Use load() to force adding, or truncate the table first.");
                 return callback();
             }
         }

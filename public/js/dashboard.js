@@ -1,8 +1,9 @@
 $(document).ready( function() {
-   setInverval(function() {
-       checkUserId();
-   }, 200);
+    setInterval(function() {
+        checkUserId();
+    }, 200);
 });
+
 
 
 function checkUserId() {

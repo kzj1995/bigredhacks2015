@@ -1,6 +1,8 @@
 <% include ../partials/_header %>
 <% var firstname = firstname || '';
-var lastname = lastname || ''; %>
+var lastname = lastname || '';
+var team = team || [];
+%>
 <!-- Custom CSS -->
 <link href="/css/dashboard.css" rel="stylesheet">
 
@@ -11,6 +13,12 @@ var lastname = lastname || ''; %>
 
             <h2>Dashboard </h2>
             <p> Welcome back, <%= firstname %> <%= lastname %> </p>
+            <% if (message.length > 0) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + message[0] + '</div>' %>
+            <%}%>
+            <% if (success.length > 0) { %>
+            <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
+            <%}%>
 
             <h2>Status</h2>
             <p>
@@ -19,17 +27,24 @@ var lastname = lastname || ''; %>
 
             <h2>My Team</h2>
             <div>
-                <span>My user ID: <%= userid %></span>
+                <p>ID: <%= userid %></p>
                 <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <% if(team.length == 0) { %>
+                        <li><%= firstname %> <%= lastname %></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    <%
+                    }
+                    else for (var i=0; i<team.length;i++) { %>
+                      <li><%= team[i].name %></li>
+                    <%}%>
+
                 </ul>
-                <form class="form-inline">
+                <form action="/user/team/add" class="form-inline" method="POST">
                     <div class="form-group">
                         <label for="addteamid" class="sr-only">Password</label>
-                        <input type="text" class="form-control" id="addteamid" placeholder="User ID">
+                        <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
                     </div>
                     <button type="submit" id="addteamid-submit" class="btn btn-default" disabled>Add a Teammate</button>
                 </form>
