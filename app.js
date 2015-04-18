@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
+var validator = require('validator');
 var session = require('express-session');
 var flash = require('connect-flash');
 
@@ -30,10 +31,19 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
+app.use(bodyParser.urlencoded({extended: false}));
+//@todo expressValidator does support isMobilePhone, but their dependencies are out of date. Rather than using npm shrinkwrap, I opted for a custom validator.
+//this should be removed once expressValidator uses validator version >3.38.0
+app.use(expressValidator({
+    customValidators: {
+        isMobilePhone: function (value, locale) {
+            return validator.isMobilePhone(value, locale);
+        }
+    }
+}));
 app.use(cookieParser());
 app.use(flash());
 app.use(session({
@@ -47,7 +57,7 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-var requireAuthentication = function(req,res, next) {
+var requireAuthentication = function (req, res, next) {
     if (req.user) {
         next();
     }
@@ -58,12 +68,12 @@ var requireAuthentication = function(req,res, next) {
 };
 
 app.use('/', routes);
-app.use('/',authRoute);
+app.use('/', authRoute);
 app.use('/user', requireAuthentication, user);
 app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -74,7 +84,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -85,7 +95,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
@@ -101,6 +111,7 @@ app.locals.viewHelper = require("./views/helper.js");
 //@todo move to setup
 //@todo force synchronous
 //loading colleges
-require('./scripts/load_colleges.js').loadOnce(function(err){});
+require('./scripts/load_colleges.js').loadOnce(function (err) {
+});
 
 module.exports = app;

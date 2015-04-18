@@ -42,45 +42,30 @@ router.get('/register', function (req, res) {
 router.post('/register', function (req, res) {
     console.log(req.body);
 
-    //todo might make sense to move creation to model in event of schema changes
-    var newUser = new User({
-        name: {
-            first: req.body.firstname,
-            last: req.body.lastname
-        },
-        email: req.body.email,
-        password: req.body.password,
-        gender: req.body.genderDropdown,
-        phone: req.body.phonenumber,
-        collegeid: req.body.collegeid,
-        year: req.body.yearDropdown,
-        major: req.body.major,
-        dietary: req.body.dietary,
-        tshirt: req.body.tshirt,
-        app: {
-            github: req.body.github,
-            linkedin: req.body.linkedin,
-            resume: req.body.resume,
-            question: {
-                q1: req.body.q1,
-                q2: req.body.q2
-            }
-        }
-    });
 
-    req.assert('firstname', 'First name is required').notEmpty();
-    req.assert('lastname', 'Last name is required').notEmpty();
+    req.body.phonenumber = req.body.phonenumber.replace(/-/g,'');
+    req.assert('phonenumber','Please enter a valid US phone number').isMobilePhone('en-US');
+    //req.assert('phonenumber','Please enter a valid US phone number').matches(/^(\+?1)?[2-9]\d{2}[2-9](?!11)\d{6}$/);
+    //todo validate phone
     req.assert('email', 'Email address is not valid').isEmail();
     req.assert('password', 'Password is not valid. 6 to 25 characters required').len(6, 25);
+    req.assert('firstname', 'First name is required').notEmpty();
+    req.assert('lastname', 'Last name is required').notEmpty();
+
+    req.assert('genderDropdown', 'Gender is required').notEmpty();
+    req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
+    req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
+    req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
+
     req.assert('major', 'Major is required').len(1,50);
     req.assert('linkedin', 'LinkedIn URL is not valid').optional().isURL();
     req.assert('collegeid','Please specify a school.').notEmpty();
     req.assert('q1', 'Question 1 cannot be blank').notEmpty();
     req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
-    //todo other field validations
+    //todo chack that validations are complete
 
     //todo validation of phone number currently not working
-    //req.assert('phone','en_US', 'Phone number is not valid').isMobilePhone();
+
 
     var errors = req.validationErrors();
     console.log(errors);
@@ -92,6 +77,30 @@ router.post('/register', function (req, res) {
         });
     }
     else {
+        var newUser = new User({
+            name: {
+                first: req.body.firstname,
+                last: req.body.lastname
+            },
+            email: req.body.email,
+            password: req.body.password,
+            gender: req.body.genderDropdown,
+            phone: req.body.phonenumber,
+            collegeid: req.body.collegeid,
+            year: req.body.yearDropdown,
+            major: req.body.major,
+            dietary: req.body.dietary,
+            tshirt: req.body.tshirt,
+            app: {
+                github: req.body.github,
+                linkedin: req.body.linkedin,
+                resume: req.body.resume,
+                question: {
+                    q1: req.body.q1,
+                    q2: req.body.q2
+                }
+            }
+        });
         newUser.save(function (err, doc) {
             if (err) {
                 // If it failed, return error
