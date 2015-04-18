@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var _ = require('underscore');
 var User = require('../models/user.js');
 
 var enums = require('../models/enum.js');
+var ALWAYS_OMIT = 'password'.split('');
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -17,7 +19,10 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
             if (user == null || !user.validPassword(password)) {
-                return done(null, false, req.flash('info', 'Incorrect email/password.'));
+                return done(null, false, function() {
+                    req.flash('email',email)
+                    req.flash('error','Incorrect username or email.');
+                }());
             }
             return done(null, user);
         });
@@ -70,8 +75,12 @@ router.post('/register', function (req, res) {
 
     if (errors) {
         //todo persist fields
+        var errorParams = errors.map(function(x) {
+            return x.param;
+        });
+        req.body = _.omit(req.body,errorParams.concat(ALWAYS_OMIT));
         res.render('register', {
-            title: 'Register', message: 'The following errors occurred', errors: errors, enums: enums
+            title: 'Register', message: 'The following errors occurred', errors: errors, input: req.body, enums: enums
         });
     }
     else {
@@ -106,8 +115,10 @@ router.post('/register', function (req, res) {
             if (err) {
                 // If it failed, return error
                 console.log(err);
-                req.flash("info", "An error occurred."); //todo persist fields
-                res.redirect("/register");
+                req.flash("info", "An error occurred.");
+                res.render('register', {
+                    title: 'Register', message: req.flash('info'), input: req.body, enums: enums
+                });
             }
             else {
                 //redirect to home page
@@ -124,7 +135,7 @@ router.post('/register', function (req, res) {
 
 
 router.get('/login', function (req, res, next) {
-    res.render('login', {user: req.user, message: req.flash('info')});
+    res.render('login', {user: req.user, message: req.flash('error'), email: req.flash('email')});
 });
 
 //todo persist fields

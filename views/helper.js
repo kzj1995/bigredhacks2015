@@ -18,7 +18,7 @@ if (!String.prototype.format) {
 /**
  * generate a list of HTML <option> items for a dropdown
  * @param arr array to generate options on
- * @param {object}  options valid: selected (string of default value)
+ * @param {object}  options valid options are selected (string of default value)
  * @returns {string}
  */
 _export.generateOptions = function (arr, options) {
