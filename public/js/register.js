@@ -73,7 +73,6 @@ $('document').ready(function () {
             phonenumber: {
                 required: true,
                 minlength: 10,
-                digits: true
             },
             major: {
                 required: true
@@ -105,7 +104,7 @@ $('document').ready(function () {
             major: "Please enter your major",
             q1: "Please fill out essay question 1",
             q2: "Please fill out essay question 2",
-            github: "Please provide a valid url"
+            linkedin: "Please provide a valid url"
         }
     });
 
