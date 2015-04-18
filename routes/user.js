@@ -27,7 +27,7 @@ router.get('/dashboard', function(req, res, next) {
             lastname: req.user.name.last,
             team: members,
             userid: req.user.pubid,
-            message: req.flash('info'),
+            error: req.flash('error'),
             success: req.flash('success'), //fixme cleanup
             title: "Dashboard"
         });
@@ -40,7 +40,7 @@ router.get('/dashboard/edit', function(req, res, next) {
     res.render('dashboard/edit_app',{
         user: user,
         enums: enums,
-        message: req.flash('info'),
+        error: req.flash('error'),
         title: "Dashboard | Edit Application" });
 });
 
@@ -52,11 +52,11 @@ router.post('/team/add', function(req, res, next) {
     user.addToTeam(pubid, function(err, resMsg) {
         if (err) {
             console.log(err);
-            req.flash("info", "An error occurred. Please try again later"); //todo standardize error messages
+            req.flash("error", "An error occurred. Please try again later"); //todo standardize error messages
         }
         else {
             if (typeof resMsg === "string") {
-                req.flash("info", resMsg);
+                req.flash("error", resMsg);
             }
             else {
                 req.flash("success", "Successfully joined team."); //todo substitute user with name
@@ -72,11 +72,11 @@ router.get('/team/leave', function(req, res, next) {
     req.user.leaveTeam(function(err, resMsg) {
         if (err) {
             console.log(err);
-            req.flash("info", "An error occurred. Please try again later.");
+            req.flash("error", "An error occurred. Please try again later.");
         }
         else {
             if (typeof res === "string") {
-                req.flash("info", res);
+                req.flash("error", res);
             }
             else {
                 req.flash("success", "Successfully left team.")

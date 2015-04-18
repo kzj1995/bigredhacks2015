@@ -1,21 +1,30 @@
 <% include partials/_header %>
 <%
 var en = enums.user;
-var errors = errors || null; //form errors
-var message = message || ""; //form errors description
+var errors = errors || []; //form errors
+var error = error || []; //misc errors flash
 var input = input || {}; //persist fields
 var helper = viewHelper;
 %>
-<% if (errors) {
+<%
+//form validation errors
+if (errors.length > 0) {
     for (var i = 0; i < errors.length; i++) {
         errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg + '</div>'
     }
 }
 else errors = [];
+
+//generic flash error
+if (error.length > 0) {
+    error = '<div class="alert alert-danger" role="alert">' + error[0] + '</div>';
+}
+
 %>
 
 <div class="container">
-    <%- errors.join("") %>
+    <%- error %>
+    <%- errors.join(""); %>
     <!--todo remove novalidate for production-->
     <form id="registrationForm" action="/register" method="POST" autocomplete="on" novalidate>
         <fieldset>
@@ -90,11 +99,11 @@ else errors = [];
 
             <div class="form-group">
                 <label>Essay Question 1 *</label>
-                <textarea id="q1" name="q1" class="form-control" rows="3" value="<%= input.q1 || "" %>"></textarea>
+                <textarea id="q1" name="q1" class="form-control" rows="3"><%= input.q1 || "" %></textarea>
             </div>
             <div class="form-group">
                 <label>Essay Question 2 *</label>
-                <textarea id="q2" name="q2" class="form-control" rows="3" value="<%= input.q2 || "" %>"></textarea>
+                <textarea id="q2" name="q2" class="form-control" rows="3"><%= input.q2 || "" %></textarea>
             </div>
             <div class="form-group">
                 <label for="github">Github Profile </label>

@@ -1,7 +1,9 @@
 <% include ../partials/_header %>
 <% var firstname = firstname || '';
 var lastname = lastname || '';
-var team = team || [];
+var team = team || []; //team members
+var error = error || []; //error flash message
+var success = success | []; //success flash message
 %>
 <!-- Custom CSS -->
 <link href="/css/dashboard.css" rel="stylesheet">
@@ -13,8 +15,8 @@ var team = team || [];
 
             <h2>Dashboard </h2>
             <p> Welcome back, <%= firstname %> <%= lastname %> </p>
-            <% if (message.length > 0) { %>
-            <%- '<div class="alert alert-danger" role="alert">' + message[0] + '</div>' %>
+            <% if (error.length > 0) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
             <%}%>
             <% if (success.length > 0) { %>
             <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>

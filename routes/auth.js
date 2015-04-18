@@ -41,7 +41,7 @@ passport.deserializeUser(function (id, done) {
 
 router.get('/register', function (req, res) {
     res.render("register",
-        {title: "Register", enums: enums, message: req.flash('info')});
+        {title: "Register", enums: enums, error: req.flash('error')});
 });
 
 router.post('/register', function (req, res) {
@@ -115,9 +115,9 @@ router.post('/register', function (req, res) {
             if (err) {
                 // If it failed, return error
                 console.log(err);
-                req.flash("info", "An error occurred.");
+                req.flash("error", "An error occurred.");
                 res.render('register', {
-                    title: 'Register', message: req.flash('info'), input: req.body, enums: enums
+                    title: 'Register', error: req.flash('error'), input: req.body, enums: enums
                 });
             }
             else {

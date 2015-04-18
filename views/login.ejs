@@ -6,8 +6,8 @@
         <h2>Login to BigRed//Hacks</h2>
         <br/>
         <%
-        if (message.length > 0) { %>
-        <%- '<div class="alert alert-danger" role="alert">' + message[0] + '</div>';%>
+        if (error.length > 0) { %>
+        <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>';%>
         <%}%>
         <form action="/login" method="post">
             <div class="form-group">
