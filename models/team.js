@@ -26,11 +26,12 @@ teamSchema.statics.findTeam = function(user_id, callback) {
 };
 
 teamSchema.methods.addUser = function(user_id, name, callback) {
+    var pos = this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
     if (this.members.length == MAX_TEAM_SIZE ) {
         return callback(null, "Your team is full. The current team limit is " + MAX_TEAM_SIZE + " members.");
     }
-    else if (this.members.indexOf(user_id) != -1) {
-        return callback(null, "User is already in team!");
+    else if (pos != -1) {
+        return callback(null, "User is already in your team!");
     }
     else this.members.push({
             id: user_id,

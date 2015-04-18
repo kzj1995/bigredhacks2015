@@ -71,19 +71,19 @@ else errors = [];
                     <div class="form-group">
                         <label for="college">Full School Name *</label><br/>
                         <input type="text" id="college" name="college" class="form-control typeahead" placeholder="School Name"
-                         value="<%= helper.collegeid %>" required readonly/>
+                         value="<%= user.school.name %>" required readonly/>
                     </div>
                     <div class="form-group">
                         <label for="yearDropdown">Graduation Year *</label>
                         <select class="form-control" id="yearDropdown" name="yearDropdown" readonly>
                             <option value=""></option>
-                            <%- helper.generateOptions(en.year, {selected: user.year}); %>
+                            <%- helper.generateOptions(en.year, {selected: user.school.year}); %>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="major">Major *</label>
                         <input type="text" id="major" name="major" class="form-control" placeholder="Major"
-                        value="<%= user.major %>" required/>
+                        value="<%= user.school.major %>" required/>
                     </div>
                 </fieldset>
                 <br/>

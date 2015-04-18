@@ -16,15 +16,18 @@ var userSchema = new mongoose.Schema({
         first: {type: String, required: true},
         last: {type: String, required: true}
     },
-    gender: {type: String, enum: en.user.gender}, //FIXME add validations
+    gender: {type: String, enum: en.user.gender},
     email: {type: String, required: true, lowercase: true, trim: true, index: {unique: true}},
     password: {type: String, required: true},
     phone: {type: String, required: true},
-    collegeid: {type: String, ref: "College", required: true},
-    year: {type: String, enum: en.user.year, required: true},
-    major: {type: String, required: true},
     dietary: {type: String, enum: en.user.dietary},
     tshirt: {type: String, enum: en.user.tshirt},
+    school: {
+        id: {type: String, ref: "College", required: true},
+        name: {type: String, required: true},
+        year: {type: String, enum: en.user.year, required: true},
+        major: {type: String, required: true}
+    },
     app: {
         github: String,
         linkedin: String,
@@ -90,9 +93,12 @@ userSchema.methods.addToTeam = function (pubid, callback) {
         if (other === null) {
             return callback(null, "User does not exist.");
         }
-        else if (pubid == _this.pubid) {
+        else if (pubid == _this.pubid  || other.internal.teamid == _this.internal.teamid) {
             //user can't add himself
-            return callback(null, "User already belongs to a team!");
+            return callback(null, "User is already in your team!");
+        }
+        else if (other.internal.teamid !== null && _this.internal.teamid !== null && other.internal.teamid !== _this.internal.teamid) {
+            return callback(null, "User is already part of a team.");
         }
         //other user has a team
         if (other.internal.teamid !== null) {
@@ -156,15 +162,29 @@ userSchema.methods.addToTeam = function (pubid, callback) {
                 }
             });
         }
-        //current user has a team
+        //current user has a team and other user does not
         else {
             _this.populate("internal.teamid", function (err, user) {
                 if (err) {
                     return callback(err);
                 }
                 else {
-                    user.internal.teamid.addUser(other._id, other.name, function (err, res) {
-                        return callback(err, res);
+                    user.internal.teamid.addUser(other._id, other.name, function (err, newteam) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        if (typeof newteam == 'string') {
+                            return callback(null, newteam);
+                        }
+                        else {
+                            other.internal.teamid = _this.internal.teamid;
+                            other.save(function(err, res) {
+                                if (err){
+                                    return callback(err);
+                                }
+                                else return callback(null, res);
+                            })
+                        }
                     });
                 }
             })

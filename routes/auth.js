@@ -42,11 +42,10 @@ router.get('/register', function (req, res) {
 router.post('/register', function (req, res) {
     console.log(req.body);
 
-
+    //todo reorder validations to be consistent with form
     req.body.phonenumber = req.body.phonenumber.replace(/-/g,'');
     req.assert('phonenumber','Please enter a valid US phone number').isMobilePhone('en-US');
-    //req.assert('phonenumber','Please enter a valid US phone number').matches(/^(\+?1)?[2-9]\d{2}[2-9](?!11)\d{6}$/);
-    //todo validate phone
+
     req.assert('email', 'Email address is not valid').isEmail();
     req.assert('password', 'Password is not valid. 6 to 25 characters required').len(6, 25);
     req.assert('firstname', 'First name is required').notEmpty();
@@ -64,7 +63,6 @@ router.post('/register', function (req, res) {
     req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
     //todo chack that validations are complete
 
-    //todo validation of phone number currently not working
 
 
     var errors = req.validationErrors();
@@ -86,16 +84,19 @@ router.post('/register', function (req, res) {
             password: req.body.password,
             gender: req.body.genderDropdown,
             phone: req.body.phonenumber,
-            collegeid: req.body.collegeid,
-            year: req.body.yearDropdown,
-            major: req.body.major,
             dietary: req.body.dietary,
             tshirt: req.body.tshirt,
+            school :{
+                id: req.body.collegeid,
+                name: req.body.college,
+                year: req.body.yearDropdown,
+                major: req.body.major
+            },
             app: {
                 github: req.body.github,
                 linkedin: req.body.linkedin,
                 resume: req.body.resume,
-                question: {
+                questions: {
                     q1: req.body.q1,
                     q2: req.body.q2
                 }
