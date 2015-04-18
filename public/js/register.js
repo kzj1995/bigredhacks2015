@@ -72,10 +72,16 @@ $('document').ready(function () {
             },
             phonenumber: {
                 required: true,
-                minlength: 10,
+                phoneUS: true
             },
+
             major: {
                 required: true
+            },
+            resume: {
+                required: true,
+                extension: "pdf",
+                accept: 'application/pdf'
             },
             q1: {
                 required: true
