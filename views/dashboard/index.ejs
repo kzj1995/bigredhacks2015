@@ -10,28 +10,34 @@ var lastname = lastname || ''; %>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
 
             <h2>Dashboard </h2>
-            <p> Welcome back, <%=firstname%> <%=lastname%> </p>
+            <p> Welcome back, <%= firstname %> <%= lastname %> </p>
 
             <h2>Status</h2>
             <p>
                 Registration Process Is Still Open
             </p>
 
-            <h2>Team Information</h2>
-            <p>
+            <h2>My Team</h2>
+            <div>
+                <span>My user ID: <%= userid %></span>
                 <ul>
                     <li></li>
                     <li></li>
                     <li></li>
                     <li></li>
                 </ul>
-                <label>Input ID <input type="text" name="idforteam"></label>
-                <br>
-                <input type="submit" value="Add Team Member">
-            </p>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="addteamid" class="sr-only">Password</label>
+                        <input type="text" class="form-control" id="addteamid" placeholder="User ID">
+                    </div>
+                    <button type="submit" id="addteamid-submit" class="btn btn-default" disabled>Add a Teammate</button>
+                </form>
+            </div>
 
         </div>
     </div>
 </div>
 
+<script src="/js/dashboard.js"></script>
 <% include ../partials/_footer %>

@@ -102,6 +102,6 @@ app.locals.viewHelper = require("./views/helper.js");
 //@todo move to setup
 //@todo force synchronous
 //loading colleges
-require('./scripts/load_colleges.js')(function(err){});
+require('./scripts/load_colleges.js').loadOnce(function(err){});
 
 module.exports = app;

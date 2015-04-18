@@ -13,12 +13,14 @@ router.get('/dashboard', function(req, res, next) {
     //todo populate user team info
     req.user.populate("internal.teamid", function(err, team) {
         if (err) {
+            console.log(err);
             team = [];
         }
         res.render('dashboard/index', {
             firstname: req.user.name.first,
             lastname: req.user.name.last,
             team: team,
+            userid: req.user.pubid,
             title: "Dashboard"
         });
     })
@@ -26,7 +28,6 @@ router.get('/dashboard', function(req, res, next) {
 
 /* GET edit registration page of logged in user */
 router.get('/dashboard/edit', function(req, res, next) {
-    //todo populate user team info
     var user = _.omit(req.user, 'password'.split(' '));
     res.render('dashboard/edit_app',{
         user: user,

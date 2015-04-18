@@ -2,32 +2,74 @@
 var async = require('async');
 var Converter = require("csvtojson").core.Converter; //converter class
 var fs = require("fs");
-var college = require('../models/college.js');
+var College = require('../models/college.js');
 
 var files = "./data/us-colleges-2014.csv ./data/us-colleges-other.csv".split(" ");
 
-//load colleges into database
+var collegeLoader = {};
+/*
+Some notes:
+ * Loading should be done before the app enters production to prevent invariant errors
+ * Invalidating and reloading list won't affect associations
+ */
 /**
  * Load a list of colleges in /data into the database
- * This should be done before the app enters production
- * Invalidating and reloading list won't affect associations
+ * Will not do anything if the colleges table has any entries
  * @param callback
  */
-var load = function (callback) {
-    console.log("Adding colleges...");
-    async.each(files, loadFromFile, function (err) {
+collegeLoader.loadOnce = function loadOnce(callback) {
+    College.findOne({}, function(err, res) {
         if (err) {
             console.log(err);
-            callback(err);
+            return callback(err);
         }
         else {
-            callback(err);
-            console.log("Adding colleges finished.");
+            if (res === null) { //college table empty
+                return _loadFromFile(callback);
+            }
+            else { //college table populated
+                console.log("Skipped adding colleges: Switch to load() to force load, or invalidate the table first.");
+                return callback();
+            }
         }
-    });
+        });
 };
 
-function loadFromFile(filepath, done) {
+/**
+ * Load a list of colleges in /data into the database
+ * Adds any missing entries
+ * @param callback
+ */
+collegeLoader.load = function load(callback) {
+    _addColleges(callback);
+};
+
+/**
+ * main method that adds colleges
+ * @param callback
+ * @private
+ */
+function _loadFromFile(callback) {
+    console.log("Adding colleges...");
+    async.each(files, _addColleges, function (err) {
+        if (err) {
+            console.log(err);
+            return callback(err);
+        }
+        else {
+            console.log("Adding colleges finished.");
+            return callback();
+        }
+    });
+}
+
+/**
+ * parse a college csv
+ * @param filepath
+ * @param done
+ * @private
+ */
+function _addColleges(filepath, done) {
     var fileStream = fs.createReadStream(filepath);
     //new converter instance
     var csvConverter = new Converter({constructResult: true});
@@ -36,7 +78,7 @@ function loadFromFile(filepath, done) {
     fileStream.pipe(csvConverter);
 
     csvConverter.on("record_parsed", function (res, rawRow, rowIndex) {
-        college.add(res.unitid, res.name, res.city, res.state, res.zip, res.longitude, res.latitude,
+        College.add(res.unitid, res.name, res.city, res.state, res.zip, res.longitude, res.latitude,
             function (err) {
                 if (err) {
                     done(err + " " + filepath + " " + rowIndex);
@@ -52,4 +94,4 @@ function loadFromFile(filepath, done) {
     });
 }
 
-module.exports = load;
+module.exports = collegeLoader;

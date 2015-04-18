@@ -65,7 +65,7 @@ collegeSchema.statics.add = function (unitid, name, city, state, zip, lon, lat, 
 };
 
 /**
- * get all college entries, limiting by fields
+ * get all College entries, limiting by fields
  * @param callback
  * @todo limit field selection
  */
