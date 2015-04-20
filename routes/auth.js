@@ -6,7 +6,7 @@ var _ = require('underscore');
 var User = require('../models/user.js');
 
 var enums = require('../models/enum.js');
-var ALWAYS_OMIT = 'password'.split('');
+var ALWAYS_OMIT = 'password confirmpassword'.split('');
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -135,7 +135,7 @@ router.post('/register', function (req, res) {
 
 
 router.get('/login', function (req, res, next) {
-    res.render('login', {user: req.user, message: req.flash('error'), email: req.flash('email')});
+    res.render('login', {title: 'Login', user: req.user, error: req.flash('error'), email: req.flash('email')});
 });
 
 //todo persist fields

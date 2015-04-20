@@ -48,6 +48,7 @@ $('document').ready(function () {
     });
 
     $('#registrationForm').validate({
+        onkeyup: false,
         rules: {
             email: {
                 required: true,

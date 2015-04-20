@@ -41,7 +41,7 @@ router.get('/dashboard/edit', function(req, res, next) {
         user: user,
         enums: enums,
         error: req.flash('error'),
-        title: "Dashboard | Edit Application" });
+        title: "Edit Application" });
 });
 
 /* POST add a user to team */
