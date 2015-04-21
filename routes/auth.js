@@ -5,12 +5,21 @@ var LocalStrategy = require('passport-local').Strategy;
 var _ = require('underscore');
 var multiparty = require('multiparty');
 var AWS = require('aws-sdk');
+var uid = require('uid2');
+var fs = require('fs');
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
+var config = require('../config.js');
 
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
+
+var RESUME_DEST = 'resume/';
+var s3Client = new AWS.S3({
+    accessKeyId: config.setup.AWS_access_key,
+    secretAccessKey: config.setup.AWS_secret_key
+});
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -103,55 +112,75 @@ router.post('/register', function (req, res) {
             //check file validity
             if (resume.size > MAX_FILE_SIZE) {
                 req.flash('error', "File is too big!");
-                res.redirect('/register');
+                return res.redirect('/register');
+
             }
-            if (res.)
-            var newUser = new User({
-                name: {
-                    first: req.body.firstname,
-                    last: req.body.lastname
-                },
-                email: req.body.email,
-                password: req.body.password,
-                gender: req.body.genderDropdown,
-                phone: req.body.phonenumber,
-                dietary: req.body.dietary,
-                tshirt: req.body.tshirt,
-                school :{
-                    id: req.body.collegeid,
-                    name: req.body.college,
-                    year: req.body.yearDropdown,
-                    major: req.body.major
-                },
-                app: {
-                    github: req.body.github,
-                    linkedin: req.body.linkedin,
-                    resume: req.body.resume,
-                    questions: {
-                        q1: req.body.q1,
-                        q2: req.body.q2
-                    }
-                }
-            });
-            newUser.save(function (err, doc) {
-                if (err) {
-                    // If it failed, return error
-                    console.log(err);
-                    req.flash("error", "An error occurred.");
-                    res.render('register', {
-                        title: 'Register', error: req.flash('error'), input: req.body, enums: enums
-                    });
-                }
-                else {
-                    //redirect to home page
-                    req.login(newUser, function (err) {
-                        if (err) {
-                            console.log(err);
+            if (resume.headers['content-type'] !== 'application/pdf') {
+                req.flash('error','File must be a pdf!');
+                return res.redirect('/register');
+            }
+
+            var body = fs.createReadStream(resume.path);
+            var fileName = uid(15) + ".pdf";
+
+            s3Client.putObject({
+                Bucket: config.setup.AWS_S3_bucket,
+                Key: RESUME_DEST + fileName,
+                ACL: 'public-read',
+                Body: body,
+                ContentType: 'application/pdf'
+            }, function(err, data) {
+                if (err) throw err;
+                console.log("done", data);
+                console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
+                var newUser = new User({
+                    name: {
+                        first: req.body.firstname,
+                        last: req.body.lastname
+                    },
+                    email: req.body.email,
+                    password: req.body.password,
+                    gender: req.body.genderDropdown,
+                    phone: req.body.phonenumber,
+                    dietary: req.body.dietary,
+                    tshirt: req.body.tshirt,
+                    school :{
+                        id: req.body.collegeid,
+                        name: req.body.college,
+                        year: req.body.yearDropdown,
+                        major: req.body.major
+                    },
+                    app: {
+                        github: req.body.github,
+                        linkedin: req.body.linkedin,
+                        resume: fileName,
+                        questions: {
+                            q1: req.body.q1,
+                            q2: req.body.q2
                         }
-                        res.redirect('/user/dashboard');
-                    })
-                }
+                    }
+                });
+                newUser.save(function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        console.log(err);
+                        req.flash("error", "An error occurred.");
+                        res.render('register', {
+                            title: 'Register', error: req.flash('error'), input: req.body, enums: enums
+                        });
+                    }
+                    else {
+                        //redirect to home page
+                        req.login(newUser, function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            res.redirect('/user/dashboard');
+                        })
+                    }
+                });
             });
+
         }
     });
 
