@@ -52,9 +52,10 @@ router.post('/register', function (req, res) {
     form.parse(req, function(err, fields, files) {
         req.body = helper.reformatFields(fields);
         req.files = files;
+        var resume = files.resume[0];
         console.log(req.body);
         console.log(req.files);
-
+        console.log(resume.headers);
         //todo reorder validations to be consistent with form
         req.body.phonenumber = req.body.phonenumber.replace(/-/g,'');
         req.assert('phonenumber','Please enter a valid US phone number').isMobilePhone('en-US');

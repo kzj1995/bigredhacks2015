@@ -1,8 +1,11 @@
+"use strict";
+var helper = {};
+
 // Make the nested fields parsed by multiparty look like req.body from body-parser
 // e.g. 'metadata[foo]': ['1']            => {metadata: {foo: 1}}
 //      'metadata[foo]': ['bar']          => {metadata: {foo: 'bar'}}
 //      'metadata[foo][]': ['bar', 'bat'] => {metadata: {foo: ['bar', 'bat']}}
-function reformatFields(fields) {
+helper.reformatFields = function reformatFields(fields) {
     // convert numbers to real numbers instead of strings
     function toNumber(i) {
         return i !== '' && !isNaN(i) ? Number(i) : i;
@@ -28,3 +31,6 @@ function reformatFields(fields) {
 
     return fields;
 };
+
+
+module.exports = helper;

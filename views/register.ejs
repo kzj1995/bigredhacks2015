@@ -22,7 +22,7 @@ if (error.length > 0) {
 
 %>
 
-<div class="container">
+<div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
     <!--todo remove novalidate for production-->
@@ -158,6 +158,6 @@ if (error.length > 0) {
 <script src="/js/vendor/jquery.validate.min.js"></script>
 <script src="/js/vendor/jquery.validate.additional-methods.min.js"></script>
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
-<script src="/js/vendor/jquery.filepicker.js"></script>
+<script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/register.js"></script>
 <% include _footer %>
