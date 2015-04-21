@@ -13,7 +13,7 @@ var schemaOptions = {
 
 var collegeSchema = new mongoose.Schema({
     _id: {type: String, required: true, unique: true}, //unique college id
-    name: {type: String, required: true},
+    name: {type: String, required: true, index: true},
     city: {type: String},
     state: {type: String}, //2 letter
     zip: String,

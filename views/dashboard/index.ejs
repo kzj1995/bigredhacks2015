@@ -1,4 +1,4 @@
-<% include ../partials/_header %>
+<% include ../_header %>
 <% var firstname = firstname || '';
 var lastname = lastname || '';
 var team = team || []; //team members
@@ -10,7 +10,7 @@ var success = success | []; //success flash message
 
 <div class="container-fluid">
     <div class="row">
-        <% include ../partials/_dashboardside.ejs %>
+        <% include _dashboardside.ejs %>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
 
             <h2>Dashboard </h2>
@@ -54,4 +54,4 @@ var success = success | []; //success flash message
 </div>
 
 <script src="/js/dashboard.js"></script>
-<% include ../partials/_footer %>
+<% include ../_footer %>
