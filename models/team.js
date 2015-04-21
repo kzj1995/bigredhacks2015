@@ -12,8 +12,11 @@ var teamSchema = new mongoose.Schema({
     }]
 });
 
-//todo consider making methods non-saving for conformity
-
+/**
+ * find a team by priuvate user_id
+ * @param user_id
+ * @param callback
+ */
 teamSchema.statics.findTeam = function(user_id, callback) {
     this.findOne({'members.id': user_id}, function(err, team) {
         if (err) {
@@ -25,6 +28,13 @@ teamSchema.statics.findTeam = function(user_id, callback) {
     })
 };
 
+/**
+ * add a user by user id
+ * @param user_id
+ * @param name of user
+ * @param callback
+ * @returns {*}
+ */
 teamSchema.methods.addUser = function(user_id, name, callback) {
     var index = this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
     if (this.members.length == MAX_TEAM_SIZE ) {
@@ -43,6 +53,12 @@ teamSchema.methods.addUser = function(user_id, name, callback) {
     });
 };
 
+/**
+ * remove a user from current team by private id
+ * @param user_id
+ * @param callback
+ * @returns {*}
+ */
 teamSchema.methods.removeUser = function(user_id, callback) {
     var _this = this;
     var index = _this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array

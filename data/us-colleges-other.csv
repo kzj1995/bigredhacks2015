@@ -1,3 +1,3 @@
 unitid,name,state,zip,city,longitude,latitude
 x000001,Cornell Tech,NY,10011,New York,-74.0021,40.7409
-x999999,Not Listed,XX,00000,X X,0,0
+x999999,Unlisted,XX,0,X X,0,0

@@ -61,7 +61,7 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-var requireAuthentication = function (req, res, next) {
+var _requireAuthentication = function (req, res, next) {
     if (req.user) {
         next();
     }
@@ -73,7 +73,7 @@ var requireAuthentication = function (req, res, next) {
 
 app.use('/', routes);
 app.use('/', authRoute);
-app.use('/user', requireAuthentication, user);
+app.use('/user', _requireAuthentication, user);
 app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler

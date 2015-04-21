@@ -46,6 +46,7 @@ var userSchema = new mongoose.Schema({
     }
 });
 
+//full name of user
 userSchema.virtual('name.full').get(function () {
     return this.name.first + " " + this.name.last;
 });
@@ -74,15 +75,22 @@ userSchema.pre('save', function (next) {
     });
 });
 
+/**
+ * compares the user's password and derermines whether it's valid
+ * @param candidatePassword
+ * @returns {boolean}
+ */
 userSchema.methods.validPassword = function (candidatePassword) {
     return bcrypt.compareSync(candidatePassword, this.password);
 };
 
-userSchema.statics.create = function () {
-
-};
 
 //todo cleanup with async library
+/**
+ * add a user to team by public user id
+ * @param pubid
+ * @param callback
+ */
 userSchema.methods.addToTeam = function (pubid, callback) {
     var _this = this;
     var userModel = mongoose.model("User"); //reference the static model
@@ -197,6 +205,11 @@ userSchema.methods.addToTeam = function (pubid, callback) {
 };
 
 //todo cleanup with async library
+/**
+ * leave the user's current team
+ * @param callback
+ * @returns {*}
+ */
 userSchema.methods.leaveTeam = function (callback) {
     var user = this;
     if (typeof user.internal.teamid === null) {

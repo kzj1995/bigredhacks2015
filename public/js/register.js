@@ -47,7 +47,17 @@ $('document').ready(function () {
 
     });
 
+    $.validator.addMethod("notEmpty", function(val, elem, params){
+        var f1 = $('#' + params[0]).val(),
+            f2 = $('#' + params[1]).val();
+        return f1 !== "" && f2 !== "";
+    }, 'Enter a valid college. Enter "Unlisted" if your college is not listed.');
+
+
     $('#registrationForm').validate({
+        onfocusout: function (e, event) {
+            this.element(e); //validate field immediately
+        },
         onkeyup: false,
         rules: {
             email: {
@@ -75,7 +85,9 @@ $('document').ready(function () {
                 required: true,
                 phoneUS: true
             },
-
+            college: {
+                notEmpty: ['college', 'collegeid']
+            },
             major: {
                 required: true
             },
