@@ -4,11 +4,13 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var _ = require('underscore');
 var multiparty = require('multiparty');
-
+var AWS = require('aws-sdk');
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
+
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
+var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -22,7 +24,7 @@ passport.use(new LocalStrategy({
             }
             if (user == null || !user.validPassword(password)) {
                 return done(null, false, function() {
-                    req.flash('email',email)
+                    req.flash('email',email);
                     req.flash('error','Incorrect username or email.');
                 }());
             }
@@ -47,15 +49,21 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-    var form = new multiparty.Form();
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
     form.parse(req, function(err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error',err);
+            res.redirect('/register');
+        }
+
         req.body = helper.reformatFields(fields);
         req.files = files;
         var resume = files.resume[0];
-        console.log(req.body);
-        console.log(req.files);
+        console.log(resume);
         console.log(resume.headers);
+
         //todo reorder validations to be consistent with form
         req.body.phonenumber = req.body.phonenumber.replace(/-/g,'');
         req.assert('phonenumber','Please enter a valid US phone number').isMobilePhone('en-US');
@@ -78,9 +86,8 @@ router.post('/register', function (req, res) {
         //todo check that validations are complete
 
 
-
         var errors = req.validationErrors();
-        console.log(errors);
+        //console.log(errors);
         if (errors) {
             //todo persist fields
             var errorParams = errors.map(function(x) {
@@ -92,7 +99,13 @@ router.post('/register', function (req, res) {
             });
         }
         else {
-            console.log(req.files);
+
+            //check file validity
+            if (resume.size > MAX_FILE_SIZE) {
+                req.flash('error', "File is too big!");
+                res.redirect('/register');
+            }
+            if (res.)
             var newUser = new User({
                 name: {
                     first: req.body.firstname,
@@ -151,7 +164,7 @@ router.get('/login', function (req, res, next) {
     res.render('login', {title: 'Login', user: req.user, error: req.flash('error'), email: req.flash('email')});
 });
 
-//todo persist fields
+
 router.post('/login',
     passport.authenticate('local', { successRedirect: '/user',
         failureRedirect: '/login',
