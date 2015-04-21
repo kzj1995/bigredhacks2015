@@ -1,7 +1,10 @@
 {
     "setup": {
       "_comment": "Secret api keys.",
-      "mailchimp_apikey": "",
+      "AWS_access_key": "",
+      "AWS_secret_key": "",
+      "AWS_S3_bucket": "",
+      "mailchimp_api_key": "",
       "cookie_secret": ""
     }
 }

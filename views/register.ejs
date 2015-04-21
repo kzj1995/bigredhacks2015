@@ -26,7 +26,7 @@ if (error.length > 0) {
     <%- error %>
     <%- errors.join(""); %>
     <!--todo remove novalidate for production-->
-    <form id="registrationForm" action="/register" name = 'registrationForm' method="POST" autocomplete="on" novalidate>
+    <form id="registrationForm" action="/register" name = 'registrationForm' method="POST" autocomplete="on" novalidate enctype="multipart/form-data">
         <fieldset>
             <legend>Account Information</legend>
             <div class="form-group">
@@ -99,9 +99,10 @@ if (error.length > 0) {
         <br/>
         <fieldset>
             <legend>Background</legend>
-            <label>Resume(PDF)</label>
-            <input type="file" name="resume" accept=".pdf"><br>
-
+            <div class="form-group">
+                <label for="resume">Resume (PDF) *</label>
+                <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resume" name="resume" accept=".pdf" required>
+            </div>
             <div class="form-group">
                 <label>Essay Question 1 *</label>
                 <textarea id="q1" name="q1" class="form-control" rows="3" required><%= input.q1 || "" %></textarea>
@@ -153,8 +154,10 @@ if (error.length > 0) {
     </form>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="/js/vendor/jquery.validate.min.js"></script>
 <script src="/js/vendor/jquery.validate.additional-methods.min.js"></script>
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
+<script src="/js/vendor/jquery.filepicker.js"></script>
 <script src="/js/register.js"></script>
 <% include _footer %>

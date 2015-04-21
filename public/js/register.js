@@ -1,4 +1,13 @@
 $('document').ready(function () {
+
+    //File picker
+    $(function() {
+        $("input[type='file']").filepicker();
+    });
+
+    /*
+     * Typeahead
+     */
     var engine = new Bloodhound({
         name: 'colleges',
         prefetch: '/api/colleges',
@@ -47,6 +56,9 @@ $('document').ready(function () {
 
     });
 
+    /*
+     * Validator
+     */
     $.validator.addMethod("notEmpty", function(val, elem, params){
         var f1 = $('#' + params[0]).val(),
             f2 = $('#' + params[1]).val();
@@ -120,6 +132,7 @@ $('document').ready(function () {
             firstname: "Please enter your first name",
             lastname: "Please enter your last name",
             phonenumber: "Please provide a valid phone number",
+            resume: "Please upload a valid .pdf",
             major: "Please enter your major",
             q1: "Please fill out essay question 1",
             q2: "Please fill out essay question 2",
