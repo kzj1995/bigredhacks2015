@@ -16,7 +16,7 @@ var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
 var RESUME_DEST = 'resume/';
-var s3Client = new AWS.S3({
+var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
 });
@@ -32,9 +32,9 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
             if (user == null || !user.validPassword(password)) {
-                return done(null, false, function() {
-                    req.flash('email',email);
-                    req.flash('error','Incorrect username or email.');
+                return done(null, false, function () {
+                    req.flash('email', email);
+                    req.flash('error', 'Incorrect username or email.');
                 }());
             }
             return done(null, user);
@@ -60,10 +60,10 @@ router.get('/register', function (req, res) {
 router.post('/register', function (req, res) {
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
-    form.parse(req, function(err, fields, files) {
+    form.parse(req, function (err, fields, files) {
         if (err) {
             console.log(err);
-            req.flash('error',err);
+            req.flash('error', err);
             res.redirect('/register');
         }
 
@@ -74,8 +74,8 @@ router.post('/register', function (req, res) {
         console.log(resume.headers);
 
         //todo reorder validations to be consistent with form
-        req.body.phonenumber = req.body.phonenumber.replace(/-/g,'');
-        req.assert('phonenumber','Please enter a valid US phone number').isMobilePhone('en-US');
+        req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
+        req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
 
         req.assert('email', 'Email address is not valid').isEmail();
         req.assert('password', 'Password is not valid. 6 to 25 characters required').len(6, 25);
@@ -87,9 +87,9 @@ router.post('/register', function (req, res) {
         req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
         req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
 
-        req.assert('major', 'Major is required').len(1,50);
+        req.assert('major', 'Major is required').len(1, 50);
         req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
-        req.assert('collegeid','Please specify a school.').notEmpty();
+        req.assert('collegeid', 'Please specify a school.').notEmpty();
         req.assert('q1', 'Question 1 cannot be blank').notEmpty();
         req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
         //todo check that validations are complete
@@ -99,12 +99,16 @@ router.post('/register', function (req, res) {
         //console.log(errors);
         if (errors) {
             //todo persist fields
-            var errorParams = errors.map(function(x) {
+            var errorParams = errors.map(function (x) {
                 return x.param;
             });
-            req.body = _.omit(req.body,errorParams.concat(ALWAYS_OMIT));
+            req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
             res.render('register', {
-                title: 'Register', message: 'The following errors occurred', errors: errors, input: req.body, enums: enums
+                title: 'Register',
+                message: 'The following errors occurred',
+                errors: errors,
+                input: req.body,
+                enums: enums
             });
         }
         else {
@@ -116,23 +120,26 @@ router.post('/register', function (req, res) {
 
             }
             if (resume.headers['content-type'] !== 'application/pdf') {
-                req.flash('error','File must be a pdf!');
+                req.flash('error', 'File must be a pdf!');
                 return res.redirect('/register');
             }
 
+            //prepare to upload file
             var body = fs.createReadStream(resume.path);
             var fileName = uid(15) + ".pdf";
 
-            s3Client.putObject({
+            s3.putObject({
                 Bucket: config.setup.AWS_S3_bucket,
                 Key: RESUME_DEST + fileName,
                 ACL: 'public-read',
                 Body: body,
                 ContentType: 'application/pdf'
-            }, function(err, data) {
-                if (err) throw err;
-                console.log("done", data);
-                console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
+            }, function (err, data) {
+                if (err) {
+                    req.flash('error', "File upload failed. :(");
+                    return res.redirect('/register');
+                }
+                //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
                 var newUser = new User({
                     name: {
                         first: req.body.firstname,
@@ -144,7 +151,7 @@ router.post('/register', function (req, res) {
                     phone: req.body.phonenumber,
                     dietary: req.body.dietary,
                     tshirt: req.body.tshirt,
-                    school :{
+                    school: {
                         id: req.body.collegeid,
                         name: req.body.college,
                         year: req.body.yearDropdown,
@@ -180,12 +187,8 @@ router.post('/register', function (req, res) {
                     }
                 });
             });
-
         }
     });
-
-
-
 });
 
 
@@ -195,9 +198,11 @@ router.get('/login', function (req, res, next) {
 
 
 router.post('/login',
-    passport.authenticate('local', { successRedirect: '/user',
+    passport.authenticate('local', {
+        successRedirect: '/user',
         failureRedirect: '/login',
-        failureFlash: true })
+        failureFlash: true
+    })
 );
 
 router.get('/logout', function (req, res) {
