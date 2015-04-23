@@ -68,15 +68,14 @@ router.post('/register', function (req, res) {
         }
 
         req.body = helper.reformatFields(fields);
-        console.log(fields);
-        console.log(req.body);
+
         req.files = files;
         var resume = files.resume[0];
         console.log(resume);
         console.log(resume.headers);
 
         //todo reorder validations to be consistent with form
-        req.body.phonenumber = req.body.phonenumber.toString().replace(/-/g, '');
+        req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
         req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
 
         req.assert('email', 'Email address is not valid').isEmail();
