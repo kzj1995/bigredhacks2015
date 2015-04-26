@@ -96,7 +96,7 @@ router.post('/dashboard/edit', function (req, res, next){
         res.render('dashboard/edit_app', {
             user: user,
             enums: enums,
-            error: errors,
+            error: req.flash('error'),
             title: "Edit Application"
         });
     }
