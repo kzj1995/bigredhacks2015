@@ -1,7 +1,7 @@
 $('document').ready(function () {
 
     //File picker
-    $(function() {
+    $(function () {
         $("input[type='file']").filepicker();
     });
 
@@ -32,10 +32,10 @@ $('document').ready(function () {
             }
 
             //move beginning matches to top
-            if (a.lastIndexOf(input, 0) === 0){
+            if (a.lastIndexOf(input, 0) === 0) {
                 return -1;
             }
-            if (b.lastIndexOf(input, 0) === 0){
+            if (b.lastIndexOf(input, 0) === 0) {
                 return 1;
             }
         }
@@ -59,11 +59,34 @@ $('document').ready(function () {
     /*
      * Validator
      */
-    $.validator.addMethod("notEmpty", function(val, elem, params){
+
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        errorPlacement: function (error, element) {
+            for (var i = 0; i < error.length; i++) {
+                error[0].innerText = " | " + error[0].innerText;
+            }
+            element = $(element).closest('.form-group').find('label');
+            error.insertAfter(element);
+        }
+    });
+
+    $.validator.addMethod("notEmpty", function (val, elem, params) {
         var f1 = $('#' + params[0]).val(),
             f2 = $('#' + params[1]).val();
         return f1 !== "" && f2 !== "";
     }, 'Enter a valid college. Enter "Unlisted" if your college is not listed.');
+
+    $.validator.addMethod("linkedinURL", function (val, elem, params) {
+        return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";
+    });
 
 
     $('#registrationForm').validate({
@@ -115,7 +138,7 @@ $('document').ready(function () {
                 required: true
             },
             linkedin: {
-                url: true
+                linkedinURL: true
             }
         },
         messages: {
@@ -136,7 +159,7 @@ $('document').ready(function () {
             major: "Please enter your major",
             q1: "Please fill out essay question 1",
             q2: "Please fill out essay question 2",
-            linkedin: "Please provide a valid url"
+            linkedin: "Please provide a valid LinkedIn url"
         }
     });
 
