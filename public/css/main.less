@@ -1,6 +1,9 @@
 @h1-size: 44pt;
 @h2-size: 22pt;
 
+@weight-normal: 300;
+@weight-bold: 500;
+
 @font-face {
   font-family: 'Blogger Sans Light';
   src: url('/fonts/blogger-sans/blogger_sans-light-webfont.eot');
@@ -19,6 +22,7 @@ body {
   //margin-top: 50px;
   background-color: @bg-light;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: @weight-normal;
 }
 
 .center-block {
@@ -86,6 +90,17 @@ a {
   margin: 0;
 }
 
+label {
+  font-weight: @weight-bold;
+}
+
+.input-group-addon {
+  font-weight: @weight-normal;
+  background-color: white;
+  border-color: @neutral;
+  border-radius: 0;
+}
+
 .form-control {
   border-radius: 0;
   border-color: @neutral;
@@ -107,26 +122,49 @@ a {
 
 .filepicker-ui button,
 .filepicker-ui input {
-  border: 1px solid lightgray;
+  border: 1px solid @neutral;
   font-size: 14px;
   padding: 4px 20px;
   height: 30px;
 }
 
 .filepicker-ui button {
+  background-color: @neutral;
+  color: white;
   border-right: none;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .filepicker-ui input {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .filepicker-preview > div {
   border: 1px solid lightgray;
   padding: 5px;
+}
+
+.alert-danger{
+  //todo
+}
+
+.btn {
+  border-radius: 0;
+}
+.btn-primary {
+  background-color: @neutral;
+  border-color: darken(@neutral,5%);
+  &:focus {
+    background-color: darken(@neutral, 20%);
+    border-color: darken(@neutral, 5%);
+    box-shadow: none;
+  }
+  &:hover {
+  background-color: darken(@neutral, 8%);
+  border-color: darken(@neutral, 5%);
+  }
 }
 
 h1 {
@@ -139,7 +177,7 @@ legend {
   padding-top: 10px;
   font-family: "Blogger Sans Light";
   font-size: @h2-size;
-  border-bottom-width: 0px;
+  border-bottom-width: 0;
   line-height: 0.3;
   &:before {
     content: "[";
@@ -156,7 +194,7 @@ legend {
         border-bottom: 2px solid @black;
         width: 5000px; //force full width
         position: absolute;
-        top: 0px;
+        top: 0;
         height: 5px;
       }
 
