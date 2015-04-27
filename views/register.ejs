@@ -26,9 +26,10 @@ if (error.length > 0) {
     <%- error %>
     <%- errors.join(""); %>
     <!--todo remove novalidate for production-->
+    <h1>Registration</h1>
     <form id="registrationForm" action="/register" name = 'registrationForm' method="POST" autocomplete="on" novalidate enctype="multipart/form-data">
         <fieldset>
-            <legend>Account Information</legend>
+            <legend><span>account information</span></legend>
             <div class="form-group">
                 <label for="email">Email Address *</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="bigredhacks@example.com"
@@ -47,7 +48,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend>Basic Information</legend>
+            <legend><span>basic information</span></legend>
             <div class="form-group">
                 <label for="firstname">First Name *</label>
                 <input type="text" id="firstname" name="firstname" minlength="2" class="form-control" placeholder="First Name"
@@ -73,7 +74,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend>School</legend>
+            <legend><span>school</span></legend>
 
             <input type="hidden" id="collegeid" name="collegeid" class="form-control"
                    value="<%= input.collegeid || "" %>" required/>
@@ -98,7 +99,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend>Background</legend>
+            <legend><span>background</span></legend>
             <div class="form-group">
                 <label for="resume">Resume (PDF) *</label>
                 <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resume" name="resume" accept=".pdf" required>
@@ -132,7 +133,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend>Preferences</legend>
+            <legend><span>preferences</span></legend>
             <div class="form-group">
                 <label for="dietary">Dietary Restrictions *</label>
                 <select class="form-control" id="dietary" name="dietary" required>
