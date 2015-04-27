@@ -25,9 +25,10 @@ router.get('/dashboard', function (req, res, next) {
 
         async.parallel({
             resumeLink: function (done) {
-                s3.getSignedUrl('getObject', params, function(err, url) {
+                /*s3.getSignedUrl('getObject', params, function(err, url) {
                     return done(err, url);
-                });
+                });*/
+                return done(null, "https://" + config.setup.AWS_S3_bucket + ".s3.amazonaws.com/resume/" + req.user.app.resume);
             },
             members: function (done) {
                 req.user.populate("internal.teamid", function (err, user) {
