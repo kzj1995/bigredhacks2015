@@ -1,5 +1,6 @@
 @h1-size: 44pt;
 @h2-size: 22pt;
+@h3-size: 16pt;
 
 @weight-normal: 300;
 @weight-bold: 500;
@@ -23,6 +24,7 @@ body {
   background-color: @bg-light;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: @weight-normal;
+  overflow-x: hidden;
 }
 
 .center-block {
@@ -32,6 +34,7 @@ body {
 a {
   color: #00B7FF;
 }
+
 
 /////////////////
 /// typeahead ///
@@ -81,7 +84,7 @@ a {
 
 .tt-suggestion.tt-cursor {
   color: #fff;
-  background-color: #0097cf;
+  background-color: @neutral; //#0097cf;
 
 }
 
@@ -90,21 +93,61 @@ a {
 }
 
 
-/**forms**/
+////////////////
+///filepicker///
+////////////////
+
+.filepicker-bootstrap {
+  //symbolic class used in filepicker
+  width: 0px;
+}
+
+.filepicker-components(@color) {
+  button {
+    background-color: @color;
+    color: white;
+    border-right: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  button, input {
+    border: 1px solid @color;
+    font-size: 14px;
+    padding: 4px 20px;
+    height: 30px;
+  }
+}
+
+.filepicker-ui {
+  input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .filepicker-components(@neutral);
+}
+
+.filepicker-preview > div {
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+///////////
+///forms///
+///////////
 
 label {
   font-weight: @weight-bold;
 }
 
-.input-group-addon {
-  font-weight: @weight-normal;
-  background-color: white;
-  border-color: @neutral;
-  border-radius: 0;
-}
+.form-style(@color) {
+  .input-group-addon {
+    font-weight: @weight-normal;
+    background-color: white;
+    border-color: @color;
+    color: @color;
+    border-radius: 0;
+  }
 
-//form control mixin
-.form-control(@color) {
   .form-control {
     border-radius: 0;
     border-color: @color;
@@ -116,12 +159,18 @@ label {
 }
 
 .form-group {
-  .form-control(@neutral);
+  .form-style(@neutral);
   &.has-success {
-    .form-control(@success);
+    .form-style(@success);
+    .filepicker-ui {
+      .filepicker-components(@success);
+    }
   }
   &.has-error {
-    .form-control(@error);
+    .form-style(@error);
+    .filepicker-ui {
+      .filepicker-components(@error);
+    }
   }
 }
 
@@ -138,49 +187,18 @@ label {
     &:before {
       content: ""
     }
+
     display: block;
     margin-bottom: 5px;
   }
 }
 
-////////////////
-///filepicker///
-////////////////
-
-.filepicker-bootstrap {
-  //symbolic class used in filepicker
-  width: 0px;
-}
-
-.filepicker-ui {
-  button {
-    background-color: @neutral;
-    color: white;
-    border-right: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  button, input {
-    border: 1px solid @neutral;
-    font-size: 14px;
-    padding: 4px 20px;
-    height: 30px;
-  }
-}
-
-.filepicker-preview > div {
-  border: 1px solid lightgray;
-  padding: 5px;
-}
-
-
-
 .alert-danger {
-  //todo
+  @lighter-color: lighten(@error, 10%);
+  color: @error;
+  background-color: @lighter-color //darken(spin(@lighter-color, -10), 5%);
+  //background-color: light(@error);
+
 }
 
 .btn-style(@color) {
@@ -199,7 +217,7 @@ label {
 
 .btn {
   border-radius: 0;
-  &.btn-primary{
+  &.btn-primary {
     .btn-style(@neutral);
   }
   &.btn-success {
@@ -211,16 +229,33 @@ label {
 }
 
 
+///////////////////////
 ///// headings ////////
+///////////////////////
+
 h1 {
-  font-family: "Blogger Sans Light";
+  font-family: "Blogger Sans Light", Arial, sans-serif;
   font-size: @h1-size;
   margin-bottom: 50px;
+  &:after {
+    display: inline-block;
+    content: "";
+    width: 53px;
+    height: 28px;
+    left: 100%;
+    background: url('/img/leaf.svg') no-repeat;
+    //background-position-x: -20px;
+    //background-position-y: -20px;
+  }
 }
 
-legend {
+h2 {
+  padding-bottom: 20px;
+}
+
+h2, legend {
   padding-top: 10px;
-  font-family: "Blogger Sans Light";
+  font-family: "Blogger Sans Light", Arial, sans-serif;
   font-size: @h2-size;
   border-bottom-width: 0;
   line-height: 0.3;
@@ -234,7 +269,7 @@ legend {
     display: inline-block;
     position: relative;
     @media (min-width: 350px) {
-      &:before, &:after {
+      &:after {
         content: "";
         border-bottom: 2px solid @black;
         width: 5000px; //force full width
@@ -243,10 +278,10 @@ legend {
         height: 5px;
       }
 
-      &:before {
+      /*&:before {
         right: 100%;
         margin-right: 1em;
-      }
+      }*/
 
       &:after {
         left: 100%;

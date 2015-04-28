@@ -9,55 +9,62 @@ var success = success || []; //success flash message
 <link href="/css/dashboard.css" rel="stylesheet">
 
 <div class="container-fluid">
-    <div class="row">
-        <% include _dashboardside.ejs %>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
+    <% include _dashboardside.ejs %>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
 
-            <h2>Dashboard </h2>
-            <p> Welcome back, <%= name.first %> <%= name.last %> </p>
+        <h1><span>dashboard</span></h1>
 
-            <% if (error.length > 0) { %>
-            <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
-            <%}%>
+        <p> welcome back, <%= name.first %> <%= name.last %> </p>
 
-            <% if (success.length > 0) { %>
-            <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
-            <%}%>
+        <% if (error.length > 0) { %>
+        <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
+        <% } %>
 
-            <br />
-            <h3>Status</h3>
-            <p>
-                Registration Process Is Still Open
-            </p>
+        <% if (success.length > 0) { %>
+        <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
+        <% } %>
 
-            <br />
-            <h3>My Team</h3><%- team.length > 0 ? ' <a href="/user/team/leave">(leave)</a>' : ''%>
-            <div>
-                <p>You can create a team with up to 5 people. (My ID: <%= userid %>)</p>
-                <ul>
-                    <% if(team.length == 0) { %>
+        <br/>
 
-                    <%
-                    }
-                    else for (var i=0; i<team.length;i++) { %>
-                      <li><%= team[i].name %></li>
-                    <%}%>
+        <h2><span>Status</span></h2>
 
-                </ul>
-                <form action="/user/team/add" class="form-inline" method="POST">
-                    <div class="form-group">
-                        <label for="addteamid" class="sr-only">Password</label>
-                        <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
-                    </div>
-                    <button type="submit" id="addteamid-submit" class="btn btn-default" disabled>Add a Teammate</button>
-                </form>
-            </div>
+        <p>
+            Registration Process Is Still Open
+        </p>
 
-            <br />
-            <h3>Resume</h3>
-            <a href="<%= resumeLink %>" target="_blank">My Resume</a>
+        <br/>
 
+        <h2><span>My Team</span></h2><%- team.length > 0 ? ' <a href="/user/team/leave">(leave)</a>' : '' %>
+        <div>
+            <p>You may add up to 5 team members. (My ID: <%= userid %>)</p>
+            <ul class="team-list">
+
+                <% if(team.length == 0) { %>
+
+                <%
+                }
+                else {
+                for (var i = 0; i < team.length;i++) { %>
+                <li><%= team[i].name %></li>
+                <% } %>
+            </ul>
+            <button class="btn btn-danger"><a href="/user/team/leave">remove yourself from this team</a></button>
+            <% } %>
+
+            <form action="/user/team/add" class="form-inline" method="POST">
+                <div class="form-group has-error">
+                    <label for="addteamid" class="sr-only">Password</label>
+                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
+                </div>
+                <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>Add a Teammate</button>
+            </form>
         </div>
+
+        <br/>
+
+        <h2><span>Resume</span></h2>
+        <a href="<%= resumeLink %>" target="_blank">My Resume</a>
+
     </div>
 </div>
 
