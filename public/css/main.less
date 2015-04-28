@@ -131,7 +131,13 @@ label {
 
 .help-inline {
   display: inline;
+  &:before {
+    content: " | "
+  }
   @media (max-width: 400px) {
+    &:before {
+      content: ""
+    }
     display: block;
     margin-bottom: 5px;
   }
@@ -177,24 +183,35 @@ label {
   //todo
 }
 
-.btn {
-  border-radius: 0;
-}
-
-.btn-primary {
-  background-color: @neutral;
-  border-color: darken(@neutral, 5%);
+.btn-style(@color) {
+  background-color: @color;
+  border-color: darken(@color, 5%);
   &:focus {
-    background-color: darken(@neutral, 20%);
-    border-color: darken(@neutral, 5%);
+    background-color: darken(@color, 20%);
+    border-color: darken(@color, 5%);
     box-shadow: none;
   }
   &:hover {
-    background-color: darken(@neutral, 8%);
-    border-color: darken(@neutral, 5%);
+    background-color: darken(@color, 8%);
+    border-color: darken(@color, 5%);
   }
 }
 
+.btn {
+  border-radius: 0;
+  &.btn-primary{
+    .btn-style(@neutral);
+  }
+  &.btn-success {
+    .btn-style(@success);
+  }
+  &.btn-danger {
+    .btn-style(@error);
+  }
+}
+
+
+///// headings ////////
 h1 {
   font-family: "Blogger Sans Light";
   font-size: @h1-size;

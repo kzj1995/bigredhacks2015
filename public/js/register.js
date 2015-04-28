@@ -70,9 +70,6 @@ $('document').ready(function () {
         errorElement: 'span',
         errorClass: 'help-inline',
         errorPlacement: function (error, element) {
-            for (var i = 0; i < error.length; i++) {
-                error[0].innerText = " | " + error[0].innerText;
-            }
             element = $(element).closest('.form-group').find('label');
             error.insertAfter(element);
         }
