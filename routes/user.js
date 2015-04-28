@@ -5,6 +5,7 @@ var enums = require('../models/enum.js');
 var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
+var ALWAYS_OMIT = 'password confirmpassword'.split('');
 
 var config = require('../config.js');
 
@@ -81,23 +82,22 @@ router.post('/dashboard/edit', function (req, res, next){
     req.assert('genderDropdown', 'Gender is required').notEmpty();
     req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
     req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
+    req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
 
     req.assert('major', 'Major is required').len(1, 50);
     req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
     req.assert('q1', 'Question 1 cannot be blank').notEmpty();
     req.assert('q2', 'Question 2 cannot be blank').notEmpty();
+
     var errors = req.validationErrors();
-    console.log(errors);
+    //console.log(errors);
     if (errors) {
-        //todo persist fields
-        var errorParams = errors.map(function (x) {
-            return x.param;
-        });
         res.render('dashboard/edit_app', {
-            user: user,
-            enums: enums,
-            error: req.flash('error'),
-            title: "Edit Application"
+            user:user,
+            title: 'Edit Application',
+            message: 'The following errors occurred',
+            errors: errors,
+            enums: enums
         });
     }
     else{
@@ -118,6 +118,8 @@ router.post('/dashboard/edit', function (req, res, next){
                 res.render('dashboard/edit_app', {
                     user: user,
                     enums: enums,
+                    errors: errors,
+                    message: 'The following errors occurred',
                     error: req.flash('error'),
                     title: "Edit Application"
                 });
