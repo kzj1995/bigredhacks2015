@@ -211,5 +211,32 @@ router.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
+router.get('/resetpassword', function (req, res) {
+    res.render('forgotpassword',{title: 'Reset Password', page: 1, user: req.user, error: req.flash('error'), email: req.flash('email')});
+});
+
+router.post('/resetpassword',function(req,res){
+    User.findOne({email: req.body.email}, function (err, user) {
+        if (user == null) {
+            req.flash('error', 'No account is associated with that email.');
+            res.render('forgotpassword',{title: 'Reset Password', page: 1, user: req.user, error: req.flash('error'), email: req.flash('email')});
+        }
+        else{
+            res.redirect('/resetpassword/email='+req.body.email);
+        }
+    });
+});
+
+router.get('/resetpassword/email=:email',function(req,res){
+    User.findOne({email: req.params.email}, function (err, user) {
+        if (user == null) {
+            res.redirect('/');
+        }
+        else{
+            res.render('forgotpassword',{title: 'Reset Password', page: 2, user: req.user, error: req.flash('error'), email: req.params.email});
+        }
+    });
+});
+
 
 module.exports = router;
