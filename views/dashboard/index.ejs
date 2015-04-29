@@ -26,17 +26,25 @@ var success = success || []; //success flash message
 
         <br/>
 
-        <h2><span>Status</span></h2>
+        <h2><span>status</span></h2>
 
         <p>
-            Registration Process Is Still Open
+            registration process is still open
         </p>
 
         <br/>
 
-        <h2><span>My Team</span></h2><%- team.length > 0 ? ' <a href="/user/team/leave">(leave)</a>' : '' %>
+        <h2><span>my team</span></h2>
         <div>
-            <p>You may add up to 5 team members. (My ID: <%= userid %>)</p>
+            <p>you may add up to 5 team members.</p>
+            <form action="/user/team/add" class="form-inline" method="POST">
+                <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
+                <div class="form-group has-error">
+                    <label for="addteamid" class="sr-only">Password</label>
+                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
+                </div>
+                <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>add a teammate</button>
+            </form>
             <ul class="team-list">
 
                 <% if(team.length == 0) { %>
@@ -47,22 +55,16 @@ var success = success || []; //success flash message
                 for (var i = 0; i < team.length;i++) { %>
                 <li><%= team[i].name %></li>
                 <% } %>
-            </ul>
-            <button class="btn btn-danger"><a href="/user/team/leave">remove yourself from this team</a></button>
-            <% } %>
 
-            <form action="/user/team/add" class="form-inline" method="POST">
-                <div class="form-group has-error">
-                    <label for="addteamid" class="sr-only">Password</label>
-                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
-                </div>
-                <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>Add a Teammate</button>
-            </form>
+            <% } %>
+            </ul>
+            <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>': ''; %>
+
         </div>
 
         <br/>
 
-        <h2><span>Resume</span></h2>
+        <h2><span>resume</span></h2>
         <a href="<%= resumeLink %>" target="_blank">My Resume</a>
 
     </div>

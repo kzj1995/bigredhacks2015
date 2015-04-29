@@ -4,12 +4,24 @@ p {
   color: @red;
   font-style: italic;
 }
+.btn {
+  font-weight: 300;
+}
 
+.label-helper {
+  &::before {
+    content: " | ";
+    font-style: normal;
+  }
+  font-style: italic;
+}
 ul.team-list {
+  margin-top: 10px;
   color: @red;
   list-style-type: none;
 
   li {
+    padding-top: 5px;
     &::before {
       content: "["
     }
@@ -20,11 +32,14 @@ ul.team-list {
 }
 
 /* Sidebar */
+.sidebar {
+  background: @bg-dark;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
 
 @media (min-width: 768px) {
-  .container {
-    margin-right: 20px;
-  }
   .sidebar {
     position: fixed;
     top: 0;
@@ -35,7 +50,7 @@ ul.team-list {
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
-    background: @bg-dark;
+
     border-right: 1px solid #747474;
   }
 }
@@ -52,6 +67,9 @@ ul.team-list {
 
       border-bottom: @divider-size @bg-light solid;
       border-top: @divider-size @bg-light solid;
+      &:hover {
+        background-color: lighten(@bg-dark, 20%);
+      }
       &::before {
         content: "[ ";
       }

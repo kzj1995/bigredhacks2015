@@ -19,7 +19,6 @@ else errors = [];
 if (error.length > 0) {
     error = '<div class="alert alert-danger" role="alert">' + error[0] + '</div>';
 }
-
 %>
 
 <div class="container" style="overflow-x:hidden;">
@@ -27,7 +26,9 @@ if (error.length > 0) {
     <%- errors.join(""); %>
     <!--todo remove novalidate for production-->
     <h1>Registration</h1>
-    <form id="registrationForm" action="/register" name = 'registrationForm' method="POST" autocomplete="on" novalidate enctype="multipart/form-data">
+
+    <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on" novalidate
+          enctype="multipart/form-data">
         <fieldset>
             <legend><span>account information</span></legend>
             <div class="form-group">
@@ -42,7 +43,8 @@ if (error.length > 0) {
             </div>
             <div class="form-group">
                 <label for="confirmpassword">Confirm Password *</label>
-                <input type="password" id="confirmpassword" name="confirmpassword" class="form-control" placeholder="Password"
+                <input type="password" id="confirmpassword" name="confirmpassword" class="form-control"
+                       placeholder="Password"
                        required/>
             </div>
         </fieldset>
@@ -51,12 +53,14 @@ if (error.length > 0) {
             <legend><span>basic information</span></legend>
             <div class="form-group">
                 <label for="firstname">First Name *</label>
-                <input type="text" id="firstname" name="firstname" minlength="2" class="form-control" placeholder="First Name"
+                <input type="text" id="firstname" name="firstname" minlength="2" class="form-control"
+                       placeholder="First Name"
                        value="<%= input.firstname || "" %>" required/>
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name *</label>
-                <input type="text" id="lastname" name="lastname" minlength="2" class="form-control" placeholder="Last Name"
+                <input type="text" id="lastname" name="lastname" minlength="2" class="form-control"
+                       placeholder="Last Name"
                        value="<%= input.lastname || "" %>" required/>
             </div>
             <div class="form-group">
@@ -102,7 +106,10 @@ if (error.length > 0) {
             <legend><span>background</span></legend>
             <div class="form-group">
                 <label for="resume">Resume (PDF) *</label>
-                <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resume" name="resume" accept=".pdf" required>
+                <div class="wrapper">
+                    <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resume"
+                           name="resume" accept=".pdf" required>
+                </div>
             </div>
             <div class="form-group">
                 <label>Essay Question 1 *</label>
