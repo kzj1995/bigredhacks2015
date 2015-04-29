@@ -1,4 +1,4 @@
-@import "_colors";
+@import "_global";
 
 body {
   @media (max-width: 768px) {
@@ -12,7 +12,14 @@ p {
   font-style: italic;
 }
 .btn {
-  font-weight: 300;
+  font-weight: @weight-normal;
+}
+
+form#resume-form {
+  margin-top: 20px;
+  input {
+    width: 250px;
+  }
 }
 
 .label-helper {
@@ -22,6 +29,8 @@ p {
   }
   font-style: italic;
 }
+
+
 ul.team-list {
   margin-top: 10px;
   color: @red;
@@ -38,7 +47,11 @@ ul.team-list {
   }
 }
 
-/* Sidebar */
+
+///////////////
+///Sidebar/////
+///////////////
+
 .sidebar {
   background: @bg-dark;
   top: 0;

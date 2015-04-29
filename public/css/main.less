@@ -1,11 +1,4 @@
-@import "_colors";
-
-@h1-size: 44pt;
-@h2-size: 24pt;
-@h3-size: 16pt;
-
-@weight-normal: 300;
-@weight-bold: 500;
+@import "_global";
 
 @header-decor-min-width: 500px;
 
@@ -120,16 +113,16 @@ a {
     border: 1px solid @color;
     font-size: 14px;
     padding: 4px 20px;
-    height: 30px;
+    height: 34px;
   }
 }
 
 .filepicker-ui {
-  display: table;
   width: 100%;
   input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    width: 250px;
     width: ~"calc(100% - 85px)";
     left: 85px;
     right: 0;
@@ -230,6 +223,7 @@ label {
 .btn-style(@color) {
   background-color: @color;
   border-color: darken(@color, 5%);
+  color: white;
   &:focus {
     background-color: darken(@color, 20%);
     border-color: darken(@color, 5%);
@@ -249,7 +243,7 @@ label {
   &.btn-success {
     .btn-style(@success);
   }
-  &.btn-danger {
+  &.btn-danger, &.btn-red {
     .btn-style(@error);
   }
 }

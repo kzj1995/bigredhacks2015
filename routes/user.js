@@ -174,7 +174,12 @@ router.get('/team/leave', function (req, res, next) {
         res.redirect('/user/dashboard');
     })
 });
-
 //fixme both add and leave share similar callback function
+
+/* POST upload a new resume*/
+router.post('/updateresume', function(req, res, next) {
+
+});
+
 
 module.exports = router;
