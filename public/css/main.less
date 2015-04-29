@@ -112,7 +112,7 @@ a {
     border-bottom-left-radius: 0;
   }
   button, input {
-    position:absolute;
+    //position:absolute;
     border: 1px solid @color;
     font-size: 14px;
     padding: 4px 20px;
@@ -123,7 +123,6 @@ a {
 .filepicker-ui {
   display: table;
   width: 100%;
-  position: relative;
   input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -143,9 +142,6 @@ a {
   padding: 5px;
 }
 
-.wrapper {
-
-}
 
 ///////////
 ///forms///
@@ -212,12 +208,18 @@ label {
   }
 }
 
-.alert-danger {
-  @lighter-color: lighten(@error, 10%);
-  color: @error;
-  background-color: @lighter-color //darken(spin(@lighter-color, -10), 5%);
-  //background-color: light(@error);
+.alert-color(@color) {
+  @lighter-color: lighten(@color, 50%);
+  color: @color;
+  background-color: @lighter-color;
+  border-color: darken(spin(@lighter-color, -10), 5%);
+}
 
+.alert-danger {
+  .alert-color(@error);
+}
+.alert-success {
+  .alert-color(@success);
 }
 
 .btn-style(@color) {
@@ -255,7 +257,7 @@ label {
 h1 {
   font-family: "Blogger Sans Light", Arial, sans-serif;
   font-size: @h1-size;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   &:after {
     display: inline-block;
     content: "";

@@ -12,8 +12,6 @@ var success = success || []; //success flash message
 
         <h1><span>dashboard</span></h1>
 
-        <p> welcome back, <%= name.first %> <%= name.last %> </p>
-
         <% if (error.length > 0) { %>
         <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
         <% } %>
@@ -22,24 +20,28 @@ var success = success || []; //success flash message
         <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
         <% } %>
 
+        <p> welcome back, <%= name.first %> <%= name.last %> </p>
+
+
         <br/>
 
         <h2><span>status</span></h2>
 
-        <p>
-            registration process is still open
-        </p>
+        <p>registration process is still open</p>
 
         <br/>
 
         <h2><span>my team</span></h2>
+
         <div>
             <p>you may add up to 5 team members.</p>
+
             <form action="/user/team/add" class="form-inline" method="POST">
                 <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
+
                 <div class="form-group has-error">
                     <label for="addteamid" class="sr-only">Password</label>
-                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="User ID">
+                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="user id">
                 </div>
                 <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>add a teammate</button>
             </form>
@@ -54,9 +56,9 @@ var success = success || []; //success flash message
                 <li><%= team[i].name %></li>
                 <% } %>
 
-            <% } %>
+                <% } %>
             </ul>
-            <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>': ''; %>
+            <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
         </div>
 
