@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var uid = require('uid2');
+var async = require('async');
 
 var College = require("./college.js");
 var Team = require("./team.js");
@@ -105,7 +106,7 @@ userSchema.methods.addToTeam = function (pubid, callback) {
             //user can't add himself
             return callback(null, "User is already in your team!");
         }
-        else if (other.internal.teamid == _this.internal.teamid && _this.internal.teamid !== null){
+        else if (other.internal.teamid == _this.internal.teamid && _this.internal.teamid !== null) {
             //same team, but both not null
             return callback(null, "User is already in your team");
         }
@@ -114,12 +115,12 @@ userSchema.methods.addToTeam = function (pubid, callback) {
         }
         //other user has a team
         if (other.internal.teamid !== null) {
-            Team.findTeam(other._id, function(err, team) {
-                if(err) {
+            Team.findTeam(other._id, function (err, team) {
+                if (err) {
                     return callback(err);
                 }
                 else {
-                    team.addUser(_this._id, _this.name, function(err, newteam) {
+                    team.addUser(_this._id, _this.name, function (err, newteam) {
                         if (err) {
                             return callback(err);
                         }
@@ -128,12 +129,12 @@ userSchema.methods.addToTeam = function (pubid, callback) {
                         }
                         else {
                             _this.internal.teamid = other.internal.teamid;
-                            _this.save(function(err, res) {
+                            _this.save(function (err, res) {
                                 if (err) {
                                     return callback(err);
                                 }
                                 else {
-                                    return callback(null,res);
+                                    return callback(null, res);
                                 }
                             })
                         }
@@ -160,15 +161,21 @@ userSchema.methods.addToTeam = function (pubid, callback) {
                             return callback(null, newteam);
                         }
                         else {
+                            other.internal.teamid = newteam._id;
                             _this.internal.teamid = newteam._id;
-                            _this.save(function (err) {
-                                if (err) {
-                                    return callback(err);
-                                }
-                                else {
-                                    return callback(null, res);
-                                }
-                            });
+                            async.parallel([
+                                    function (done) {
+                                        _this.save(done)
+                                    },
+                                    function (done) {
+                                        other.save(done)
+                                    }],
+                                function (err) {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    callback(err, res);
+                                });
                         }
                     });
                 }
@@ -190,8 +197,8 @@ userSchema.methods.addToTeam = function (pubid, callback) {
                         }
                         else {
                             other.internal.teamid = _this.internal.teamid;
-                            other.save(function(err, res) {
-                                if (err){
+                            other.save(function (err, res) {
+                                if (err) {
                                     return callback(err);
                                 }
                                 else return callback(null, res);
@@ -241,8 +248,8 @@ userSchema.methods.leaveTeam = function (callback) {
  * @param user_id
  * @param callback
  */
-userSchema.statics.removeFromTeam = function(user_id, callback) {
-    User.findById(user_id, function(err, user) {
+userSchema.statics.removeFromTeam = function (user_id, callback) {
+    User.findById(user_id, function (err, user) {
         if (err) {
             return callback(err);
         }
@@ -250,18 +257,18 @@ userSchema.statics.removeFromTeam = function(user_id, callback) {
             if (user.internal.teamid === null) {
                 return callback();
             }
-            user.populate("internal.teamid", function(err, user) {
+            user.populate("internal.teamid", function (err, user) {
                 if (err) {
                     return callback(err);
                 }
                 else {
-                    user.internal.teamid.removeUser(user_id, function(err) {
+                    user.internal.teamid.removeUser(user_id, function (err) {
                         if (err) {
                             return callback(err);
                         }
                         else {
                             user.internal.teamid = null;
-                            user.save(function(err) {
+                            user.save(function (err) {
                                 if (err) return callback(err);
                                 else return callback(true);
                             })
