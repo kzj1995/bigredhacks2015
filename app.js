@@ -43,8 +43,11 @@ app.use(expressValidator({
             return validator.isMobilePhone(value, locale);
         },
         //optional only checks undefined, not truthiness
-        optionalOrisURL: function(value) {
+        optionalOrisURL: function (value) {
             return !value || validator.isURL(value);
+        },
+        optionalOrLen: function (value, min, max) {
+            return !value || validator.isLength(value, min, max);
         }
     }
 }));

@@ -5,7 +5,6 @@ var enums = require('../models/enum.js');
 var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
-var ALWAYS_OMIT = 'password confirmpassword'.split('');
 
 var config = require('../config.js');
 
@@ -75,7 +74,9 @@ router.get('/dashboard/edit', function (req, res, next) {
 router.post('/dashboard/edit', function (req, res, next){
 
     var user = req.user;
-    console.log(req.body);
+    //console.log(req.body);
+    req.assert('password', 'Password is not valid. 6 to 25 characters required').optionalOrLen(6, 25);
+
     req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
     req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
 
@@ -96,11 +97,15 @@ router.post('/dashboard/edit', function (req, res, next){
             user:user,
             title: 'Edit Application',
             message: 'The following errors occurred',
+            error: req.flash('error'),
             errors: errors,
             enums: enums
         });
     }
     else{
+        if (req.body.password !== "") {
+            user.password = req.body.password;
+        }
         user.phone = req.body.phonenumber;
         user.gender = req.body.genderDropdown;
         user.school.major = req.body.major;
@@ -115,21 +120,15 @@ router.post('/dashboard/edit', function (req, res, next){
                 // If it failed, return error
                 console.log(err);
                 req.flash("error", "An error occurred.");
-                res.render('dashboard/edit_app', {
-                    user: user,
-                    enums: enums,
-                    errors: errors,
-                    message: 'The following errors occurred',
-                    error: req.flash('error'),
-                    title: "Edit Application"
-                });
+                return res.redirect('/dashboard/edit')
             }
             else {
-                //redirect to home page
+                //redirect to dashboard home
+                req.flash("success", "Application successfully updated!");
                 res.redirect('/user/dashboard');
             }
         });
-        console.log(user);
+        //console.log(user);
     }
 });
 
@@ -175,6 +174,6 @@ router.get('/team/leave', function (req, res, next) {
     })
 });
 
-//todo both add and leave share similar callback function
+//fixme both add and leave share similar callback function
 
 module.exports = router;
