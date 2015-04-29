@@ -1,6 +1,5 @@
 <% include ../_header %>
-<% var firstname = firstname || '';
-var lastname = lastname || '';
+<%
 var team = team || []; //team members
 var error = error || []; //error flash message
 var success = success || []; //success flash message
@@ -48,7 +47,7 @@ var success = success || []; //success flash message
                         <label for="addteamid" class="sr-only">Password</label>
                         <input type="text" class="form-control" id="addteamid" name="userid" placeholder="user id">
                     </div>
-                    <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>add a teammate</button>
+                    <button type="submit" id="addteamid-submit" class="btn btn-red" disabled>add a teammate</button>
                 </form>
                 <ul class="team-list">
 
@@ -63,7 +62,7 @@ var success = success || []; //success flash message
 
                     <% } %>
                 </ul>
-                <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
+                <%- (team.length > 0) ? '<a class="btn btn-red" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
             </div>
 
@@ -72,9 +71,24 @@ var success = success || []; //success flash message
             <div class="header-wrapper">
                 <h2 class="page-title">resume</h2>
             </div>
+            <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
+            <button class="btn btn-red" id="resume-update">update my resume</button>
+
+            <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
+                  enctype="multipart/form-data">
+                <label>upload a new resume (.pdf)</label><br/>
+
+                <div class="form-group has-error">
+                    <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resumeinput"
+                           name="resumeinput" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-red" id="resume-save" disabled>Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
+<script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/dashboard.js"></script>
 <% include ../_footer %>

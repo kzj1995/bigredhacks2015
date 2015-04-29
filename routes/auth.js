@@ -4,23 +4,17 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var _ = require('underscore');
 var multiparty = require('multiparty');
-var AWS = require('aws-sdk');
-var uid = require('uid2');
-var fs = require('fs');
+
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
-var config = require('../config.js');
-var mandrill = require('mandrill-api/mandrill');
 
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
-var RESUME_DEST = 'resume/';
-var s3 = new AWS.S3({
-    accessKeyId: config.setup.AWS_access_key,
-    secretAccessKey: config.setup.AWS_secret_key
-});
+var config = require('../config.js');
+var mandrill = require('mandrill-api/mandrill');
+
 
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
@@ -66,7 +60,7 @@ router.post('/register', function (req, res) {
     form.parse(req, function (err, fields, files) {
         if (err) {
             console.log(err);
-            req.flash('error', err);
+            req.flash('error', "Error parsing form.");
             return res.redirect('/register');
         }
 
@@ -101,7 +95,6 @@ router.post('/register', function (req, res) {
         var errors = req.validationErrors();
         //console.log(errors);
         if (errors) {
-            //todo persist fields
             var errorParams = errors.map(function (x) {
                 return x.param;
             });
@@ -116,30 +109,14 @@ router.post('/register', function (req, res) {
         }
         else {
 
-            //check file validity
-            if (resume.size > MAX_FILE_SIZE) {
-                req.flash('error', "File is too big!");
-                return res.redirect('/register');
-
-            }
-            if (resume.headers['content-type'] !== 'application/pdf') {
-                req.flash('error', 'File must be a pdf!');
-                return res.redirect('/register');
-            }
-
-            //prepare to upload file
-            var body = fs.createReadStream(resume.path);
-            var fileName = uid(15) + ".pdf";
-
-            s3.putObject({
-                Bucket: config.setup.AWS_S3_bucket,
-                Key: RESUME_DEST + fileName,
-                ACL: 'public-read',
-                Body: body,
-                ContentType: 'application/pdf'
-            }, function (err, data) {
+            helper.uploadResume(resume, null, function (err, file) {
                 if (err) {
+                    console.log(err);
                     req.flash('error', "File upload failed. :(");
+                    return res.redirect('/register');
+                }
+                if (typeof file === "string") {
+                    req.flash('error', file);
                     return res.redirect('/register');
                 }
                 //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
@@ -163,7 +140,7 @@ router.post('/register', function (req, res) {
                     app: {
                         github: req.body.github,
                         linkedin: req.body.linkedin,
-                        resume: fileName,
+                        resume: file.filename,
                         questions: {
                             q1: req.body.q1,
                             q2: req.body.q2
@@ -250,28 +227,46 @@ router.get('/logout', function (req, res) {
 });
 
 router.get('/resetpassword', function (req, res) {
-    res.render('forgotpassword',{title: 'Reset Password', page: 1, user: req.user, error: req.flash('error'), email: req.flash('email')});
+    res.render('forgotpassword', {
+        title: 'Reset Password',
+        page: 1,
+        user: req.user,
+        error: req.flash('error'),
+        email: req.flash('email')
+    });
 });
 
-router.post('/resetpassword',function(req,res){
+router.post('/resetpassword', function (req, res) {
     User.findOne({email: req.body.email}, function (err, user) {
         if (user == null) {
             req.flash('error', 'No account is associated with that email.');
-            res.render('forgotpassword',{title: 'Reset Password', page: 1, user: req.user, error: req.flash('error'), email: req.flash('email')});
+            res.render('forgotpassword', {
+                title: 'Reset Password',
+                page: 1,
+                user: req.user,
+                error: req.flash('error'),
+                email: req.flash('email')
+            });
         }
-        else{
-            res.redirect('/resetpassword/email='+req.body.email);
+        else {
+            res.redirect('/resetpassword/email=' + req.body.email);
         }
     });
 });
 
-router.get('/resetpassword/email=:email',function(req,res){
+router.get('/resetpassword/email=:email', function (req, res) {
     User.findOne({email: req.params.email}, function (err, user) {
         if (user == null) {
             res.redirect('/');
         }
-        else{
-            res.render('forgotpassword',{title: 'Reset Password', page: 2, user: req.user, error: req.flash('error'), email: req.params.email});
+        else {
+            res.render('forgotpassword', {
+                title: 'Reset Password',
+                page: 2,
+                user: req.user,
+                error: req.flash('error'),
+                email: req.params.email
+            });
         }
     });
 });
