@@ -79,7 +79,6 @@ router.post('/register', function (req, res) {
         req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
 
         req.assert('email', 'Email address is not valid').isEmail();
-        req.assert('password', 'Password is not valid. 6 to 25 characters required').len(6, 25);
         req.assert('firstname', 'First name is required').notEmpty();
         req.assert('lastname', 'Last name is required').notEmpty();
 

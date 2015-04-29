@@ -71,6 +71,68 @@ router.get('/dashboard/edit', function (req, res, next) {
     });
 });
 
+
+router.post('/dashboard/edit', function (req, res, next){
+
+    var user = req.user;
+    //console.log(req.body);
+    req.assert('password', 'Password is not valid. 6 to 25 characters required').optionalOrLen(6, 25);
+
+    req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
+    req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
+
+    req.assert('genderDropdown', 'Gender is required').notEmpty();
+    req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
+    req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
+    req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
+
+    req.assert('major', 'Major is required').len(1, 50);
+    req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
+    req.assert('q1', 'Question 1 cannot be blank').notEmpty();
+    req.assert('q2', 'Question 2 cannot be blank').notEmpty();
+
+    var errors = req.validationErrors();
+    //console.log(errors);
+    if (errors) {
+        res.render('dashboard/edit_app', {
+            user:user,
+            title: 'Edit Application',
+            message: 'The following errors occurred',
+            error: req.flash('error'),
+            errors: errors,
+            enums: enums
+        });
+    }
+    else{
+        if (req.body.password !== "") {
+            user.password = req.body.password;
+        }
+        user.phone = req.body.phonenumber;
+        user.gender = req.body.genderDropdown;
+        user.school.major = req.body.major;
+        user.app.questions.q1 = req.body.q1;
+        user.app.questions.q2 = req.body.q2;
+        user.app.github = req.body.github;
+        user.app.linkedin = req.body.linkedin;
+        user.dietary = req.body.dietary;
+        user.tshirt = req.body.tshirt;
+        user.save(function (err, doc) {
+            if (err) {
+                // If it failed, return error
+                console.log(err);
+                req.flash("error", "An error occurred.");
+                return res.redirect('/dashboard/edit')
+            }
+            else {
+                //redirect to dashboard home
+                req.flash("success", "Application successfully updated!");
+                res.redirect('/user/dashboard');
+            }
+        });
+        //console.log(user);
+    }
+});
+
 /* POST add a user to team */
 router.post('/team/add', function (req, res, next) {
     var pubid = req.body.userid;
@@ -113,6 +175,6 @@ router.get('/team/leave', function (req, res, next) {
     })
 });
 
-//todo both add and leave share similar callback function
+//fixme both add and leave share similar callback function
 
 module.exports = router;

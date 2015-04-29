@@ -1,28 +1,25 @@
 <% include ../_header %>
 <% var en = enums.user;
-var errors = errors || null;
+var errors = errors || [];
 var message = message || "";
-
 var helper = viewHelper;
 %>
 
-
-<% if (errors) {
+<% if (errors.length > 0) {
     for (var i = 0; i < errors.length; i++) {
         errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg + '</div>'
     }
 }
 else errors = [];
 %>
-<!-- Custom CSS -->
-<link href="/css/dashboard.css" rel="stylesheet">
 
 <div class="container-fluid">
     <div class="row">
         <% include _dashboardside.ejs %>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
             <h1>edit application</h1>
-            <form id="registrationForm" action="/register" method="POST" autocomplete="on">
+            <%- errors.join(""); %>
+            <form id="registrationForm" action="/user/dashboard/edit" method="POST" autocomplete="on">
                 <fieldset>
                     <legend><span>account information</span></legend>
                     <div class="form-group">
@@ -32,9 +29,9 @@ else errors = [];
                         readonly>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password *</label>
+                        <label for="password">Change Password</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                        value="" readonly>
+                        value="">
                     </div>
                 </fieldset>
                 </fieldset>
@@ -142,6 +139,8 @@ else errors = [];
         </div>
     </div>
 </div>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/register.js"></script>
 
