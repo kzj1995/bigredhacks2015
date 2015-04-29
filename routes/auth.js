@@ -11,6 +11,7 @@ var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
+var mandrill = require('mandrill-api/mandrill');
 
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
@@ -20,6 +21,8 @@ var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
 });
+
+var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
@@ -177,11 +180,47 @@ router.post('/register', function (req, res) {
                         });
                     }
                     else {
-                        //redirect to home page
+                        //send email and redirect to home page
                         req.login(newUser, function (err) {
                             if (err) {
                                 console.log(err);
                             }
+                            var htmlcontent="<p>Hello "+newUser.name.first+" "+newUser.name.last+",</p><p>"+
+                            "Thank you so much for registering for BigRed//Hacks. We will keep you posted "+
+                            "on the status of your application and other relevant information."+"</p><p>"+
+                            "<p>Cheers,</p>"+"<p>BigRed//Hacks Team </p>"
+
+                            var message={
+                                "html": htmlcontent,
+                                "subject": "BigRed//Hacks Registration Confirmation",
+                                "from_email": "info@bigredhacks.com",
+                                "from_name": "BigRed//Hacks",
+                                "to": [{
+                                    "email": newUser.email,
+                                    "name": newUser.name.first+" "+newUser.name.last,
+                                    "type": "to"
+                                }],
+                                "important": false,
+                                "track_opens": null,
+                                "track_clicks": null,
+                                "auto_text": null,
+                                "auto_html": null,
+                                "inline_css": null,
+                                "url_strip_qs": null,
+                                "preserve_recipients": null,
+                                "view_content_link": null,
+                                "tracking_domain": null,
+                                "signing_domain": null,
+                                "return_path_domain": null,
+                                "merge": true,
+                                "merge_language": "mailchimp"
+                            };
+                            var async = false;
+                            mandrill_client.messages.send({"message": message, "async": async}, function(result) {
+                                console.log(result);
+                            }, function(e) {
+                                console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                            });
                             res.redirect('/user/dashboard');
                         })
                     }
