@@ -7,69 +7,71 @@ var success = success || []; //success flash message
 %>
 
 <div class="container-fluid">
-    <% include _dashboardside.ejs %>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
+    <div class="row">
+        <% include _dashboardside.ejs %>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
 
-        <div class="header-wrapper-leaf">
-        <h1 class="leaf">dashboard</h1>
-        </div>
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">dashboard</h1>
+            </div>
 
-        <% if (error.length > 0) { %>
-        <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
-        <% } %>
+            <% if (error.length > 0) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
+            <% } %>
 
-        <% if (success.length > 0) { %>
-        <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
-        <% } %>
+            <% if (success.length > 0) { %>
+            <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
+            <% } %>
 
-        <p> welcome back, <%= name.first %> <%= name.last %> </p>
+            <p> welcome back, <%= name.first %> <%= name.last %> </p>
 
 
-        <br/>
+            <br/>
 
-        <div class="header-wrapper">
-        <h2 class="page-title">status</h2>
-        </div>
-        <p>registration process is still open</p>
+            <div class="header-wrapper">
+                <h2 class="page-title">status</h2>
+            </div>
+            <p>registration process is still open</p>
 
-        <br/>
+            <br/>
 
-        <div class="header-wrapper">
-            <h2 class="page-title">my team</h2>
-        </div>
-        <div>
-            <p>you may add up to 5 team members.</p>
+            <div class="header-wrapper">
+                <h2 class="page-title">my team</h2>
+            </div>
+            <div>
+                <p>you may add up to 5 team members.</p>
 
-            <form action="/user/team/add" class="form-inline" method="POST">
-                <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
+                <form action="/user/team/add" class="form-inline" method="POST">
+                    <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
 
-                <div class="form-group has-error">
-                    <label for="addteamid" class="sr-only">Password</label>
-                    <input type="text" class="form-control" id="addteamid" name="userid" placeholder="user id">
-                </div>
-                <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>add a teammate</button>
-            </form>
-            <ul class="team-list">
+                    <div class="form-group has-error">
+                        <label for="addteamid" class="sr-only">Password</label>
+                        <input type="text" class="form-control" id="addteamid" name="userid" placeholder="user id">
+                    </div>
+                    <button type="submit" id="addteamid-submit" class="btn btn-danger" disabled>add a teammate</button>
+                </form>
+                <ul class="team-list">
 
-                <% if(team.length == 0) { %>
+                    <% if(team.length == 0) { %>
 
-                <%
-                }
-                else {
-                for (var i = 0; i < team.length;i++) { %>
-                <li><%= team[i].name %></li>
-                <% } %>
+                    <%
+                    }
+                    else {
+                    for (var i = 0; i < team.length;i++) { %>
+                    <li><%= team[i].name %></li>
+                    <% } %>
 
-                <% } %>
-            </ul>
-            <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
+                    <% } %>
+                </ul>
+                <%- (team.length > 0) ? '<a class="btn btn-danger" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
-        </div>
+            </div>
 
-        <br/>
+            <br/>
 
-        <div class="header-wrapper">
-            <h2 class="page-title">resume</h2>
+            <div class="header-wrapper">
+                <h2 class="page-title">resume</h2>
+            </div>
         </div>
     </div>
 </div>
