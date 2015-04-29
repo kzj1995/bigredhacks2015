@@ -30,7 +30,7 @@ if (error.length > 0) {
     <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on" novalidate
           enctype="multipart/form-data">
         <fieldset>
-            <legend><span>account information</span></legend>
+            <div class="header-wrapper"><legend class="page-title">account information</legend></div>
             <div class="form-group">
                 <label for="email">Email Address *</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="bigredhacks@example.com"
@@ -50,7 +50,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend><span>basic information</span></legend>
+            <div class="header-wrapper"><legend class="page-title">basic information</legend></div>
             <div class="form-group">
                 <label for="firstname">First Name *</label>
                 <input type="text" id="firstname" name="firstname" minlength="2" class="form-control"
@@ -78,7 +78,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend><span>school</span></legend>
+            <div class="header-wrapper"><legend class="page-title">school</legend></div>
 
             <input type="hidden" id="collegeid" name="collegeid" class="form-control"
                    value="<%= input.collegeid || "" %>" required/>
@@ -103,7 +103,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend><span>background</span></legend>
+            <div class="header-wrapper"><legend class="page-title">background</legend></div>
             <div class="form-group">
                 <label for="resume">Resume (PDF) *</label>
                 <div class="wrapper">
@@ -140,7 +140,7 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <legend><span>preferences</span></legend>
+            <div class="header-wrapper"><legend class="page-title">preferences</legend></div>
             <div class="form-group">
                 <label for="dietary">Dietary Restrictions *</label>
                 <select class="form-control" id="dietary" name="dietary" required>
