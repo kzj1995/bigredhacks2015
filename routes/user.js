@@ -5,13 +5,12 @@ var enums = require('../models/enum.js');
 var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
+var multiparty = require('multiparty');
 
+var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 
-var s3 = new AWS.S3({
-    accessKeyId: config.setup.AWS_access_key,
-    secretAccessKey: config.setup.AWS_secret_key
-});
+var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
 router.get('/', function (req, res, next) {
     return res.redirect('/user/dashboard'); //todo there should be some relative redirect
@@ -23,41 +22,41 @@ router.get('/dashboard', function (req, res, next) {
     var params = {Bucket: config.setup.AWS_S3_bucket, Key: 'resume/' + req.user.app.resume};
     var resumeLink;
 
-        async.parallel({
-            resumeLink: function (done) {
-                /*s3.getSignedUrl('getObject', params, function(err, url) {
-                    return done(err, url);
-                });*/
-                return done(null, "https://" + config.setup.AWS_S3_bucket + ".s3.amazonaws.com/resume/" + req.user.app.resume);
-            },
-            members: function (done) {
-                req.user.populate("internal.teamid", function (err, user) {
-                    var members = [];
-                    if (err) {
-                        return done(err);
-                    }
+    async.parallel({
+        resumeLink: function (done) {
+            /*s3.getSignedUrl('getObject', params, function(err, url) {
+             return done(err, url);
+             });*/
+            return done(null, "https://" + config.setup.AWS_S3_bucket + ".s3.amazonaws.com/resume/" + req.user.app.resume);
+        },
+        members: function (done) {
+            req.user.populate("internal.teamid", function (err, user) {
+                var members = [];
+                if (err) {
+                    return done(err);
+                }
 
-                    //initialize members
-                    if (user.internal.teamid !== null) {
-                        members = user.internal.teamid.members;
-                    }
-                    return done(err, members);
-                })
-            }
-        }, function(err, results) {
-            if (err) {
-                console.log(err);
-            }
-            res.render('dashboard/index', {
-                name: req.user.name,
-                resumeLink: results.resumeLink,
-                team: results.members,
-                userid: req.user.pubid,
-                error: req.flash('error'),
-                success: req.flash('success'),
-                title: "Dashboard"
-            });
-        })
+                //initialize members
+                if (user.internal.teamid !== null) {
+                    members = user.internal.teamid.members;
+                }
+                return done(err, members);
+            })
+        }
+    }, function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+        res.render('dashboard/index', {
+            name: req.user.name,
+            resumeLink: results.resumeLink,
+            team: results.members,
+            userid: req.user.pubid,
+            error: req.flash('error'),
+            success: req.flash('success'),
+            title: "Dashboard"
+        });
+    })
 });
 
 /* GET edit registration page of logged in user */
@@ -72,7 +71,7 @@ router.get('/dashboard/edit', function (req, res, next) {
 });
 
 
-router.post('/dashboard/edit', function (req, res, next){
+router.post('/dashboard/edit', function (req, res, next) {
 
     var user = req.user;
     //console.log(req.body);
@@ -95,7 +94,7 @@ router.post('/dashboard/edit', function (req, res, next){
     //console.log(errors);
     if (errors) {
         res.render('dashboard/edit_app', {
-            user:user,
+            user: user,
             title: 'Edit Application',
             message: 'The following errors occurred',
             error: req.flash('error'),
@@ -103,7 +102,7 @@ router.post('/dashboard/edit', function (req, res, next){
             enums: enums
         });
     }
-    else{
+    else {
         if (req.body.password !== "") {
             user.password = req.body.password;
         }
@@ -177,9 +176,38 @@ router.get('/team/leave', function (req, res, next) {
 //fixme both add and leave share similar callback function
 
 /* POST upload a new resume*/
-router.post('/updateresume', function(req, res, next) {
+router.post('/updateresume', function (req, res, next) {
 
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
+
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error', "Error parsing form.");
+            return res.redirect('/user/dashboard');
+        }
+        console.log(files);
+        var resume = files.resumeinput[0];
+        var options = {};
+        // make sure the user has had a resume
+        if (req.user.app.resume) {
+            options.filename = req.user.app.resume;
+        }
+
+        helper.uploadResume(resume, options, function (err, file) {
+            if (err) {
+                console.log(err);
+                req.flash('error', "File upload failed. :(");
+            }
+            if (typeof file === "string") {
+                req.flash('error', file);
+            }
+            else {
+                req.flash('success', 'Resume successfully updated');
+            }
+            return res.redirect('/user/dashboard');
+        })
+    })
 });
-
 
 module.exports = router;

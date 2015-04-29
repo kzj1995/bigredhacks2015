@@ -29,7 +29,7 @@ function checkUserId() {
 }
 
 function checkResume() {
-    var files = $('input#resume-input')[0].files;
+    var files = $('input#resumeinput')[0].files;
     if (files.length > 0 && files[0].type === "application/pdf") {
         $('#resume-save').prop('disabled', false);
     }

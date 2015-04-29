@@ -1,6 +1,5 @@
 <% include ../_header %>
-<% var firstname = firstname || '';
-var lastname = lastname || '';
+<%
 var team = team || []; //team members
 var error = error || []; //error flash message
 var success = success || []; //success flash message
@@ -75,12 +74,13 @@ var success = success || []; //success flash message
             <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
             <button class="btn btn-red" id="resume-update">update my resume</button>
 
-            <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form">
+            <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
+                  enctype="multipart/form-data">
                 <label>upload a new resume (.pdf)</label><br/>
 
                 <div class="form-group has-error">
-                    <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resume-input"
-                           name="resume" accept=".pdf" required>
+                    <input data-label="Upload" class="form-control filepicker-bootstrap" type="file" id="resumeinput"
+                           name="resumeinput" accept=".pdf" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-red" id="resume-save" disabled>Save</button>

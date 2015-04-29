@@ -24,10 +24,9 @@ if (error.length > 0) {
 <div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
-    <!--todo remove novalidate for production-->
     <h1>Registration</h1>
 
-    <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on" novalidate
+    <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
             <div class="header-wrapper"><legend class="page-title">account information</legend></div>

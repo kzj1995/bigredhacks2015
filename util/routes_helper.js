@@ -1,6 +1,19 @@
 "use strict";
 var helper = {};
+var AWS = require('aws-sdk');
+var uid = require('uid2');
+var fs = require('fs');
 var qs = require('qs');
+
+var config = require('../config.js');
+
+var MAX_RESUME_SIZE = 1024 * 1024 * 5;
+var RESUME_DEST = 'resume/';
+var s3 = new AWS.S3({
+    accessKeyId: config.setup.AWS_access_key,
+    secretAccessKey: config.setup.AWS_secret_key
+});
+
 
 // Make the nested fields parsed by multiparty look like req.body from body-parser
 // e.g. 'metadata[foo]': ['1']            => {metadata: {foo: 1}}
@@ -42,5 +55,58 @@ helper.reformatFields = function reformatFields(fields, castNumber) {
     return qs.parse(fields);
 };
 
+/**
+ * upload a resume to aws
+ * resume must be a multiparty file object
+ * @param resume
+ * @param options
+ * @param callback
+ * @returns {*}
+ */
+helper.uploadResume = function uploadResume(resume, options, callback) {
+    if (!options) {
+        options = {};
+    }
+    var filename = options.filename;
+
+    // /check file validity
+    if (resume.size > MAX_RESUME_SIZE) {
+        return callback(null, "File is too big!");
+    }
+
+    if (resume.headers['content-type'] !== 'application/pdf') {
+        return callback(null, 'File must be a pdf!');
+    }
+
+    //prepare to upload file
+    var body = fs.createReadStream(resume.path);
+    //generate a filename if not provided
+    if (!filename) {
+        filename = uid(15) + ".pdf";
+    }
+    console.log(filename);
+    s3.putObject({
+        Bucket: config.setup.AWS_S3_bucket,
+        Key: RESUME_DEST + filename,
+        ACL: 'public-read',
+        Body: body,
+        ContentType: 'application/pdf'
+    }, function(err, res) {
+        res.filename = filename;
+        return callback(err, res);
+    });
+};
+
+//deprecated
+helper.deleteResume = function deleteResume(location, callback) {
+    var params = {
+        Bucket: 'STRING_VALUE', /* required */
+        Key: 'STRING_VALUE' /* required */
+    };
+    s3.deleteObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+};
 
 module.exports = helper;
