@@ -26,7 +26,8 @@ body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: @weight-normal;
   overflow-x: hidden;
-  padding-bottom: 50px;
+  margin-top: 10px;
+  padding: 0 50px 50px 50px;
 }
 
 .center-block {
@@ -262,7 +263,9 @@ h1 {
 }
 
 .leaf {
-  //padding-right: 20px;
+  @leafwidth: 53px;
+  @leaf-margin: 20px;
+  padding-right: @leafwidth+@leaf-margin;
   position: relative;
   display: inline-block;
   background-color:@bg-light;
@@ -272,7 +275,10 @@ h1 {
     background-size: 53px*@ratio - 0.1 28px*@ratio;
   }
   &:after {
-    margin-left: 20px;
+    display: block;
+    position: absolute;
+    top: 23.4px;
+    margin-left: @leaf-margin;
     background: url('/img/leaf.svg') no-repeat;
     display: inline-block;
     content: "";
@@ -324,6 +330,7 @@ h1 {
   .header-wrapper;
   &&:before {
     height: 1.5px;
+    top: 50%;
   }
 }
 
