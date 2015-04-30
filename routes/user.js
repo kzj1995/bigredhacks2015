@@ -80,7 +80,6 @@ router.post('/dashboard/edit', function (req, res, next) {
     req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
     req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
 
-    req.assert('genderDropdown', 'Gender is required').notEmpty();
     req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
     req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
     req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
@@ -107,7 +106,6 @@ router.post('/dashboard/edit', function (req, res, next) {
             user.password = req.body.password;
         }
         user.phone = req.body.phonenumber;
-        user.gender = req.body.genderDropdown;
         user.school.major = req.body.major;
         user.app.questions.q1 = req.body.q1;
         user.app.questions.q2 = req.body.q2;

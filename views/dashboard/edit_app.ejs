@@ -64,8 +64,8 @@ else errors = [];
                     </div>
                     <div class="form-group">
                         <label for="genderDropdown">Gender *</label>
-                        <select class="form-control" id="genderDropdown" name="genderDropdown">
-                            <option value=""></option>
+                        <select class="form-control" id="genderDropdown" name="genderDropdown" readonly>
+                            <option value="">Select</option>
                             <%- helper.generateOptions(en.gender, {selected: user.gender}); %>
                         </select>
                     </div>
@@ -81,7 +81,7 @@ else errors = [];
                         <label for="college">Full School Name *</label><br/>
                         <input type="text" id="college" name="college" class="form-control typeahead"
                                placeholder="School Name"
-                               value="<%= user.school.name %>" required readonly/>
+                               value="<%= user.school.name %>" readonly/>
                     </div>
                     <div class="form-group">
                         <label for="yearDropdown">Graduation Year *</label>
@@ -141,14 +141,14 @@ else errors = [];
                     <div class="form-group">
                         <label for="dietary">Dietary Restrictions *</label>
                         <select class="form-control" id="dietary" name="dietary">
-                            <option value=""></option>
+                            <option value="">Select</option>
                             <%- helper.generateOptions(en.dietary, {selected: user.dietary}); %>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="tshirt">T-Shirt Size *</label>
                         <select class="form-control" id="tshirt" name="tshirt">
-                            <option value=""></option>
+                            <option value="">Select</option>
                             <%- helper.generateOptions(en.tshirt, {selected: user.tshirt}); %>
                         </select>
                     </div>

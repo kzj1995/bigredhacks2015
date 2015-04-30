@@ -4,6 +4,9 @@ $(document).ready( function() {
     $("#resume-update").on('click', function(e) {
         e.preventDefault();
         $("#resume-form").toggle();
+        $('body').animate({
+            scrollTop: $('body').get(0).scrollHeight
+        }, 500);
     });
 
     //File picker

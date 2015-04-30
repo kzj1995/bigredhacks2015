@@ -60,6 +60,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
+app.use(require('express-uglify').middleware({ src: path.join(__dirname, '/public'), logLevel: 'none', }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
