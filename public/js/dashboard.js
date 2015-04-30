@@ -8,7 +8,7 @@ $(document).ready( function() {
 
     //File picker
     $(function () {
-        $("input[type='file']").filepicker();
+        $("input[type='file']").filepicker({style: 'default'});
     });
 
     setInterval(function() {

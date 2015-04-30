@@ -218,6 +218,7 @@ label {
 }
 
 .btn-style(@color) {
+  font-weight: @weight-normal;
   background-color: @color;
   border-color: darken(@color, 5%);
   color: white;
@@ -234,6 +235,9 @@ label {
 
 .btn {
   border-radius: 0;
+  &.btn-default {
+    .btn-style(@neutral);
+  }
   &.btn-primary {
     .btn-style(@neutral);
   }
@@ -308,6 +312,7 @@ h1 {
 .header-wrapper {
   display: block;
   position: relative;
+
   &::before {
     background-color: @black;
     width: 100%;
@@ -329,11 +334,21 @@ h1 {
     }
   }
 }
+legend {
+  margin-bottom: 0; //needed for correct display with firefox
+}
+
+h2 {
+  margin-bottom: 15px; //needed for correct display with chrome
+}
+
+p:first-child{
+
+}
 
 h2, legend {
   width: auto;
   padding-top: 10px;
-  margin-bottom: 15px;
   font-family: "Blogger Sans Light", Arial, sans-serif;
   font-size: @h2-size;
   border-bottom-width: 0;
