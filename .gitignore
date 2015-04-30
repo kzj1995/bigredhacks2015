@@ -33,7 +33,7 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
-/public/css/_colors.css
+/public/css/_global.css
 /public/css/dashboard.css
 /public/css/index.css
 /public/css/login.css

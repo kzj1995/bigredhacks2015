@@ -1,4 +1,6 @@
 @import "_global";
+@sidebar-font-size: 14pt;
+@sidebar-brand-font-size: 24pt;
 
 body {
   @media (max-width: 768px) {
@@ -11,6 +13,7 @@ p {
   color: @red;
   font-style: italic;
 }
+
 .btn {
   font-weight: @weight-normal;
 }
@@ -30,7 +33,6 @@ form#resume-form {
   font-style: italic;
 }
 
-
 ul.team-list {
   margin-top: 10px;
   color: @red;
@@ -47,16 +49,41 @@ ul.team-list {
   }
 }
 
-
 ///////////////
 ///Sidebar/////
 ///////////////
+
 
 .sidebar {
   background: @bg-dark;
   top: 0;
   bottom: 0;
   left: 0;
+
+  }
+
+.brand {
+  margin-bottom: 10px;
+  display: block;
+  &:focus, &:hover, &:active {
+    text-decoration: none;
+  }
+}
+#brand-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 76px;
+  height: 76px;
+}
+#brand-text {
+  padding-top: 5px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  font-family: "Blogger Sans Light", Arial, sans-serif;
+  font-size: @sidebar-brand-font-size;
+  color: @white;
 }
 
 @media (min-width: 768px) {
@@ -67,10 +94,8 @@ ul.team-list {
     left: 0;
     z-index: 1000;
     display: block;
-    //padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
-
     border-right: 1px solid #747474;
   }
 }
@@ -82,7 +107,7 @@ ul.team-list {
   margin-left: -20px;
   > li {
     > a {
-      font-size: 14pt;
+      font-size: @sidebar-font-size;
       color: @white;
 
       border-bottom: @divider-size @bg-light solid;
@@ -103,7 +128,7 @@ ul.team-list {
     &:first-child > a {
       border-top: @divider-size*2 @bg-light solid;
     }
-    &:last-child > a{
+    &:last-child > a {
       border-bottom: @divider-size*2 @bg-light solid;
     }
   }
