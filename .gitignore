@@ -33,6 +33,8 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+.cache
+*.map.js
 /public/css/_global.css
 /public/css/dashboard.css
 /public/css/index.css
