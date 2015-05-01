@@ -118,6 +118,8 @@ router.post('/register', function (req, res) {
                     phone: req.body.phonenumber,
                     dietary: req.body.dietary,
                     tshirt: req.body.tshirt,
+                    project: req.body.projectDropdown,
+                    experience: req.body.experienceDropdown,
                     school: {
                         id: req.body.collegeid,
                         name: req.body.college,
