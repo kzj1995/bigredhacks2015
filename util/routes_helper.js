@@ -92,8 +92,13 @@ helper.uploadResume = function uploadResume(resume, options, callback) {
         Body: body,
         ContentType: 'application/pdf'
     }, function(err, res) {
+        if (err) {
+            callback(err);
+        }
+        else {
         res.filename = filename;
         return callback(err, res);
+        }
     });
 };
 

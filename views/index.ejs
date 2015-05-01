@@ -1,203 +1,303 @@
 <% include _header %>
 <!-- Custom CSS -->
 <link href="/css/index.css" rel="stylesheet">
-<!--
-  ____  _       _____          _     _____    _            _        
- |  _ \(_)     |  __ \        | |   / / / |  | |          | |       
- | |_) |_  __ _| |__) |___  __| |  / / /| |__| | __ _  ___| | _____ 
- |  _ <| |/ _` |  _  // _ \/ _` | / / / |  __  |/ _` |/ __| |/ / __|
- | |_) | | (_| | | \ \  __/ (_| |/ / /  | |  | | (_| | (__|   <\__ \
- |____/|_|\__, |_|  \_\___|\__,_/_/_/   |_|  |_|\__,_|\___|_|\_\___/
-           __/ |                                                    
-          |___/                                                     
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
--->
+    <title>BigRed//Hacks Fall 2015</title>
+    <link rel="shortcut icon" href="img/icon.png">
 
-<!-- Navigation -->
-<a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
-<nav id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-        <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
-        <li class="sidebar-brand">
-            <a href="#top"></a>
-        </li>
-        <li>
-            <a href="#top">Home</a>
-        </li>
-        <li>
-            <a href="#about">About</a>
-        </li>
-        <li>
-            <a href="#faq">FAQ</a>
-        </li>
-        <li>
-            <a href="#schedule">Schedule</a>
-        </li>
-        <li>
-            <a href="#sponsors">Sponsors</a>
-        </li>
-        <li>
-            <a href="#tools">Tools</a>
-        </li>
-    </ul>
-</nav>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-<!-- Header -->
-<header id="top" class="header">
-    <div class="text-vertical-center">
-        <h1>BigRed//Hacks</h1>
+    <!-- Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/animate.css" rel="stylesheet" />
+    <!-- Squad theme CSS -->
+    <link href="css/style.css" rel="stylesheet">
+	<link href="color/default.css" rel="stylesheet">
 
-        <h3>September XX-XX 2015</h3>
-        <br>
-        <a href="#reg" class="btn btn-dark btn-lg">Get Started</a>
-    </div>
-</header>
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+	<!-- Preloader -->
+	<div id="preloader">
+	  <div id="load"></div>
+	</div>
 
-<!-- Register -->
-<section id="reg" class="padding">
-    <div class="container">
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <img src="img/logo-white.png" height="40" width="180" draggable="false">
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#intro">Home</a></li>
+        <li><a href="#about">About</a></li>
+		<li><a href="#faq">FAQ</a></li>
+		<li><a href="#schedule">Schedule</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#sponsors">Sponsors</a></li>
+        <li><a href="#connect">Connect</a></li>
+        </li>
+      </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<!-- Section: intro -->
+    <section id="intro" class="intro">
+
+		<div class="slogan">
+			<h2>BIGRED//HACKS</h2>
+			<h4>The ultimate hackathon at Cornell University</h4>
+			<h4>Sept 18-20, 2015</h4>
+			<a href="/register" class="btn btn-default">Register</a>&nbsp;&nbsp;&nbsp;
+            <a href="/login" class="btn btn-default">Login</a>
+		</div>
+
+    </section>
+	<!-- /Section: intro -->
+
+	<!-- Section: about -->
+    <section id="about" class="home-section text-center">
+		<div class="heading-about">
+			<div class="container">
+            <img src="img/leaf-yellow.svg" draggable="false" style="float:left;"><br><br><h2 style="float:left;">About</h2>
+			</div>
+		</div>
+		<div class="container">
+
+            <p>CONTENT</p><bR>
+
         <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Get Started</h2><br>
-                <a href="/register" class="btn btn-dark btn-lg">Register</a>
-                <a href="/login" class="btn btn-dark btn-lg">Login</a>
+            <div class="col-xs-6 col-sm-3 col-md-3">
+                <div class="team boxed-grey">
+                    <div class="inner">
+						<h5>Creating</h5>
+                        <p class="subtitle">Subtitle</p>
+                        <div class="avatar"><img src="https://pbs.twimg.com/profile_images/458794430200152064/XdQULww6.png" alt="" class="img-responsive img-circle" /></div>
+                    </div>
+                </div>
+
+            </div>
+			<div class="col-xs-6 col-sm-3 col-md-3">
+                <div class="team boxed-grey">
+                    <div class="inner">
+						<h5>Exploring</h5>
+                        <p class="subtitle">Subtitle</p>
+                        <div class="avatar"><img src="https://pbs.twimg.com/profile_images/458794430200152064/XdQULww6.png" alt="" class="img-responsive img-circle" /></div>
+
+                    </div>
+				</div>
+            </div>
+			<div class="col-xs-6 col-sm-3 col-md-3">
+                <div class="team boxed-grey">
+                    <div class="inner">
+						<h5>Learning</h5>
+                        <p class="subtitle">Subtitle</p>
+                        <div class="avatar"><img src="https://pbs.twimg.com/profile_images/458794430200152064/XdQULww6.png" alt="" class="img-responsive img-circle" /></div>
+
+                    </div>
+				</div>
+            </div>
+			<div class="col-xs-6 col-sm-3 col-md-3">
+                <div class="team boxed-grey">
+                    <div class="inner">
+						<h5>Sharing</h5>
+                        <p class="subtitle">Subtitle</p>
+                        <div class="avatar"><img src="https://pbs.twimg.com/profile_images/458794430200152064/XdQULww6.png" alt="" class="img-responsive img-circle" /></div>
+
+                    </div>
+				</div>
             </div>
         </div>
-    </div>
-</section>
+		</div>
+	</section>
+	<!-- /Section: about -->
 
-<!-- About -->
-<section id="about" class="padding bg-danger">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-lg-10 col-lg-offset-1">
-                <h2>About</h2>
 
-                <p>-content-</p>
+	<!-- Section: faq -->
+    <section id="faq" class="home-section text-center bg-gray">
+
+		<div class="heading-about">
+			<div class="container">
+            <img src="img/leaf-yellow.svg" style="float:left;"><br><br><h2 style="float:left;">FAQ</h2>
+			</div>
+		<div class="container">
+
+            <p>CONTENT</p>
+
+            </div>
+		</div>
+
+	</section>
+	<!-- /Section: services -->
+
+
+    <!-- Section: schedule -->
+    <section id="schedule" class="home-section text-center">
+		<div class="heading-about">
+			<div class="container">
+            <img src="img/leaf-yellow.svg" draggable="false" style="float:left;"><br><br><h2 style="float:left;">Schedule</h2>
+			</div>
+		</div>
+		<div class="container">
+
+            <p>CONTENT</p>
+
+            </div>
+	</section>
+    <!-- /Section: schedule -->
+
+
+
+
+
+
+    <!-- Section: tools -->
+        <section id="tools" class="home-section text-center bg-gray">
+
+		<div class="heading-about">
+			<div class="container">
+            <img src="img/leaf-yellow.svg" style="float:left;"><br><br><h2 style="float:left;">Tools</h2>
+			<div class="row">
+				</div>
+		<div class="container">
+
+            <p>CONTENT</p>
+
+            </div>
+        </section>
+    <!-- /Section: tools -->
+
+
+
+
+    <!-- Section: sponsors -->
+        <section id="sponsors" class="home-section text-center">
+		<div class="heading-about">
+			<div class="container">
+            <img src="img/leaf-yellow.svg" draggable="false" style="float:left;"><br><br><h2 style="float:left;">Sponsors</h2>
+			</div>
+		</div>
+		<div class="container">
+
+            <p>CONTENT</p>
+
+            </div>
+	</section>
+    <!-- /Section: sponsors -->
+
+
+	<!-- Section: contact -->
+    <section id="connect" class="home-section text-center">
+		<div class="heading-contact">
+			<div class="container">
+			<img src="img/leaf-yellow.svg" draggable="false" style="float:left;"><br><br><h2 style="float:left;">Connect</h2><br>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="boxed-grey">
+                <form id="contact-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">
+                                Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter name" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">
+                                Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span>
+                                </span>
+                                <input type="email" class="form-control" id="email" placeholder="Enter email" required="required" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">
+                                Subject</label>
+                            <select id="subject" name="subject" class="form-control" required="required">
+                                <option value="na" selected="">Choose One:</option>
+                                <option value="question">Question</option>
+                                <option value="request">Request</option>
+                                <option value="sponsorship">Sponsorship</option>
+                                <option value="suggestions">Suggestions</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">
+                                Message</label>
+                            <textarea name="message" id="message" class="form-control" rows="9" cols="25" required="required"
+                                placeholder="Message"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-skin pull-right" id="btnContactUs">
+                            Send Message</button>
+                    </div>
+                </div>
+                </form>
             </div>
         </div>
+
+		<div class="col-lg-4">
+			<div class="widget-contact">
+				<h5>Social Networks</h5>
+
+			</div>
+		</div>
     </div>
-</section>
+
+		</div>
+	</section>
+	<!-- /Section: contact -->
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="wow shake" data-wow-delay="0.4s">
+					<div class="page-scroll marginbot-30">
+						<!--<a href="#intro" id="totop" class="btn btn-circle">
+							<i class="fa fa-angle-double-up animated"></i>
+						</a>-->
+					</div>
+					</div>
+					<p>&copy;2015 BigRed//Hacks</p> <p>All other trademarks and logos © their respective owners.</p><p>
+From Ithaca with ♥</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+    <!-- Core JavaScript Files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+	<script src="js/jquery.scrollTo.js"></script>
+	<script src="js/wow.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="js/custom.js"></script>
+
+</body>
 
 
-<!-- FAQ -->
-<section id="faq" class="padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>FAQ</h2>
-
-                <p>-content</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- Schedule -->
-<section id="schedule" class="padding bg-danger">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Schedule</h2><br>
-                <br>
-                <table>
-                    <tr>
-                        <td width="400">Friday</td>
-                        <td width="400">Saturday</td>
-                        <td width="400">Sunday</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- Sponsors -->
-<section id="sponsors" class="padding">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-lg-10 col-lg-offset-1">
-                <h2>Sponsors</h2>
-
-                <p>-content-</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- Tools -->
-<section id="tools" class="padding bg-danger">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-lg-10 col-lg-offset-1">
-                <h2>Tools</h2>
-
-                <p>-Content-</p>
-
-                <p>(Contains hardware provided and a link to download the mobile app)</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 col-lg-offset-1 text-center">
-                <h4><strong>Footer</strong>
-                </h4>
-
-                <p>Content</p>
-                <br>
-                <ul class="list-inline">
-                    <li>
-                        <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
-                    </li>
-                </ul>
-                <hr class="small">
-                <p class="text-muted">&copy; </p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- Custom Theme JavaScript -->
-<script>
-    // Closes the sidebar menu
-    $("#menu-close").click(function (e) {
-        e.preventDefault();
-        $("#sidebar-wrapper").toggleClass("active");
-    });
-
-    // Opens the sidebar menu
-    $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#sidebar-wrapper").toggleClass("active");
-    });
-
-    // Scrolls to the selected menu item on the page
-    $(function () {
-        $('a[href*=#]:not([href=#])').click(function () {
-            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
-
-                var target = $(this.hash);
-                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-                if (target.length) {
-                    $('html,body').animate({
-                        scrollTop: target.offset().top
-                    }, 1000);
-                    return false;
-                }
-            }
-        });
-    });
-</script>
-
-<% include _footer %>
+<!--<% include _footer %>-->
