@@ -8,6 +8,7 @@ var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
+var validator = require('../library/validations.js');
 
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
@@ -68,29 +69,14 @@ router.post('/register', function (req, res) {
 
         req.files = files;
         var resume = files.resume[0];
-        console.log(resume);
-        console.log(resume.headers);
+        //console.log(resume);
+        //console.log(resume.headers);
 
         //todo reorder validations to be consistent with form
-        req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
-        req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
-
-        req.assert('email', 'Email address is not valid').isEmail();
-        req.assert('firstname', 'First name is required').notEmpty();
-        req.assert('lastname', 'Last name is required').notEmpty();
-
-        req.assert('genderDropdown', 'Gender is required').notEmpty();
-        req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
-        req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
-        req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
-
-        req.assert('major', 'Major is required').len(1, 50);
-        req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
-        req.assert('collegeid', 'Please specify a school.').notEmpty();
-        req.assert('q1', 'Question 1 cannot be blank').notEmpty();
-        req.assert('q2', 'Question 2 cannot be blank').notEmpty(); //fixme refine this
-        //todo check that validations are complete
-
+        validator.validator(req);
+        req = validator.runValidations([
+            'email','password','firstname','lastname','phonenumber','major','genderDropdown','dietary','tshirt','linkedin','collegeid','q1','q2','yearDropdown'
+        ]);
 
         var errors = req.validationErrors();
         //console.log(errors);

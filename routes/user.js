@@ -9,6 +9,7 @@ var multiparty = require('multiparty');
 
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
+var validator = require('../library/validations.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
@@ -74,21 +75,12 @@ router.get('/dashboard/edit', function (req, res, next) {
 router.post('/dashboard/edit', function (req, res, next) {
 
     var user = req.user;
-    //console.log(req.body);
-    req.assert('password', 'Password is not valid. 6 to 25 characters required').optionalOrLen(6, 25);
-
-    req.body.phonenumber = req.body.phonenumber.replace(/-/g, '');
-    req.assert('phonenumber', 'Please enter a valid US phone number').isMobilePhone('en-US');
-
-    req.assert('dietary', 'Please specify dietary restrictions').notEmpty();
-    req.assert('tshirt', 'Please specify a t-shirt size').notEmpty();
-    req.assert('yearDropdown', 'Please specify a graduation year').notEmpty();
-
-    req.assert('major', 'Major is required').len(1, 50);
-    req.assert('linkedin', 'LinkedIn URL is not valid').optionalOrisURL();
-    req.assert('q1', 'Question 1 cannot be blank').notEmpty();
-    req.assert('q2', 'Question 2 cannot be blank').notEmpty();
-
+    console.log(validator);
+    validator.validator(req);
+    req = validator.runValidations([
+        'passwordOptional','phonenumber','dietary','tshirt','yearDropdown','major','linkedin','q1','q2'
+    ]);
+    //console.log(req.validationErrors());
     var errors = req.validationErrors();
     //console.log(errors);
     if (errors) {

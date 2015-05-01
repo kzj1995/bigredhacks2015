@@ -60,7 +60,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
-app.use(require('express-uglify').middleware({ src: path.join(__dirname, '/public'), logLevel: 'none', }));
+if (app.get('env') === 'production') {
+    app.use(require('express-uglify').middleware({src: path.join(__dirname, '/public'), logLevel: 'none',}));
+}
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -117,7 +119,7 @@ app.locals.viewHelper = require("./util/views_helper.js");
 //@todo move to setup
 //@todo force synchronous
 //loading colleges
-require('./scripts/load_colleges.js').loadOnce(function (err) {
+require('./util/load_colleges.js').loadOnce(function (err) {
 });
 
 module.exports = app;
