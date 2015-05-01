@@ -4,7 +4,7 @@ body {
   width: 100%;
   height: 100%;
   font-family: 'Roboto', sans-serif;
-  font-weight: 300;
+  font-weight: @weight-normal;
   color: @black;
   background-color: @bg-light;
   padding: 0;
@@ -25,7 +25,7 @@ h6 {
   margin: 0 0 30px;
   text-transform: uppercase;
   font-family: "Blogger Sans Light", sans-serif;
-  font-weight: 700;
+  font-weight: @weight-normal;
   letter-spacing: 1px;
 }
 
@@ -34,7 +34,7 @@ p {
   font-size: 16px;
   line-height: 1.6em;
   .lead {
-    font-weight: 600;
+    font-weight: @weight-bold;
   }
 }
 
@@ -309,19 +309,36 @@ hr {
   position: relative;
   background: url(../img/bg1.jpg) no-repeat center center scroll;
   background-size: 100% 100%;
+  .slogan {
+    text-align: center;
+    h2 {
+      color: #FFF;
+      text-shadow: none;
+      font-size: 60px;
+      line-height: 60px;
+      font-weight: 700;
+      font-family: "Blogger Sans Light", sans-serif;
+      background-color: rgba(0, 0, 0, 0);
+      text-decoration: none;
+      text-transform: uppercase;
+      border-width: 0px;
+      border-color: #000;
+      border-style: none;
+      text-shadow: -1px 0 1px #000;
+    }
+
+    h4 {
+      color: #fff;
+      text-shadow: -1px 1px 1px #000;
+    }
+  }
+  .page-scroll {
+    text-align: center;
+  }
 }
 
 #intro.intro {
   padding: 20% 0 0 0;
-}
-
-.intro .slogan {
-  text-align: center;
-
-}
-
-.intro .page-scroll {
-  text-align: center;
 }
 
 .brand-heading {
@@ -330,27 +347,6 @@ hr {
 
 .intro-text {
   font-size: 18px;
-}
-
-.intro .slogan h2 {
-  color: #FFF;
-  text-shadow: none;
-  font-size: 60px;
-  line-height: 60px;
-  font-weight: 700;
-  font-family: Montserrat, sans-serif;
-  background-color: rgba(0, 0, 0, 0);
-  text-decoration: none;
-  text-transform: uppercase;
-  border-width: 0px;
-  border-color: #000;
-  border-style: none;
-  text-shadow: -1px 0 1px #000;
-}
-
-.intro .slogan h4 {
-  color: #fff;
-  text-shadow: -1px 1px 1px #000;
 }
 
 /* ===========================
@@ -410,53 +406,45 @@ hr {
   padding: 0;
 }
 
-.team-social .social-facebook a {
-  background: #3873ae;
+.team-social {
+  .social-facebook a {
+    background: #3873ae;
+    &:hover {
+      background: #4893ce;
+    }
+  }
+  .social-twitter a {
+    background: #62c6f8;
+    &:hover {
+      background: #82e6ff;
+    }
+  }
+  .social-dribble a {
+    background: #d74980;
+    &:hover {
+      background: #f769a0;
+    }
+  }
+  .social-deviantart a {
+    background: #8da356;
+    &:hover {
+      background: #adc376;
+    }
+  }
+  .social-google a {
+    background: #000;
+    &:hover {
+      background: #333;
+    }
+  }
+  .social-vimeo a {
+    background: #51a6d3;
+    &:hover {
+      background: #71c6f3;
+    }
+  }
 }
 
-.team-social .social-twitter a {
-  background: #62c6f8;
-}
-
-.team-social .social-dribble a {
-  background: #d74980;
-}
-
-.team-social .social-deviantart a {
-  background: #8da356;
-}
-
-.team-social .social-google a {
-  background: #000;
-}
-
-.team-social .social-vimeo a {
-  background: #51a6d3;
-}
-
-.team-social .social-facebook a:hover {
-  background: #4893ce;
-}
-
-.team-social .social-twitter a:hover {
-  background: #82e6ff;
-}
-
-.team-social .social-dribble a:hover {
-  background: #f769a0;
-}
-
-.team-social .social-deviantart a:hover {
-  background: #adc376;
-}
-
-.team-social .social-google a:hover {
-  background: #333;
-}
-
-.team-social .social-vimeo a:hover {
-  background: #71c6f3;
-}
 
 /* ===========================
 --- Services
@@ -642,8 +630,7 @@ Parallax
 .btn {
   border-radius: 0;
   text-transform: uppercase;
-  font-family: Montserrat, sans-serif;
-  font-weight: 400;
+  font-weight: @weight-normal;
   -webkit-transition: all .3s ease-in-out;
   -moz-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
