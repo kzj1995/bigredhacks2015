@@ -44,7 +44,8 @@ var userSchema = new mongoose.Schema({
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
         going: {type: Boolean}
-    }
+    },
+    passwordtoken: String
 });
 
 //full name of user
