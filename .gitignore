@@ -39,3 +39,4 @@ node_modules
 /public/css/dashboard.css
 /public/css/index.css
 /public/css/login.css
+/public/css/vendor/animate.css

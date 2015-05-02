@@ -73,8 +73,7 @@ router.post('/register', function (req, res) {
         //console.log(resume.headers);
 
         //todo reorder validations to be consistent with form
-        validator.validator(req);
-        req = validator.runValidations([
+        req = validator.validate(req,[
             'email','password','firstname','lastname','phonenumber','major','genderDropdown','dietary','tshirt','linkedin','collegeid','q1','q2','yearDropdown'
         ]);
 
