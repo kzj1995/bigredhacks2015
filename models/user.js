@@ -23,6 +23,8 @@ var userSchema = new mongoose.Schema({
     phone: {type: String, required: true},
     dietary: {type: String, enum: en.user.dietary},
     tshirt: {type: String, enum: en.user.tshirt},
+    project: {type: String, enum: en.user.project},
+    experience: {type: String, enum: en.user.experience},
     school: {
         id: {type: String, ref: "College", required: true},
         name: {type: String, required: true},
@@ -44,7 +46,8 @@ var userSchema = new mongoose.Schema({
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
         going: {type: Boolean}
-    }
+    },
+    passwordtoken: String
 });
 
 //full name of user

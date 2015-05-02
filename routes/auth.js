@@ -15,6 +15,7 @@ var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
 var config = require('../config.js');
 var mandrill = require('mandrill-api/mandrill');
+var uid = require("uid2");
 
 
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
@@ -116,6 +117,8 @@ router.post('/register', function (req, res) {
                     phone: req.body.phonenumber,
                     dietary: req.body.dietary,
                     tshirt: req.body.tshirt,
+                    project: req.body.projectDropdown,
+                    experience: req.body.experienceDropdown,
                     school: {
                         id: req.body.collegeid,
                         name: req.body.college,
@@ -130,7 +133,8 @@ router.post('/register', function (req, res) {
                             q1: req.body.q1,
                             q2: req.body.q2
                         }
-                    }
+                    },
+                    passwordtoken:""
                 });
                 newUser.save(function (err, doc) {
                     if (err) {
@@ -211,6 +215,61 @@ router.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
+router.get('/resetpass?', function (req, res) {
+    User.findOne({passwordtoken: req.query.token}, function (err, user) {
+        if (user == null) {
+            res.redirect('/');
+        }
+        else {
+            res.render('forgotpassword', {
+                title: 'Reset Password',
+                page: 3,
+                error: req.flash('error'),
+                email: user.email
+            });
+        }
+    });
+});
+
+router.post('/resetpass?', function (req, res) {
+    User.findOne({passwordtoken: req.query.token}, function (err, user) {
+        if (user == null || req.query.token == "" || req.query.token == undefined) {
+            res.redirect('/');
+        }
+        else {
+            validator.validator(req);
+            req = validator.runValidations([
+                'password'
+            ]);
+            var errors = req.validationErrors();
+            if(errors) {
+                req.flash('error', 'Password is not valid. 6 to 25 characters required.');
+                res.redirect('/resetpass?token='+req.query.token);
+            }
+            else {
+                user.password = req.body.password;
+                user.passwordtoken = "";
+                user.save(function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        console.log(err);
+                        req.flash("error", "An error occurred.");
+                        res.redirect('/')
+                    }
+                    else {
+                        res.render('forgotpassword', {
+                            title: 'Reset Password',
+                            page: 4,
+                            error: req.flash('error'),
+                            email: user.email
+                        });
+                    }
+                });
+            }
+        }
+    });
+});
+
 router.get('/resetpassword', function (req, res) {
     res.render('forgotpassword', {
         title: 'Reset Password',
@@ -234,27 +293,62 @@ router.post('/resetpassword', function (req, res) {
             });
         }
         else {
-            res.redirect('/resetpassword/email=' + req.body.email);
-        }
-    });
-});
-
-router.get('/resetpassword/email=:email', function (req, res) {
-    User.findOne({email: req.params.email}, function (err, user) {
-        if (user == null) {
-            res.redirect('/');
-        }
-        else {
             res.render('forgotpassword', {
                 title: 'Reset Password',
                 page: 2,
                 user: req.user,
                 error: req.flash('error'),
-                email: req.params.email
+                email: user.email
+            });
+            user.passwordtoken=uid(15);
+            user.save(function (err, doc) {
+                if (err) {
+                    // If it failed, return error
+                    console.log(err);
+                    req.flash("error", "An error occurred.");
+                    res.redirect('/')
+                }
+                else {
+                    var passwordreseturl = req.protocol + '://' + req.get('host')+"/resetpass?token=" + user.passwordtoken
+                    var htmlcontent = "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
+                        "You can reset your password by visiting the following link: </p><p>" +
+                        "<a href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
+                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                    var message = {
+                        "html": htmlcontent,
+                        "subject": "BigRed//Hacks Password Reset",
+                        "from_email": "info@bigredhacks.com",
+                        "from_name": "BigRed//Hacks",
+                        "to": [{
+                            "email": user.email,
+                            "name": user.name.first + " " + user.name.last,
+                            "type": "to"
+                        }],
+                        "important": false,
+                        "track_opens": null,
+                        "track_clicks": null,
+                        "auto_text": null,
+                        "auto_html": null,
+                        "inline_css": null,
+                        "url_strip_qs": null,
+                        "preserve_recipients": null,
+                        "view_content_link": null,
+                        "tracking_domain": null,
+                        "signing_domain": null,
+                        "return_path_domain": null,
+                        "merge": true,
+                        "merge_language": "mailchimp"
+                    };
+                    var async = false;
+                    mandrill_client.messages.send({"message": message, "async": async}, function (result) {
+                        console.log(result);
+                    }, function (e) {
+                        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                    });
+                }
             });
         }
     });
 });
-
 
 module.exports = router;

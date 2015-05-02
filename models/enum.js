@@ -10,7 +10,9 @@ var en = {
         dietary: "None Vegetarian Gluten-free".split(" "),
         gender: "Female Male Other".split(" "),
         tshirt: "XS S M L XL".split(" "),
-        status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" ")
+        status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" "),
+        experience: "Yes No".split(" "),
+        project: "Hardware Software".split(" ")
     }
 };
 

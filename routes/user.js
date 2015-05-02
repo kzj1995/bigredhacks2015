@@ -97,6 +97,7 @@ router.post('/dashboard/edit', function (req, res, next) {
         if (req.body.password !== "") {
             user.password = req.body.password;
         }
+        console.log(req.body);
         user.phone = req.body.phonenumber;
         user.school.major = req.body.major;
         user.app.questions.q1 = req.body.q1;
@@ -105,6 +106,8 @@ router.post('/dashboard/edit', function (req, res, next) {
         user.app.linkedin = req.body.linkedin;
         user.dietary = req.body.dietary;
         user.tshirt = req.body.tshirt;
+        user.experience = req.body.experienceDropdown;
+        user.project = req.body.projectDropdown;
         user.save(function (err, doc) {
             if (err) {
                 // If it failed, return error
