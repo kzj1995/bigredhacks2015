@@ -310,10 +310,10 @@ router.post('/resetpassword', function (req, res) {
                     res.redirect('/')
                 }
                 else {
-                    var passwordreseturl = "localhost:3000/resetpass?token=" + user.passwordtoken
+                    var passwordreseturl = req.protocol + '://' + req.get('host')+"/resetpass?token=" + user.passwordtoken
                     var htmlcontent = "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
-                        "<a href=" + passwordreseturl + ">" + passwordreseturl + "</a></p>" +
+                        "<a href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
                         "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
                     var message = {
                         "html": htmlcontent,
