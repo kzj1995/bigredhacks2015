@@ -135,7 +135,7 @@ else errors = [];
                         <label for="experienceDropdown">Is this your first Hackathon? </label>
                         <select class="form-control" id="experienceDropdown" name="experienceDropdown">
                             <option value="">Select</option>
-                            <%- helper.generateOptions(en.experience, {selected: user.preferences.experience}); %>
+                            <%- helper.generateOptions(en.experience, {selected: user.app.experience}); %>
                         </select>
                     </div>
                 </fieldset>

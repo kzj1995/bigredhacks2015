@@ -119,8 +119,7 @@ router.post('/register', function (req, res) {
                     preferences:{
                         dietary: req.body.dietary,
                         tshirt: req.body.tshirt,
-                        projecttype: req.body.projectDropdown,
-                        experience: req.body.experienceDropdown
+                        projecttype: req.body.projectDropdown
                     },
                     school: {
                         id: req.body.collegeid,
@@ -135,7 +134,8 @@ router.post('/register', function (req, res) {
                         questions: {
                             q1: req.body.q1,
                             q2: req.body.q2
-                        }
+                        },
+                        experience: req.body.experienceDropdown
                     },
                     passwordtoken:""
                 });

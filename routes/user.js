@@ -104,10 +104,10 @@ router.post('/dashboard/edit', function (req, res, next) {
         user.app.questions.q2 = req.body.q2;
         user.app.github = req.body.github;
         user.app.linkedin = req.body.linkedin;
+        user.app.experience = req.body.experienceDropdown;
         user.preferences.dietary = req.body.dietary;
         user.preferences.tshirt = req.body.tshirt;
         user.preferences.projecttype = req.body.projectDropdown;
-        user.preferences.experience = req.body.experienceDropdown;
         user.save(function (err, doc) {
             if (err) {
                 // If it failed, return error
