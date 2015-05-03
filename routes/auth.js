@@ -237,8 +237,7 @@ router.post('/resetpass?', function (req, res) {
             res.redirect('/');
         }
         else {
-            validator.validator(req);
-            req = validator.runValidations([
+            req = validator.validate(req,[
                 'password'
             ]);
             var errors = req.validationErrors();
