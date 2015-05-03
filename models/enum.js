@@ -11,8 +11,8 @@ var en = {
         gender: "Female Male Other".split(" "),
         tshirt: "XS S M L XL".split(" "),
         status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" "),
-        experience: "Yes No".split(" "),
-        project: "Hardware Software".split(" ")
+        experience: "Yes No".split(" "),//store boolean state as string for simplicity
+        projecttype: "Hardware Software".split(" ")
     }
 };
 

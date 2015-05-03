@@ -105,6 +105,7 @@ router.post('/register', function (req, res) {
                     req.flash('error', file);
                     return res.redirect('/register');
                 }
+
                 //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
                 var newUser = new User({
                     name: {
@@ -115,10 +116,12 @@ router.post('/register', function (req, res) {
                     password: req.body.password,
                     gender: req.body.genderDropdown,
                     phone: req.body.phonenumber,
-                    dietary: req.body.dietary,
-                    tshirt: req.body.tshirt,
-                    project: req.body.projectDropdown,
-                    experience: req.body.experienceDropdown,
+                    preferences:{
+                        dietary: req.body.dietary,
+                        tshirt: req.body.tshirt,
+                        projecttype: req.body.projectDropdown,
+                        experience: req.body.experienceDropdown
+                    },
                     school: {
                         id: req.body.collegeid,
                         name: req.body.college,

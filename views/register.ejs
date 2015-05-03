@@ -151,7 +151,7 @@ if (error.length > 0) {
                 <label for="projectDropdown">What type of project are you thinking about working on?</label>
                 <select class="form-control" id="projectDropdown" name="projectDropdown">
                     <option value="">Select</option>
-                    <%- helper.generateOptions(en.project, {selected: (input.projectDropdown || "")}); %>
+                    <%- helper.generateOptions(en.projecttype, {selected: (input.projectDropdown || "")}); %>
                 </select>
             </div>
             <div class="form-group">
