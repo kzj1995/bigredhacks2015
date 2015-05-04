@@ -1,5 +1,6 @@
 @import "_global";
 
+@main-header-size: 48pt;
 @body-line-height: 1.6em;
 @body-size: 16px;
 
@@ -143,13 +144,6 @@ a {
   background-color: rgba(255, 255, 255, .2);
 }
 
-.navbar-custom .nav li a:hover,
-.navbar-custom .nav li a:focus,
-.navbar-custom .nav li.active {
-  outline: 0;
-  background-color: rgba(255, 255, 255, .2);
-}
-
 .navbar-toggle {
   padding: 4px 6px;
   font-size: 14px;
@@ -230,9 +224,9 @@ a {
   margin: -5px auto 0 auto;
   left: 0;
   right: 0;
-  border-radius: 0px;
+  border-radius: 0;
   border: 5px solid #FF4136;
-  box-shadow: 10px 0px #39CCCC, 10px 0px #01FF70;
+  box-shadow: 10px 0 #39CCCC, 10px 0 #01FF70;
   animation: shadowSpin 1s ease-in-out infinite;
 }
 
@@ -328,8 +322,8 @@ img.leaf {
     text-align: center;
     h2 {
       color: #FFF;
-      font-size: 60px;
-      line-height: 60px;
+      font-size:@main-header-size; //60px;
+      line-height: @main-header-size;
       font-weight: 700;
       font-family: "Blogger Sans Light", sans-serif;
       background-color: rgba(0, 0, 0, 0);
@@ -563,24 +557,13 @@ Parallax
 }
 
 .btn{
-  font-family:Calibri;
-  font-size:16px;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 16px;
   letter-spacing: 0.5px;
-}
-
-.btn-default {
-  border: 1px solid #b31b1b;
-  outline: 0;
-  color: #FFF;
-  background-color: #b45555;
-}
-
-.btn-default:hover,
-.btn-default:focus {
-  border: 1px solid #b31b1b;
-  outline: 0;
-  color: #FFF;
-  background-color: #b31b1b;
+  padding: 9px 15px 9px 15px;
+  &.btn-red {
+    font-weight: @weight-bold;
+  }
 }
 
 
