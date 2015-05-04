@@ -1,5 +1,8 @@
 @import "_global";
 
+@body-line-height: 1.6em;
+@body-size: 16px;
+
 body {
   width: 100%;
   height: 100%;
@@ -9,6 +12,10 @@ body {
   background-color: @bg-light;
   padding: 0;
   margin: 0;
+}
+
+h2 {
+  font-size: 40px;
 }
 
 p{
@@ -30,11 +37,17 @@ h1,h2,h3,h4,h5,h6 {
 
 p {
   margin: 0 0 20px;
-  font-size: 16px;
-  line-height: 1.6em;
   .lead {
     font-weight: @weight-bold;
   }
+}
+
+p, dl {
+  font-size: @body-size;
+  line-height: @body-line-height;
+}
+dd {
+  margin: 0 0 20px;
 }
 
 a {
@@ -141,12 +154,11 @@ a {
   padding: 4px 6px;
   font-size: 14px;
   color: #fff;
+  &:focus, &:active {
+    outline: 0;
+  }
 }
 
-.navbar-toggle:focus,
-.navbar-toggle:active {
-  outline: 0;
-}
 
 /* loader */
 #preloader {
@@ -259,8 +271,8 @@ hr {
 ============================ */
 
 .home-section {
-  padding-top: 110px;
-  padding-bottom: 110px;
+  padding-top: 80px;
+  padding-bottom: 80px;
   display: block;
   position: relative;
   z-index: 120;
@@ -298,7 +310,8 @@ hr {
 img.leaf {
   float:left;
   @media(max-width: 500px) {
-    float: none;
+    width: 0;
+    height: 0;
     visibility: hidden;
   }
 }
@@ -315,7 +328,6 @@ img.leaf {
     text-align: center;
     h2 {
       color: #FFF;
-      text-shadow: none;
       font-size: 60px;
       line-height: 60px;
       font-weight: 700;
@@ -456,19 +468,17 @@ Parallax
   -webkit-transition: background .3s ease-in-out;
   -moz-transition: background .3s ease-in-out;
   transition: background .3s ease-in-out;
+  &:hover,&:focus {
+    outline: 0;
+    color: #fff;
+    background: rgba(255, 255, 255, .1);
+  }
+  &.btn-dark {
+    border: 2px solid #666;
+    color: #666;
+  }
 }
 
-.btn-circle.btn-dark {
-  border: 2px solid #666;
-  color: #666;
-}
-
-.btn-circle:hover,
-.btn-circle:focus {
-  outline: 0;
-  color: #fff;
-  background: rgba(255, 255, 255, .1);
-}
 
 .btn-circle.btn-dark :hover,
 .btn-circle.btn-dark :focus {
@@ -670,10 +680,6 @@ a, .tp-caption a.btn:hover {
 
 .bg-skin {
   background: #b31b1b;
-}
-
-form#contact-form input:focus, form#contact-form select:focus, form#contact-form textarea:focus {
-  border-color: #67b0d1;
 }
 
 footer {
