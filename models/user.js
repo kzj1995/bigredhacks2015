@@ -24,7 +24,7 @@ var userSchema = new mongoose.Schema({
     preferences: {
         dietary: {type: String, enum: en.user.dietary},
         tshirt: {type: String, enum: en.user.tshirt},
-        projecttype: {type: String, enum: en.user.projecttype}
+        projecttype: {type: String, enum: en.user.projecttype, required: true}
     },
     school: {
         id: {type: String, ref: "College", required: true},
@@ -40,7 +40,7 @@ var userSchema = new mongoose.Schema({
             q1: String,//@todo fill out with identifiers for questions
             q2: String
         },
-        experience: {type: String, enum: en.user.experience}
+        experience: {type: String, enum: en.user.experience, required: true}
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},

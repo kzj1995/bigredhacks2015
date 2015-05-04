@@ -52,6 +52,12 @@ var validator = function () {
         }, //fixme refine this
         yearDropdown: function (req) {
             req.assert('yearDropdown', 'Please specify a graduation year').notEmpty()
+        },
+        experienceDropdown: function (req) {
+            req.assert('experienceDropdown', 'Please specify if this is your first hackathon').notEmpty()
+        },
+        projectDropdown: function (req) {
+            req.assert('projectDropdown', 'Please specify a project type you want to work on').notEmpty()
         }
         //todo check that validations are complete
     };

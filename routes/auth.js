@@ -75,7 +75,7 @@ router.post('/register', function (req, res) {
 
         //todo reorder validations to be consistent with form
         req = validator.validate(req,[
-            'email','password','firstname','lastname','phonenumber','major','genderDropdown','dietary','tshirt','linkedin','collegeid','q1','q2','yearDropdown'
+            'email','password','firstname','lastname','phonenumber','major','genderDropdown','dietary','tshirt','linkedin','collegeid','q1','q2','projectDropdown','experienceDropdown','yearDropdown'
         ]);
 
         var errors = req.validationErrors();

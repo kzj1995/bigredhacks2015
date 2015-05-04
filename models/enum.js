@@ -12,7 +12,7 @@ var en = {
         tshirt: "XS S M L XL".split(" "),
         status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" "),
         experience: "Yes No".split(" "),//store boolean state as string for simplicity
-        projecttype: "Hardware Software".split(" ")
+        projecttype: "Not sure/Hardware/Software".split("/")
     }
 };
 
