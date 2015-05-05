@@ -39,13 +39,18 @@
 
 <!-- Section: intro -->
 <section id="intro" class="intro">
-
+<div class="transparent"></div>
     <div class="slogan">
         <h2>BIGRED//HACKS</h2>
         <h4>Cornell University's Ultimate Hackathon</h4>
         <h4>Sept 18-20, 2015</h4>
+        <% if (isUser) { %>
+        <a href="/user/dashboard" class="btn btn-red">My Dashboard</a>
+        <% }
+        else { %>
         <a href="/register" class="btn btn-red">Register</a>&nbsp;&nbsp;&nbsp;
         <a href="/login" class="btn btn-red">Login</a>
+        <% } %>
     </div>
 
 </section>
@@ -231,6 +236,7 @@
             <p>Coming soon!</p>
 
         </div>
+    </div>
 </section>
 <!-- /Section: tools -->
 
