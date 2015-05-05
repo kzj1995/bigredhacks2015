@@ -23,6 +23,11 @@ p{
   text-align:left;
 }
 
+p.footer{
+  font-size:12px;
+  text-align:center;
+}
+
 html {
   width: 100%;
   height: 100%;
@@ -30,10 +35,13 @@ html {
 
 h1,h2,h3,h4,h5,h6 {
   margin: 0 0 30px;
-  text-transform: uppercase;
   font-family: "Blogger Sans Light", sans-serif;
   font-weight: @weight-normal;
   letter-spacing: 1px;
+}
+
+h2{
+  text-transform:lowercase;
 }
 
 p {
@@ -100,7 +108,7 @@ a {
   font-size: 12px;
   letter-spacing: 1px;
   color: #444;
-  text-transform: uppercase;
+  text-transform: none;
   font-weight: 700;
 }
 
@@ -153,82 +161,6 @@ a {
   }
 }
 
-
-/* loader */
-#preloader {
-  background: #ffffff;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 100%;
-  z-index: 999;
-}
-
-#loaderInner {
-  background: #ffffff url(../img/spinner.gif) center center no-repeat;
-  height: 60px;
-  left: 50%;
-  margin: -50px 0 0 -50px;
-  position: absolute;
-  top: 50%;
-  width: 60px;
-}
-
-@keyframes boxSpin {
-  0% {
-    transform: translate(-10px, 0px);
-  }
-  25% {
-    transform: translate(10px, 10px);
-  }
-  50% {
-    transform: translate(10px, -10px);
-  }
-  75% {
-    transform: translate(-10px, -10px);
-  }
-  100% {
-    transform: translate(-10px, 10px);
-  }
-}
-
-@keyframes shadowSpin {
-  0% {
-    box-shadow: 10px -10px #39CCCC, -10px 10px #FFDC00;
-  }
-  25% {
-    box-shadow: 10px 10px #39CCCC, -10px -10px #FFDC00;
-  }
-  50% {
-    box-shadow: -10px 10px #39CCCC, 10px -10px #FFDC00;
-  }
-  75% {
-    box-shadow: -10px -10px #39CCCC, 10px 10px #FFDC00;
-  }
-  100% {
-    box-shadow: 10px -10px #39CCCC, -10px 10px #FFDC00;
-  }
-}
-
-#load {
-  z-index: 9999;
-  background-color: #FF4136;
-  opacity: 0.75;
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  top: 50%;
-  margin: -5px auto 0 auto;
-  left: 0;
-  right: 0;
-  border-radius: 0;
-  border: 5px solid #FF4136;
-  box-shadow: 10px 0 #39CCCC, 10px 0 #01FF70;
-  animation: shadowSpin 1s ease-in-out infinite;
-}
 
 /* misc */
 hr {
@@ -329,7 +261,7 @@ img.leaf {
       font-family: "Blogger Sans Light", sans-serif;
       background-color: rgba(0, 0, 0, 0);
       text-decoration: none;
-      text-transform: uppercase;
+      text-transform: lowercase;
       border-width: 0px;
       border-color: #000;
       border-style: none;
@@ -451,7 +383,7 @@ Parallax
 .btn {
   margin-bottom:30px;
   border-radius: 0;
-  text-transform: uppercase;
+  text-transform: none;
   font-weight: @weight-normal;
   -webkit-transition: all .3s ease-in-out;
   -moz-transition: all .3s ease-in-out;
@@ -567,7 +499,7 @@ Parallax
 
 .btn{
   font-family: "Roboto", Arial, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.5px;
   padding: 9px 15px 9px 15px;
   &.btn-red {
@@ -575,10 +507,6 @@ Parallax
   }
 }
 
-
-.banner-social-buttons {
-  margin-top: 0;
-}
 
 /* Media queries */
 
