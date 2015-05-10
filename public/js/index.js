@@ -42,24 +42,34 @@ function pad(num, size) {
     //properties correspond to indexed background images in /img/bgd
     var images = [
         {
-            navbar: "blue"
+            navbar: "blue",
+            by: "Robert Barker",
+            with: "University Photography"
         },
         {
-            navbar: "orange"
+            navbar: "orange",
+            by: "Lindsay France",
+            with: "University Photography"
         },
         {
-            navbar: "blue"
+            navbar: "purple",
+            by: "Robert Barker",
+            with: "University Photography"
         },
         {
-            navbar: "blue"
+            navbar: "purple",
+            by: "Jason Koski",
+            with: "University Photography"
         }
     ];
 
     var numImages = images.length;
     var index = Math.floor(Math.random() * numImages);
+    var image = images[index];
     $('.intro').css({'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
     'background-size': 'cover'});
-    $('.nav.navbar-nav').addClass(images[index].navbar)
+    $('.nav.navbar-nav').addClass(image.navbar);
+    $('#cover-photo-attribution').html("Cover photo by " + image.by+"/"+image.with+"<br/>");
 
 
 })(jQuery);

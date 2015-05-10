@@ -120,7 +120,7 @@ if (error.length > 0) {
                 <textarea id="q2" name="q2" class="form-control" rows="4" required><%= input.q2 || "" %></textarea>
             </div>
             <div class="form-group">
-                <label for="github">Github Profile </label>
+                <label for="github">github profile </label>
 
                 <div class="input-group">
                     <div class="input-group-addon">@</div>
@@ -138,7 +138,7 @@ if (error.length > 0) {
                 </div>
             </div>
             <div class="form-group">
-                <label for="experienceDropdown">is this your first Hackathon? *</label>
+                <label for="experienceDropdown">is this your first hackathon? *</label>
                 <select class="form-control" id="experienceDropdown" name="experienceDropdown" required>
                     <option value="">select</option>
                     <%- helper.generateOptions(en.experience, {selected: (input.experienceDropdown || "")}); %>
