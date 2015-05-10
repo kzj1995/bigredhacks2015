@@ -21,7 +21,7 @@ body {
   font-weight: @weight-normal;
   overflow-x: hidden;
   margin-top: 10px;
-  padding: 0px 0px 50px 10px;
+  padding: 0 0 50px 10px;
   @media (min-width: 768px) {
     padding: 0 50px 50px 50px;
   }
@@ -30,7 +30,6 @@ body {
 .center-block {
   float: none;
 }
-
 
 /////////////////
 /// typeahead ///
@@ -42,13 +41,8 @@ body {
 
 .tt-input,
 .tt-hint {
-  //width: 420px;
-  //height: 30px;
   padding: 8px 12px;
-  //font-size: 24px;
   line-height: 30px;
-  //border: 2px solid #ccc;
-  //border-radius: 8px;
   outline: none;
 }
 
@@ -66,7 +60,6 @@ body {
   margin-top: 2px;
   padding: 8px 0;
   background-color: #fff;
-  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   //border-radius: 8px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
@@ -94,7 +87,7 @@ body {
 
 .filepicker-bootstrap {
   //symbolic class used in filepicker
-  width: 0px;
+  width: 0;
 }
 
 .filepicker-components(@color) {
@@ -106,7 +99,6 @@ body {
     border-bottom-left-radius: 0;
   }
   button, input {
-    //position:absolute;
     border: 1px solid @color;
     font-size: 14px;
     padding: 4px 20px;
@@ -119,7 +111,7 @@ body {
   input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    width: 250px;
+    width: 250px; //fallback in case calc not supported
     width: ~"calc(100% - 85px)";
     left: 85px;
     right: 0;
@@ -135,6 +127,8 @@ body {
   border: 1px solid lightgray;
   padding: 5px;
 }
+
+
 
 ///////////
 ///forms///
@@ -249,6 +243,8 @@ label {
   }
 }
 
+
+
 ///////////////////////
 ///// headings ////////
 ///////////////////////
@@ -267,7 +263,7 @@ h1.leaf {
     position: relative;
     display: inline-block;
     background-color: @bg-light;
-    .leaf-scale(@ratio:1) {
+    .leaf-scale(@ratio:1) { //idek
       width: 53px*@ratio+.1;
       height: 28px*@ratio+.4;
       background-size: 53px*@ratio - 0.1 28px*@ratio;
@@ -280,7 +276,6 @@ h1.leaf {
       background: url('/img/leaf.svg') no-repeat;
       content: "";
       .leaf-scale(1.01);
-      //left: 100%;
     }
   }
 }
@@ -332,6 +327,7 @@ h1.leaf {
     }
   }
 }
+
 legend {
   margin-bottom: 0; //needed for correct display with firefox
 }
@@ -340,9 +336,6 @@ h2 {
   margin-bottom: 15px; //needed for correct display with chrome
 }
 
-p:first-child{
-
-}
 
 h2, legend {
   width: auto;
@@ -350,4 +343,23 @@ h2, legend {
   font-family: "Blogger Sans Light", Arial, sans-serif;
   font-size: @h2-size;
   border-bottom-width: 0;
+}
+
+
+
+///////////////////
+///////tables//////
+///////////////////
+.table {
+  text-align: left;
+  text-transform: lowercase;
+  & > thead > tr > th {
+    border-bottom: 0;
+  }
+  th {
+    color: @red;
+  }
+  & > tbody > tr > td, & > tbody > tr > th, & > tfoot > tr > td, & > tfoot > tr > th, & > thead > tr > td, & > thead > tr > th {
+    border-color: lighten(@black, 65%);
+  }
 }

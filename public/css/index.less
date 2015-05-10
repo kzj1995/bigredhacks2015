@@ -20,7 +20,7 @@ body {
   margin: 0;
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
   margin: 0 0 30px;
   font-family: "Blogger Sans Light", sans-serif;
   font-weight: @weight-normal;
@@ -28,16 +28,15 @@ h1,h2,h3,h4,h5,h6 {
   text-transform: lowercase;
 }
 
-
 p {
-  text-align:left;
+  text-align: left;
   margin: 0 0 20px;
   .lead {
     font-weight: @weight-bold;
   }
-  .footer{
-    font-size:12px;
-    text-align:center;
+  .footer {
+    font-size: 12px;
+    text-align: center;
   }
 }
 
@@ -45,12 +44,12 @@ p, dl {
   font-size: @body-size;
   line-height: @body-line-height;
 }
+
 dd {
   margin: 0 0 20px;
 }
 
 a {
-  color: #28c3ab;
   -webkit-transition: all .2s ease-in-out;
   -moz-transition: all .2s ease-in-out;
   transition: all .2s ease-in-out;
@@ -87,7 +86,10 @@ a {
 }
 
 .nav.navbar-nav {
-  background-color: rgba(178,223,244,0.7);
+  background-color: fade(@orange, 70%);
+  &.blue {
+    background-color: rgba(178, 223, 244, 0.7);
+  }
 }
 
 .navbar-custom.top-nav-collapse .nav.navbar-nav {
@@ -97,9 +99,9 @@ a {
 .navbar-custom ul.nav li a {
   font-size: 12px;
   letter-spacing: 1px;
-  color: #444;
+  color: @black;
   font-weight: @weight-bold;
-  text-transform:lowercase;
+  text-transform: lowercase;
 }
 
 .navbar-custom.top-nav-collapse ul.nav li a {
@@ -151,8 +153,7 @@ a {
   }
 }
 
-
-/* misc */
+// misc //
 hr {
   margin-top: 10px;
 }
@@ -182,9 +183,9 @@ hr {
   margin-bottom: 50px !important;
 }
 
-/* ===========================
---- General sections
-============================ */
+// ===========================
+//--- General sections
+//============================
 
 .home-section {
   padding-top: 80px;
@@ -199,7 +200,7 @@ hr {
   h2 {
     font-size: 40px;
     color: @red;
-    text-transform:lowercase;
+    text-transform: lowercase;
   }
 }
 
@@ -217,47 +218,53 @@ hr {
   background: @bg-dark;
 }
 
-/* --- section color var --- */
+// --- section color var --- //
 
 .text-light {
   color: @white;
 }
 
 img.leaf {
-  float:left;
-  @media(max-width: 500px) {
+  float: left;
+  @media (max-width: 500px) {
     width: 0;
     height: 0;
     visibility: hidden;
   }
 }
-/* ===========================
---- Intro
-============================ */
+
+// ===========================
+//--- Intro
+//============================
 
 .intro {
   width: 100%;
   position: relative;
   background: url(../img/bg1.jpg) no-repeat center center scroll;
+  //background: url(../img/dark_clock_tower.jpg) no-repeat center center scroll;
   background-size: 100% 100%;
   .slogan {
     text-align: center;
     position: relative;
+    img {
+      position:relative;
+      top:-25px;
+      padding-right:10px;
+    }
+    h2, h4, h3 {
+      color: @white;
+    }
     h2 {
-      color: #FFF;
-      font-size:@main-header-size; //60px;
+      font-size: @main-header-size; //60px;
       line-height: @main-header-size;
       font-weight: 700;
       background-color: rgba(0, 0, 0, 0);
       text-decoration: none;
-      border-width: 0px;
-      border-color: #000;
-      border-style: none;
       text-shadow: -1px 0 1px #000;
     }
 
-    h4 {
-      color: #fff;
+    h3, h4 {
+      margin: 0 0 15px;
       text-shadow: -1px 1px 1px #000;
     }
   }
@@ -271,7 +278,7 @@ img.leaf {
   height: 100%;
   position: absolute;
   top: 0;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 #intro.intro {
@@ -286,9 +293,9 @@ img.leaf {
   font-size: 18px;
 }
 
-/* ===========================
---- About
-============================ */
+// ===========================
+//--- About
+//============================
 
 .boxed-grey {
   padding: 20px;
@@ -296,11 +303,11 @@ img.leaf {
 
 .pics {
   h5 {
-    font-size:16px;
+    font-size: 16px;
     margin-bottom: 10px;
   }
   p.subtitle {
-    font-size:13px;
+    font-size: 13px;
     margin-bottom: 10px;
   }
 }
@@ -309,12 +316,9 @@ img.leaf {
   margin-bottom: 20px;
 }
 
-
-
-
-/* ===========================
---- Footer
-============================ */
+// ===========================
+//--- Footer
+//============================
 
 footer {
   text-align: center;
@@ -326,13 +330,12 @@ footer p {
   color: #f8f8f8;
 }
 
-
-/* ===========================
---- Elements
-============================ */
+// ===========================
+//--- Elements
+//============================
 
 .btn {
-  margin-bottom:30px;
+  margin-bottom: 30px;
   border-radius: 0;
   text-transform: none;
   font-weight: @weight-normal;
@@ -354,7 +357,7 @@ footer p {
   -webkit-transition: background .3s ease-in-out;
   -moz-transition: background .3s ease-in-out;
   transition: background .3s ease-in-out;
-  &:hover,&:focus {
+  &:hover, &:focus {
     outline: 0;
     color: #fff;
     background: rgba(255, 255, 255, .1);
@@ -364,7 +367,6 @@ footer p {
     color: #666;
   }
 }
-
 
 .btn-circle.btn-dark :hover,
 .btn-circle.btn-dark :focus {
@@ -448,7 +450,7 @@ footer p {
   border-color: #666;
 }
 
-.btn{
+.btn {
   font-family: "Roboto", Arial, sans-serif;
   font-size: 14px;
   letter-spacing: 0.5px;
@@ -456,8 +458,10 @@ footer p {
   &.btn-red {
     font-weight: @weight-bold;
   }
+  &.fixed-width {
+    width: 90px;
+  }
 }
-
 
 /* Media queries */
 
@@ -535,7 +539,6 @@ footer p {
 
 }
 
-//start default.css
 a, .tp-caption a.btn:hover {
   color: #b31b1b;
 }
@@ -547,7 +550,6 @@ a, .tp-caption a.btn:hover {
 .navbar-custom ul.nav ul.dropdown-menu li a:hover {
   color: #67b0d1;
 }
-
 
 .bg-skin {
   background: #b31b1b;

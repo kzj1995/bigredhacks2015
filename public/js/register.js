@@ -155,8 +155,6 @@ $('document').ready(function () {
             phonenumber: "Please provide a valid phone number",
             resume: "Please upload a valid .pdf",
             major: "Please enter your major",
-            q1: "Please fill out essay question 1",
-            q2: "Please fill out essay question 2",
             linkedin: "Please provide a valid LinkedIn url"
         }
     });
