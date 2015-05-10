@@ -6,7 +6,7 @@ var helper = viewHelper;
 %>
 <% if (errors.length > 0) {
     for (var i = 0; i < errors.length; i++) {
-        errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg + '</div>'
+        errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg.toLowerCase() + '</div>'
     }
 }
 else errors = [];
@@ -27,13 +27,13 @@ else errors = [];
                     </div>
                     <br/>
                     <div class="form-group">
-                        <label for="email">Email Address *</label>
+                        <label for="email">email address *</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder=
-                        "bigredhacks@example.com" value="<%= user.email %>" title="Please enter a valid email"
+                        "bigredhacks@example.com" value="<%= user.email %>" title="please enter a valid email"
                                readonly>
                     </div>
                     <div class="form-group">
-                        <label for="password">Change Password</label>
+                        <label for="password">change password</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password"
                                value="">
                     </div>
@@ -47,25 +47,25 @@ else errors = [];
                     <br/>
 
                     <div class="form-group">
-                        <label for="firstname">First Name *</label>
-                        <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name"
+                        <label for="firstname">first name *</label>
+                        <input type="text" id="firstname" name="firstname" class="form-control" placeholder="first name"
                                value="<%= user.name.first %>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="lastname">Last Name *</label>
-                        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Last Name"
+                        <label for="lastname">last name *</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="last name"
                                value="<%= user.name.last %>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="phonenumber">Phone Number *</label>
+                        <label for="phonenumber">phone number *</label>
                         <input type="text" id="phonenumber" name="phonenumber" class="form-control"
-                               placeholder="2058675309"
+                               placeholder="XXX-XXX-XXXX"
                                value="<%= user.phone %>" required/>
                     </div>
                     <div class="form-group">
-                        <label for="genderDropdown">Gender *</label>
+                        <label for="genderDropdown">gender *</label>
                         <select class="form-control" id="genderDropdown" name="genderDropdown" readonly>
-                            <option value="">Select</option>
+                            <option value="">select</option>
                             <%- helper.generateOptions(en.gender, {selected: user.gender}); %>
                         </select>
                     </div>
@@ -78,20 +78,20 @@ else errors = [];
                     <br/>
 
                     <div class="form-group">
-                        <label for="college">Full School Name *</label><br/>
+                        <label for="college">full school name *</label><br/>
                         <input type="text" id="college" name="college" class="form-control typeahead"
-                               placeholder="School Name"
+                               placeholder="school name"
                                value="<%= user.school.name %>" readonly/>
                     </div>
                     <div class="form-group">
-                        <label for="yearDropdown">Graduation Year *</label>
+                        <label for="yearDropdown">graduation year *</label>
                         <select class="form-control" id="yearDropdown" name="yearDropdown" readonly>
                             <option value=""></option>
                             <%- helper.generateOptions(en.year, {selected: user.school.year}); %>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="major">Major *</label>
+                        <label for="major">major *</label>
                         <input type="text" id="major" name="major" class="form-control" placeholder="Major"
                                value="<%= user.school.major %>" required/>
                     </div>
@@ -114,7 +114,7 @@ else errors = [];
                                   rows="3"><%= user.app.questions.q2 %></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="github">Github Profile </label>
+                        <label for="github">github profile </label>
 
                         <div class="input-group">
                             <div class="input-group-addon">@</div>
@@ -123,7 +123,7 @@ else errors = [];
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="linkedin">LinkedIn Profile</label>
+                        <label for="linkedin">linkedIn profile</label>
 
                         <div class="input-group">
                             <div class="input-group-addon">http://</div>
@@ -132,9 +132,9 @@ else errors = [];
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="experienceDropdown">Is this your first Hackathon? *</label>
+                        <label for="experienceDropdown">is this your first Hackathon? *</label>
                         <select class="form-control" id="experienceDropdown" name="experienceDropdown" required>
-                            <option value="">Select</option>
+                            <option value="">select</option>
                             <%- helper.generateOptions(en.experience, {selected: user.app.experience}); %>
                         </select>
                     </div>
@@ -146,7 +146,7 @@ else errors = [];
                     </div>
                     <br/>
                     <div class="form-group">
-                        <label for="projectDropdown">What type of project are you thinking about working on? *</label>
+                        <label for="projectDropdown">what type of project are you thinking about working on? *</label>
                         <select class="form-control" id="projectDropdown" name="projectDropdown" required>
                             <option value="">Select</option>
                             <%- helper.generateOptions(en.projecttype, {selected: user.preferences.projecttype}); %>
@@ -155,12 +155,12 @@ else errors = [];
                     <div class="form-group">
                         <label for="dietary">Dietary Restrictions *</label>
                         <select class="form-control" id="dietary" name="dietary" required>
-                            <option value="">Select</option>
+                            <option value="">select</option>
                             <%- helper.generateOptions(en.dietary, {selected: user.preferences.dietary}); %>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tshirt">T-Shirt Size *</label>
+                        <label for="tshirt">t-shirt size *</label>
                         <select class="form-control" id="tshirt" name="tshirt" required>
                             <option value="">Select</option>
                             <%- helper.generateOptions(en.tshirt, {selected: user.preferences.tshirt}); %>
@@ -168,7 +168,7 @@ else errors = [];
                     </div>
                 </fieldset>
 
-                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="submit" class="btn btn-primary">submit</button>
             </form>
         </div>
     </div>

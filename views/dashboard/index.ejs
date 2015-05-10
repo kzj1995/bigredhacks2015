@@ -16,11 +16,11 @@ var success = success || []; //success flash message
             </div>
 
             <% if (error.length > 0) { %>
-            <%- '<div class="alert alert-danger" role="alert">' + error[0] + '</div>' %>
+            <%- '<div class="alert alert-danger" role="alert">' + error[0].toLowerCase() + '</div>' %>
             <% } %>
 
             <% if (success.length > 0) { %>
-            <%- '<div class="alert alert-success" role="alert">' + success[0] + '</div>' %>
+            <%- '<div class="alert alert-success" role="alert">' + success[0].toLowerCase() + '</div>' %>
             <% } %>
 
             <p> welcome back, <%= name.first %> <%= name.last %> </p>
@@ -31,7 +31,7 @@ var success = success || []; //success flash message
             <div class="header-wrapper">
                 <h2 class="page-title">status</h2>
             </div>
-            <p>registration process is still open</p>
+            <p>registration process is still open.</p>
 
             <br/>
 
