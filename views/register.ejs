@@ -30,7 +30,9 @@ if (error.length > 0) {
     <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
-            <div class="header-wrapper"><legend class="page-title">account information</legend></div>
+            <div class="header-wrapper">
+                <legend class="page-title">account information</legend>
+            </div>
             <div class="form-group">
                 <label for="email">email address *</label>
                 <input type="email" id="email" name="email" class="form-control" placeholder="bigredhacks@example.com"
@@ -50,7 +52,9 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <div class="header-wrapper"><legend class="page-title">basic information</legend></div>
+            <div class="header-wrapper">
+                <legend class="page-title">basic information</legend>
+            </div>
             <div class="form-group">
                 <label for="firstname">first name *</label>
                 <input type="text" id="firstname" name="firstname" minlength="2" class="form-control"
@@ -78,7 +82,9 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <div class="header-wrapper"><legend class="page-title">school</legend></div>
+            <div class="header-wrapper">
+                <legend class="page-title">school</legend>
+            </div>
 
             <input type="hidden" id="collegeid" name="collegeid" class="form-control"
                    value="<%= input.collegeid || "" %>" required/>
@@ -103,9 +109,12 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <div class="header-wrapper"><legend class="page-title">background</legend></div>
+            <div class="header-wrapper">
+                <legend class="page-title">background</legend>
+            </div>
             <div class="form-group">
                 <label for="resume">resume (.pdf) *</label>
+
                 <div class="wrapper">
                     <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resume"
                            name="resume" accept=".pdf" required>
@@ -147,7 +156,9 @@ if (error.length > 0) {
         </fieldset>
         <br/>
         <fieldset>
-            <div class="header-wrapper"><legend class="page-title">preferences</legend></div>
+            <div class="header-wrapper">
+                <legend class="page-title">preferences</legend>
+            </div>
             <div class="form-group">
                 <label for="projectDropdown">what type of project are you thinking about working on? *</label>
                 <select class="form-control" id="projectDropdown" name="projectDropdown" required>
@@ -170,9 +181,9 @@ if (error.length > 0) {
                 </select>
             </div>
         </fieldset>
-
-        <button type="submit" id="submit" class="btn btn-primary">submit</button>
-
+        <fieldset>
+            <button type="submit" id="submit" class="btn btn-primary">submit</button>
+        </fieldset>
     </form>
 </div>
 

@@ -6,6 +6,7 @@
       "AWS_S3_bucket": "",
       "mailchimp_api_key": "",
       "cookie_secret": "",
-      "mandrill_api_key": ""
+      "mandrill_api_key": "",
+      "url": ""
     }
 }

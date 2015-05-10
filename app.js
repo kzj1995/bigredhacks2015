@@ -12,6 +12,7 @@ var flash = require('connect-flash');
 
 var config = require('./config.js');
 
+var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var apiRoute = require('./routes/api');
@@ -64,7 +65,7 @@ if (app.get('env') === 'production') {
     app.use(require('express-uglify').middleware({src: path.join(__dirname, '/public'), logLevel: 'none'}));
 }
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(subdomain({base: config.setup.url}));
 
 var _requireAuthentication = function (req, res, next) {
     if (req.user) {
@@ -77,6 +78,10 @@ var _requireAuthentication = function (req, res, next) {
 };
 
 //setup routes
+app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
+/*app.use('/subdomain/fa15/', function(req,res,next) {
+   // res.redirect('/*');
+});*/
 app.use('/', routes);
 app.use('/', authRoute);
 app.use('/user', _requireAuthentication, user);
