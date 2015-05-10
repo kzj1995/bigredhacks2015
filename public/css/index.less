@@ -86,7 +86,9 @@ a {
 }
 
 .nav.navbar-nav {
-  background-color: fade(@orange, 70%);
+  &.orange {
+    background-color: fade(@orange, 70%);
+  }
   &.blue {
     background-color: rgba(178, 223, 244, 0.7);
   }
@@ -237,12 +239,22 @@ img.leaf {
 //--- Intro
 //============================
 
+#background-wrapper {
+  //background-size: 100% 100%;
+  //background-repeat: no-repeat;
+  //background-attachment: scroll;
+  //background-image: url(/img/bgd/cornell_000.jpg);
+}
 .intro {
   width: 100%;
   position: relative;
-  background: url(../img/bg1.jpg) no-repeat center center scroll;
-  //background: url(../img/dark_clock_tower.jpg) no-repeat center center scroll;
-  background-size: 100% 100%;
+  //background: url(../img/bg1.jpg) no-repeat center center scroll;
+  background: url(../img/dark_clock_tower.jpg) no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
   .slogan {
     text-align: center;
     position: relative;
@@ -265,7 +277,7 @@ img.leaf {
 
     h3, h4 {
       margin: 0 0 15px;
-      text-shadow: -1px 1px 1px #000;
+      text-shadow: -2.5px 2.5px 8px #000;
     }
   }
   .page-scroll {
