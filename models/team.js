@@ -63,8 +63,8 @@ teamSchema.methods.removeUser = function(user_id, callback) {
     var _this = this;
     var index = _this.members.map(function(e) { return e.id.toString(); }).indexOf(user_id.toString()); //check whether user is in array
     if (index != -1) {
-        console.log(index);
-        _this.members.splice(_this.members.indexOf(index), 1);
+        _this.members.splice(index, 1);
+        console.log(_this.members);
         _this.save(function(err, team){
             if (err){
                 return callback(err);
