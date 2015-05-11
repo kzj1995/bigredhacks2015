@@ -193,15 +193,14 @@ hr {
 //============================
 
 .home-section {
-  padding-top: 80px;
-  padding-bottom: 80px;
+  padding-top: 10px;
+  padding-bottom: 100px;
   display: block;
   position: relative;
   z-index: 120;
 }
 
 .section-heading {
-  padding-left: 0;
   h2 {
     font-size: 40px;
     color: @red;
@@ -244,6 +243,7 @@ img.leaf {
 
 .intro {
   width: 100%;
+  padding: 20% 0 40px 0;
   position: relative;
   background: url(../img/bgd/cornell_000.jpg) no-repeat center center scroll;
   -webkit-background-size: cover;
@@ -286,11 +286,7 @@ img.leaf {
   height: 100%;
   position: absolute;
   top: 0;
-  background: rgba(0, 0, 0, 0.2);
-}
-
-#intro.intro {
-  padding: 20% 0 0 0;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .brand-heading {
@@ -400,7 +396,6 @@ footer p {
 
   .intro {
     height: 100%;
-    padding: 0;
   }
 
   .brand-heading {
@@ -414,14 +409,6 @@ footer p {
 }
 
 @media (max-width: 768px) {
-
-  .team.boxed-grey {
-    margin-bottom: 30px;
-  }
-
-  .boxed-grey {
-    margin-bottom: 30px;
-  }
 
 }
 
@@ -452,11 +439,11 @@ footer p {
 }
 
 a, .tp-caption a.btn:hover {
-  color: #b31b1b;
+  color: @red;
 }
 
 .top-nav-collapse {
-  background: #b31b1b;
+  background: @red;
 }
 
 .navbar-custom ul.nav ul.dropdown-menu li a:hover {
@@ -464,17 +451,17 @@ a, .tp-caption a.btn:hover {
 }
 
 .bg-skin {
-  background: #b31b1b;
+  background: @red;
 }
 
 footer {
-  background-color: #b31b1b;
+  background-color: @red;
 }
 
 .btn-skin {
   color: #fff;
-  background-color: #b31b1b;
-  border-color: #b31b1b;
+  background-color: @red;
+  border-color: @red;
 }
 
 
@@ -491,6 +478,7 @@ footer {
   text-align: center;
   padding-top: 100px;
   margin-bottom: 100px;
+  text-transform: lowercase;
 }
 
 .landing-header {
