@@ -89,7 +89,7 @@ function pad(num, size) {
      * validator
      */
 
-    $.validator.addMethod("cornellEmail", function (val, elem, params) {
+    $.validator.addMethod("checkCornellEmail", function (val, elem, params) {
         return /^[^@]+@cornell\.edu$/i.test(val) || val === "";
     }, 'Please enter a cornell.edu');
 
