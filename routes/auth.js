@@ -157,13 +157,16 @@ router.post('/register', function (req, res) {
                             if (err) {
                                 console.log(err);
                             }
-                            var htmlcontent="<p>Hello "+newUser.name.first+" "+newUser.name.last+",</p><p>"+
-                            "Thank you so much for registering for BigRed//Hacks. We will keep you posted "+
-                            "on the status of your application and other relevant information."+"</p><p>"+
-                            "<p>Cheers,</p>"+"<p>BigRed//Hacks Team </p>"
+                            var template_name = "bigredhackstemplate";
+                            var template_content = [{
+                                "name": "emailcontent",
+                                "content": "<p>Hello "+newUser.name.first+" "+newUser.name.last+",</p><p>"+
+                                "Thank you so much for registering for BigRed//Hacks. We will keep you posted "+
+                                "on the status of your application and other relevant information."+"</p><p>"+
+                                "<p>Cheers,</p>"+"<p>BigRed//Hacks Team </p>"
+                            }];
 
                             var message={
-                                "html": htmlcontent,
                                 "subject": "BigRed//Hacks Registration Confirmation",
                                 "from_email": "info@bigredhacks.com",
                                 "from_name": "BigRed//Hacks",
@@ -188,7 +191,9 @@ router.post('/register', function (req, res) {
                                 "merge_language": "mailchimp"
                             };
                             var async = false;
-                            mandrill_client.messages.send({"message": message, "async": async}, function(result) {
+                            mandrill_client.messages.sendTemplate({"template_name": template_name,
+                                "template_content": template_content,
+                                "message": message, "async": async}, function(result) {
                                 console.log(result);
                             }, function(e) {
                                 console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
@@ -309,13 +314,16 @@ router.post('/resetpassword', function (req, res) {
                     res.redirect('/')
                 }
                 else {
-                    var passwordreseturl = req.protocol + '://' + req.get('host')+"/resetpass?token=" + user.passwordtoken
-                    var htmlcontent = "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
+                    var passwordreseturl = req.protocol + '://' + req.get('host')+"/resetpass?token=" + user.passwordtoken;
+                    var template_name="bigredhackstemplate";
+                    var template_content = [{
+                        "name": "emailcontent",
+                        "content": "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
                         "<a href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
-                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
+                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                    }];
                     var message = {
-                        "html": htmlcontent,
                         "subject": "BigRed//Hacks Password Reset",
                         "from_email": "info@bigredhacks.com",
                         "from_name": "BigRed//Hacks",
@@ -340,7 +348,9 @@ router.post('/resetpassword', function (req, res) {
                         "merge_language": "mailchimp"
                     };
                     var async = false;
-                    mandrill_client.messages.send({"message": message, "async": async}, function (result) {
+                    mandrill_client.messages.sendTemplate({"template_name": template_name,
+                        "template_content": template_content,
+                        "message": message, "async": async}, function (result) {
                         console.log(result);
                     }, function (e) {
                         console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
