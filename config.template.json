@@ -10,6 +10,7 @@
     "url": ""
   },
   "mailchimp": {
-    "interested": ""
+    "l_interested": "",
+    "l_applicants": ""
   }
 }

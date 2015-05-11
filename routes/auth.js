@@ -21,8 +21,6 @@ var uid = require("uid2");
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
 
-
-
 passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
@@ -77,8 +75,8 @@ router.post('/register', function (req, res) {
         //console.log(resume.headers);
 
         //todo reorder validations to be consistent with form
-        req = validator.validate(req,[
-            'email','password','firstname','lastname','phonenumber','major','genderDropdown','dietary','tshirt','linkedin','collegeid','q1','q2','projectDropdown','experienceDropdown','yearDropdown'
+        req = validator.validate(req, [
+            'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'projectDropdown', 'experienceDropdown', 'yearDropdown'
         ]);
 
         var errors = req.validationErrors();
@@ -119,7 +117,7 @@ router.post('/register', function (req, res) {
                     password: req.body.password,
                     gender: req.body.genderDropdown,
                     phone: req.body.phonenumber,
-                    preferences:{
+                    preferences: {
                         dietary: req.body.dietary,
                         tshirt: req.body.tshirt,
                         projecttype: req.body.projectDropdown
@@ -140,7 +138,7 @@ router.post('/register', function (req, res) {
                         },
                         experience: req.body.experienceDropdown
                     },
-                    passwordtoken:""
+                    passwordtoken: ""
                 });
                 newUser.save(function (err, doc) {
                     if (err) {
@@ -152,48 +150,57 @@ router.post('/register', function (req, res) {
                         });
                     }
                     else {
-                        //send email and redirect to home page
-                        req.login(newUser, function (err) {
+                        helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
                             if (err) {
                                 console.log(err);
                             }
-                            var htmlcontent="<p>Hello "+newUser.name.first+" "+newUser.name.last+",</p><p>"+
-                            "Thank you so much for registering for BigRed//Hacks. We will keep you posted "+
-                            "on the status of your application and other relevant information."+"</p><p>"+
-                            "<p>Cheers,</p>"+"<p>BigRed//Hacks Team </p>"
-
-                            var message={
-                                "html": htmlcontent,
-                                "subject": "BigRed//Hacks Registration Confirmation",
-                                "from_email": "info@bigredhacks.com",
-                                "from_name": "BigRed//Hacks",
-                                "to": [{
-                                    "email": newUser.email,
-                                    "name": newUser.name.first+" "+newUser.name.last,
-                                    "type": "to"
-                                }],
-                                "important": false,
-                                "track_opens": null,
-                                "track_clicks": null,
-                                "auto_text": null,
-                                "auto_html": null,
-                                "inline_css": null,
-                                "url_strip_qs": null,
-                                "preserve_recipients": null,
-                                "view_content_link": null,
-                                "tracking_domain": null,
-                                "signing_domain": null,
-                                "return_path_domain": null,
-                                "merge": true,
-                                "merge_language": "mailchimp"
-                            };
-                            var async = false;
-                            mandrill_client.messages.send({"message": message, "async": async}, function(result) {
+                            else {
                                 console.log(result);
-                            }, function(e) {
-                                console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                            });
-                            res.redirect('/user/dashboard');
+                            }
+
+                            //send email and redirect to home page
+                            req.login(newUser, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                var htmlcontent = "<p>Hello " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                    "Thank you so much for registering for BigRed//Hacks. We will keep you posted " +
+                                    "on the status of your application and other relevant information." + "</p><p>" +
+                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+
+                                var message = {
+                                    "html": htmlcontent,
+                                    "subject": "BigRed//Hacks Registration Confirmation",
+                                    "from_email": "info@bigredhacks.com",
+                                    "from_name": "BigRed//Hacks",
+                                    "to": [{
+                                        "email": newUser.email,
+                                        "name": newUser.name.first + " " + newUser.name.last,
+                                        "type": "to"
+                                    }],
+                                    "important": false,
+                                    "track_opens": null,
+                                    "track_clicks": null,
+                                    "auto_text": null,
+                                    "auto_html": null,
+                                    "inline_css": null,
+                                    "url_strip_qs": null,
+                                    "preserve_recipients": null,
+                                    "view_content_link": null,
+                                    "tracking_domain": null,
+                                    "signing_domain": null,
+                                    "return_path_domain": null,
+                                    "merge": true,
+                                    "merge_language": "mailchimp"
+                                };
+                                var async = false;
+                                mandrill_client.messages.send({"message": message, "async": async}, function (result) {
+                                    console.log(result);
+                                }, function (e) {
+                                    console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                                });
+                                res.redirect('/user/dashboard');
+                            })
                         })
                     }
                 });
@@ -238,13 +245,13 @@ router.post('/resetpass?', function (req, res) {
             res.redirect('/');
         }
         else {
-            req = validator.validate(req,[
+            req = validator.validate(req, [
                 'password'
             ]);
             var errors = req.validationErrors();
-            if(errors) {
+            if (errors) {
                 req.flash('error', 'Password is not valid. 6 to 25 characters required.');
-                res.redirect('/resetpass?token='+req.query.token);
+                res.redirect('/resetpass?token=' + req.query.token);
             }
             else {
                 user.password = req.body.password;
@@ -300,7 +307,7 @@ router.post('/resetpassword', function (req, res) {
                 error: req.flash('error'),
                 email: user.email
             });
-            user.passwordtoken=uid(15);
+            user.passwordtoken = uid(15);
             user.save(function (err, doc) {
                 if (err) {
                     // If it failed, return error
@@ -309,7 +316,7 @@ router.post('/resetpassword', function (req, res) {
                     res.redirect('/')
                 }
                 else {
-                    var passwordreseturl = req.protocol + '://' + req.get('host')+"/resetpass?token=" + user.passwordtoken
+                    var passwordreseturl = req.protocol + '://' + req.get('host') + "/resetpass?token=" + user.passwordtoken
                     var htmlcontent = "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
                         "<a href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
