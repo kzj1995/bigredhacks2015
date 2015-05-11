@@ -9,6 +9,7 @@ var expressValidator = require('express-validator');
 var validator = require('validator');
 var session = require('express-session');
 var flash = require('connect-flash');
+var compression = require('compression');
 
 var config = require('./config.js');
 
@@ -31,6 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
+app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -63,8 +65,13 @@ app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 if (app.get('env') === 'production') {
     app.use(require('express-uglify').middleware({src: path.join(__dirname, '/public'), logLevel: 'none'}));
+    var oneDay = 86400000;
+    app.use(express.static(path.join(__dirname, 'public'), {maxAge: oneDay}));
 }
-app.use(express.static(path.join(__dirname, 'public')));
+else {
+    app.use(express.static(path.join(__dirname, 'public')));
+}
+
 app.use(subdomain({base: config.setup.url}));
 
 var _requireNoAuthentication = function (req, res, next) {
