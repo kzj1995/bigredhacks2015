@@ -248,7 +248,7 @@ userSchema.methods.leaveTeam = function (callback) {
                 })
             }
             catch(err) {
-                console.log("userSchema.methods.leaveTeam:",err);
+                callback("userSchema.methods.leaveTeam: "+err);
             }
         })
     }

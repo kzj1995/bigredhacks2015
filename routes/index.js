@@ -27,8 +27,14 @@ router.post('/cornell/subscribe', function (req, res, next) {
     else {
         helper.addSubscriber(config.mailchimp.l_interested, email, "", "", function (err, result) {
             if (err) {
+                if (err.name === "List_AlreadySubscribed") {
+                    req.flash("error", err.error);
+                }
+                else {
+                    req.flash("error", "There was an error adding your email to the list.");
+                }
                 console.log(err);
-                req.flash("error", "There was an error adding your email to the list.");
+
             }
             else {
                 console.log(result);
