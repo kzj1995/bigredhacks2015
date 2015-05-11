@@ -101,8 +101,7 @@ function pad(num, size) {
         rules: {
             cornellEmail: {
                 required: true,
-                email: true,
-                cornellEmail: true
+                email: true
             }
         }
     })

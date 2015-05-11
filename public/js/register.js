@@ -115,13 +115,19 @@ $('document').ready(function () {
                 accept: 'application/pdf'
             },
             q1: {
-                required: true
+                required: true,
+                maxlength: 5000
             },
             q2: {
-                required: true
+                required: true,
+                maxlength: 5000
             },
             linkedin: {
                 linkedinURL: true
+            },
+            anythingelse: {
+                required: false,
+                maxlength: 1000
             }
         },
         messages: {

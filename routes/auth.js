@@ -117,10 +117,10 @@ router.post('/register', function (req, res) {
                     password: req.body.password,
                     gender: req.body.genderDropdown,
                     phone: req.body.phonenumber,
-                    preferences: {
+                    logistics: {
                         dietary: req.body.dietary,
                         tshirt: req.body.tshirt,
-                        projecttype: req.body.projectDropdown
+                        anythingelse: req.body.anythingelse
                     },
                     school: {
                         id: req.body.collegeid,

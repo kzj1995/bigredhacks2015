@@ -105,9 +105,9 @@ router.post('/dashboard/edit', function (req, res, next) {
         user.app.github = req.body.github;
         user.app.linkedin = req.body.linkedin;
         user.app.experience = req.body.experienceDropdown;
-        user.preferences.dietary = req.body.dietary;
-        user.preferences.tshirt = req.body.tshirt;
-        user.preferences.projecttype = req.body.projectDropdown;
+        user.logistics.dietary = req.body.dietary;
+        user.logistics.tshirt = req.body.tshirt;
+        user.logistics.anythingelse = req.body.anythingelse;
         user.save(function (err, doc) {
             if (err) {
                 // If it failed, return error
