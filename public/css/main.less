@@ -128,8 +128,6 @@ body {
   padding: 5px;
 }
 
-
-
 ///////////
 ///forms///
 ///////////
@@ -211,6 +209,20 @@ label {
   .alert-color(@success);
 }
 
+.alert.float {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  z-index: 99999;
+  text-align: center;
+  @media (min-width: 768px) {
+    width: 500px;
+    margin-left: -250px;
+  }
+}
+
 .btn-style(@color) {
   font-weight: @weight-normal;
   background-color: @color;
@@ -229,6 +241,7 @@ label {
 
 .btn {
   border-radius: 0;
+  text-transform: lowercase;
   &.btn-default {
     .btn-style(@neutral);
   }
@@ -242,8 +255,6 @@ label {
     .btn-style(@error);
   }
 }
-
-
 
 ///////////////////////
 ///// headings ////////
@@ -263,7 +274,8 @@ h1.leaf {
     position: relative;
     display: inline-block;
     background-color: @bg-light;
-    .leaf-scale(@ratio:1) { //idek
+    .leaf-scale(@ratio:1) {
+      //idek
       width: 53px*@ratio+.1;
       height: 28px*@ratio+.4;
       background-size: 53px*@ratio - 0.1 28px*@ratio;
@@ -336,7 +348,6 @@ h2 {
   margin-bottom: 15px; //needed for correct display with chrome
 }
 
-
 h2, legend {
   width: auto;
   padding-top: 10px;
@@ -344,8 +355,6 @@ h2, legend {
   font-size: @h2-size;
   border-bottom-width: 0;
 }
-
-
 
 ///////////////////
 ///////tables//////
@@ -362,4 +371,8 @@ h2, legend {
   & > tbody > tr > td, & > tbody > tr > th, & > tfoot > tr > td, & > tfoot > tr > th, & > thead > tr > td, & > thead > tr > th {
     border-color: lighten(@black, 65%);
   }
+}
+
+.modal-content {
+  border-radius: 0;
 }

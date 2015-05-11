@@ -41,17 +41,12 @@ function pad(num, size) {
     //properties correspond to indexed background images in /img/bgd
     var images = [
         {
-            navbar: "blue",
-            by: "Robert Barker",
-            with: "University Photography"
-        },
-        {
             navbar: "orange",
             by: "Lindsay France",
             with: "University Photography"
         },
         {
-            navbar: "purple",
+            navbar: "blue",
             by: "Robert Barker",
             with: "University Photography"
         },
@@ -70,5 +65,46 @@ function pad(num, size) {
     $('.nav.navbar-nav').addClass(image.navbar);
     $('#cover-photo-attribution').html("Cover photo by " + image.by+"/"+image.with+"<br/>");
 
+    //registration modal stuff
+    var footer, title;
+    $("#regCornell").on("click", function(e) {
+        e.preventDefault();
+        footer = $("#regModal .modal-footer").html();
+        $("#regModal .modal-footer .reg-select").addClass("hidden");
+        title = $("#regModal .modal-title").text();
+        $("#regModal .modal-title").text("Cornell/Ithaca Registration");
+        $("#regModal .modal-body").removeClass("hidden");
+        $("#cornell-submit").removeClass("hidden");
+    });
+
+    $('#regModal').on('hidden.bs.modal', function (e) {
+        $("#regModal .modal-footer .reg-select").removeClass("hidden");
+        $("#regModal .modal-title").text(title);
+        $("#regModal .modal-body").addClass("hidden");
+        $("#cornell-submit").addClass("hidden");
+    });
+
+
+    /**
+     * validator
+     */
+
+    $.validator.addMethod("cornellEmail", function (val, elem, params) {
+        return /^[^@]+@cornell\.edu$/i.test(val) || val === "";
+    }, 'Please enter a cornell.edu');
+
+    $('#subscribeEmail').validate({
+        onfocusout: function (e, event) {
+            this.element(e); //validate field immediately
+        },
+        onkeyup: false,
+        rules: {
+            cornellEmail: {
+                required: true,
+                email: true,
+                cornellEmail: true
+            }
+        }
+    })
 
 })(jQuery);

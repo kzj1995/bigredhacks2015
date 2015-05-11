@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var uid = require('uid2');
 var fs = require('fs');
 var qs = require('qs');
+var mcapi = require('mailchimp-api');
 
 var config = require('../config.js');
 
@@ -13,6 +14,8 @@ var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
 });
+
+var mc = new mcapi.Mailchimp(config.setup.mailchimp_api_key);
 
 
 // Make the nested fields parsed by multiparty look like req.body from body-parser
@@ -33,7 +36,7 @@ helper.reformatFields = function reformatFields(fields, castNumber) {
             if (f.match(/\[\]$/)) {
                 // if our key uses array syntax we can make qs.parse produce the intended result
                 // by removing the trailing [] on the key
-                var key = f.replace(/\[\]$/,'');
+                var key = f.replace(/\[\]$/, '');
 
                 if (castNumber) {
                     fields[key] = fields[f].map(function (i) {
@@ -91,13 +94,13 @@ helper.uploadResume = function uploadResume(resume, options, callback) {
         ACL: 'public-read',
         Body: body,
         ContentType: 'application/pdf'
-    }, function(err, res) {
+    }, function (err, res) {
         if (err) {
             callback(err);
         }
         else {
-        res.filename = filename;
-        return callback(err, res);
+            res.filename = filename;
+            return callback(err, res);
         }
     });
 };
@@ -108,10 +111,31 @@ helper.deleteResume = function deleteResume(location, callback) {
         Bucket: 'STRING_VALUE', /* required */
         Key: 'STRING_VALUE' /* required */
     };
-    s3.deleteObject(params, function(err, data) {
+    s3.deleteObject(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else     console.log(data);           // successful response
     });
+};
+
+helper.addSubscriber = function (listid, email, fname, lname, callback) {
+    var mcReq = {
+        id: listid,
+        email: {email: email},
+        double_optin: false,
+        merge_vars: {
+            EMAIL: email,
+            FNAME: fname,
+            LNAME: lname
+        }
+    };
+
+    // submit subscription request to mail chimp
+    mc.lists.subscribe(mcReq, function (data) {
+        callback(null, data);
+    }, function (error) {
+        callback(error);
+    });
+
 };
 
 module.exports = helper;

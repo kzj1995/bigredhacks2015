@@ -28,8 +28,9 @@ if (error.length > 0) {
 <div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
-    <h1>Registration</h1>
+    <h1>General Registration</h1>
 
+    <p>This registration form is only for Cornell students. If you're a non-cornell student, sign up for our mailing list.</p>
     <form id="registrationForm" action="/register" name='registrationForm' method="POST" autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
@@ -192,6 +193,7 @@ if (error.length > 0) {
 
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
+<script src="js/jquery.validate.options.js"></script>
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/register.js"></script>

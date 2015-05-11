@@ -58,6 +58,9 @@ var validator = function () {
         },
         projectDropdown: function (req) {
             req.assert('projectDropdown', 'Please specify a project type you want to work on').notEmpty()
+        },
+        cornellEmail: function (req) {
+            req.assert('cornellEmail', 'Email address is not valid').isEmail()
         }
         //todo check that validations are complete
     };
