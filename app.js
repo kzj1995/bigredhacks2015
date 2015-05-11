@@ -67,6 +67,15 @@ if (app.get('env') === 'production') {
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(subdomain({base: config.setup.url}));
 
+var _requireNoAuthentication = function (req, res, next) {
+    if (req.user) {
+        res.redirect('/user/dashboard')
+    }
+    else {
+        next();
+    }
+};
+
 var _requireAuthentication = function (req, res, next) {
     if (req.user) {
         next();
@@ -77,14 +86,22 @@ var _requireAuthentication = function (req, res, next) {
     }
 };
 
+
+//generic middleware function
+app.use(function(req,res,next) {
+    res.locals.isUser = !!req.user;
+    next();
+});
+
 //setup routes
 app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 /*app.use('/subdomain/fa15/', function(req,res,next) {
    // res.redirect('/*');
 });*/
+//requireAuthentication must come before requireNoAuthentication to prevent redirect loops
 app.use('/', routes);
-app.use('/', authRoute);
 app.use('/user', _requireAuthentication, user);
+app.use('/', _requireNoAuthentication, authRoute);
 app.use('/api', apiRoute);
 
 
@@ -113,9 +130,8 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+    res.render('404', {
+        isUser: !!req.user
     });
 });
 

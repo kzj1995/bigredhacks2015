@@ -20,6 +20,9 @@ var uid = require("uid2");
 
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
+
+
+
 passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
@@ -213,11 +216,6 @@ router.post('/login',
     })
 );
 
-router.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/');
-});
-
 router.get('/resetpass?', function (req, res) {
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null) {
@@ -256,7 +254,7 @@ router.post('/resetpass?', function (req, res) {
                         // If it failed, return error
                         console.log(err);
                         req.flash("error", "An error occurred.");
-                        res.redirect('/')
+                        res.redirect('/login')
                     }
                     else {
                         res.render('forgotpassword', {
@@ -315,7 +313,7 @@ router.post('/resetpassword', function (req, res) {
                     var htmlcontent = "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
                         "<a href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
-                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>";
                     var message = {
                         "html": htmlcontent,
                         "subject": "BigRed//Hacks Password Reset",

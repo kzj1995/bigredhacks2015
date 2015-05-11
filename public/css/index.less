@@ -342,103 +342,7 @@ footer p {
 //--- Elements
 //============================
 
-.btn {
-  margin-bottom: 30px;
-  border-radius: 0;
-  text-transform: none;
-  font-weight: @weight-normal;
-  -webkit-transition: all .3s ease-in-out;
-  -moz-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
-}
 
-.btn-circle {
-  width: 70px;
-  height: 70px;
-  margin-top: 15px;
-  padding: 7px 16px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  font-size: 40px;
-  color: #fff;
-  background: 0 0;
-  -webkit-transition: background .3s ease-in-out;
-  -moz-transition: background .3s ease-in-out;
-  transition: background .3s ease-in-out;
-  &:hover, &:focus {
-    outline: 0;
-    color: #fff;
-    background: rgba(255, 255, 255, .1);
-  }
-  &.btn-dark {
-    border: 2px solid #666;
-    color: #666;
-  }
-}
-
-.btn-circle.btn-dark :hover,
-.btn-circle.btn-dark :focus {
-  outline: 0;
-  color: #999;
-  background: #fff;
-}
-
-.btn-circle.btn-dark :hover i,
-.btn-circle.btn-dark :focus i {
-  color: #999;
-}
-
-.page-scroll .btn-circle i.animated {
-  -webkit-transition-property: -webkit-transform;
-  -webkit-transition-duration: 1s;
-  -moz-transition-property: -moz-transform;
-  -moz-transition-duration: 1s;
-}
-
-.page-scroll .btn-circle:hover i.animated {
-  -webkit-animation-name: pulse;
-  -moz-animation-name: pulse;
-  -webkit-animation-duration: 1.5s;
-  -moz-animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-timing-function: linear;
-}
-
-@-webkit-keyframes pulse {
-  0% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-
-  50% {
-    -webkit-transform: scale(1.2);
-    transform: scale(1.2);
-  }
-
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-}
-
-@-moz-keyframes pulse {
-  0% {
-    -moz-transform: scale(1);
-    transform: scale(1);
-  }
-
-  50% {
-    -moz-transform: scale(1.2);
-    transform: scale(1.2);
-  }
-
-  100% {
-    -moz-transform: scale(1);
-    transform: scale(1);
-  }
-}
 
 #text {
   color: #fff;
@@ -571,4 +475,31 @@ footer {
   color: #fff;
   background-color: #b31b1b;
   border-color: #b31b1b;
+}
+
+
+//========================
+//--404 page
+//========================
+
+.landing-icon {
+  font-size: 100px;
+  line-height: 102px;
+  color: darken(@red,0%);
+}
+.landing-container {
+  text-align: center;
+  padding-top: 100px;
+  margin-bottom: 100px;
+}
+
+.landing-header {
+  text-align: center;
+  font-size: 48px;
+  color: @red;
+}
+.landing-subheader {
+  text-align: center;
+  font-size: 16px;
+  color: @black;
 }

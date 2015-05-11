@@ -1,16 +1,15 @@
+/**
+ * pad a number with leading 0's
+ * @param num
+ * @param size
+ * @returns {string}
+ */
 function pad(num, size) {
     var s = "000" + num; //assume never need more than 3 digits
     return s.substr(s.length - size);
 }
 
 (function ($) {
-
-    new WOW().init();
-
-    jQuery(window).load(function () {
-        jQuery("#preloader").delay(100).fadeOut("slow");
-        jQuery("#load").delay(100).fadeOut("slow");
-    });
 
     //jQuery to collapse the navbar on scroll
     $(window).scroll(function () {

@@ -21,7 +21,10 @@ if (error.length > 0) {
 }
 %>
 
+<link href="/css/index.css" rel="stylesheet">
+<link href="/css/login.css" rel="stylesheet">
 <body>
+<% include _navbar-generic %>
 <div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
