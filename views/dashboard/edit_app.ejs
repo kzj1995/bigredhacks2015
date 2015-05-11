@@ -85,7 +85,7 @@ else errors = [];
                                value="<%= user.school.name %>" readonly/>
                     </div>
                     <div class="form-group">
-                        <label for="yearDropdown">graduation year *</label>
+                        <label for="yearDropdown">academic year *</label>
                         <select class="form-control" id="yearDropdown" name="yearDropdown" readonly>
                             <option value=""></option>
                             <%- helper.generateOptions(en.year, {selected: user.school.year}); %>
