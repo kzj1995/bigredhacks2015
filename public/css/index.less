@@ -93,7 +93,7 @@ a {
     background-color: rgba(178, 223, 244, 0.7);
   }
   &.purple {
-    background-color: lighten(fade(@purple, 70%),20%);
+    background-color: lighten(fade(@purple, 70%), 20%);
   }
 }
 
@@ -212,9 +212,9 @@ img.leaf {
     text-align: center;
     position: relative;
     img {
-      position:relative;
-      top:-25px;
-      padding-right:10px;
+      position: relative;
+      top: -25px;
+      padding-right: 10px;
     }
     h2, h4, h3 {
       color: @white;
@@ -295,7 +295,6 @@ footer p {
 //--- Elements
 //============================
 
-
 .btn {
   font-family: "Roboto", Arial, sans-serif;
   font-size: 14px;
@@ -347,7 +346,13 @@ footer p {
 }
 
 @media (max-width: 768px) {
-
+  .intro {
+    .slogan {
+      h2 {
+        font-size: @main-header-size - 10pt;
+      }
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -370,7 +375,6 @@ footer {
   background-color: @red;
 }
 
-
 //========================
 //--404 page
 //========================
@@ -378,8 +382,9 @@ footer {
 .landing-icon {
   font-size: 100px;
   line-height: 102px;
-  color: darken(@red,0%);
+  color: darken(@red, 0%);
 }
+
 .landing-container {
   text-align: center;
   padding-top: 100px;
@@ -392,6 +397,7 @@ footer {
   font-size: 48px;
   color: @red;
 }
+
 .landing-subheader {
   text-align: center;
   font-size: 16px;
