@@ -136,6 +136,10 @@ a {
   color: #666;
 }
 
+.navbar-custom ul.nav ul.dropdown-menu li a:hover {
+  color: #67b0d1;
+}
+
 .navbar-custom .nav li a {
   -webkit-transition: background .3s ease-in-out;
   -moz-transition: background .3s ease-in-out;
@@ -158,36 +162,6 @@ a {
   }
 }
 
-// misc //
-hr {
-  margin-top: 10px;
-}
-
-/* margins */
-.marginbot-0 {
-  margin-bottom: 0 !important;
-}
-
-.marginbot-10 {
-  margin-bottom: 10px !important;
-}
-
-.marginbot-20 {
-  margin-bottom: 20px !important;
-}
-
-.marginbot-30 {
-  margin-bottom: 30px !important;
-}
-
-.marginbot-40 {
-  margin-bottom: 40px !important;
-}
-
-.marginbot-50 {
-  margin-bottom: 50px !important;
-}
-
 // ===========================
 //--- General sections
 //============================
@@ -198,6 +172,9 @@ hr {
   display: block;
   position: relative;
   z-index: 120;
+  &:nth-child(even) {
+    background: #f9f6d9
+  }
 }
 
 .section-heading {
@@ -206,26 +183,6 @@ hr {
     color: @red;
     text-transform: lowercase;
   }
-}
-
-/* --- section bg var --- */
-
-.bg-white {
-  background: @bg-light;
-}
-
-.bg-gray {
-  background: #f9f6d9;
-}
-
-.bg-dark {
-  background: @bg-dark;
-}
-
-// --- section color var --- //
-
-.text-light {
-  color: @white;
 }
 
 img.leaf {
@@ -339,25 +296,6 @@ footer p {
 //============================
 
 
-
-#text {
-  color: #fff;
-  background: #ffcc00;
-}
-
-#map {
-  height: 500px;
-}
-
-.btn-skin:hover,
-.btn-skin:focus,
-.btn-skin:active,
-.btn-skin.active {
-  color: #fff;
-  background-color: #666;
-  border-color: #666;
-}
-
 .btn {
   font-family: "Roboto", Arial, sans-serif;
   font-size: 14px;
@@ -422,46 +360,14 @@ footer p {
     margin-bottom: 30px;
   }
 
-  .tp-banner-container {
-    padding-top: 40px;
-  }
-
-  .page-scroll a.btn-circle {
-    width: 40px;
-    height: 40px;
-    margin-top: 10px;
-    padding: 7px 0;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    font-size: 20px;
-  }
-
-}
-
-a, .tp-caption a.btn:hover {
-  color: @red;
 }
 
 .top-nav-collapse {
   background: @red;
 }
 
-.navbar-custom ul.nav ul.dropdown-menu li a:hover {
-  color: #67b0d1;
-}
-
-.bg-skin {
-  background: @red;
-}
-
 footer {
   background-color: @red;
-}
-
-.btn-skin {
-  color: #fff;
-  background-color: @red;
-  border-color: @red;
 }
 
 
