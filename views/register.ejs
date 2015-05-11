@@ -161,14 +161,7 @@ if (error.length > 0) {
         <br/>
         <fieldset>
             <div class="header-wrapper">
-                <legend class="page-title">preferences</legend>
-            </div>
-            <div class="form-group">
-                <label for="projectDropdown">what type of project are you thinking about working on? *</label>
-                <select class="form-control" id="projectDropdown" name="projectDropdown" required>
-                    <option value="">select</option>
-                    <%- helper.generateOptions(en.projecttype, {selected: (input.projectDropdown || "")}); %>
-                </select>
+                <legend class="page-title">logistics</legend>
             </div>
             <div class="form-group">
                 <label for="dietary">dietary restrictions *</label>
@@ -184,6 +177,11 @@ if (error.length > 0) {
                     <%- helper.generateOptions(en.tshirt, {selected: (input.tshirt || "")}); %>
                 </select>
             </div>
+            <div class="form-group">
+                <label>is there anything else you'd like to tell us?</label>
+                        <textarea id="anythingelse" name="anythingelse" class="form-control"
+                                  rows="2"><%= input.anythingelse %></textarea>
+            </div>
         </fieldset>
         <fieldset>
             <button type="submit" id="submit" class="btn btn-primary">submit</button>
@@ -193,7 +191,7 @@ if (error.length > 0) {
 
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
-<script src="js/jquery.validate.options.js"></script>
+<script src="/js/jquery.validate.options.js"></script>
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/register.js"></script>

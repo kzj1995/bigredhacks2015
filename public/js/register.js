@@ -70,6 +70,18 @@ $('document').ready(function () {
         return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";
     });
 
+    notCornellText = 'We aren\'t accepting applications from Cornell students right now.';
+    $.validator.addMethod("emailNotCornell", function (val, elem, params) {
+        return !/^[^@]+@cornell\.edu$/i.test(val);
+    }, notCornellText);
+
+    $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
+        var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
+        if (restrict.indexOf(val) == -1) {
+            return true;
+        }
+        else return false;
+    }, notCornellText);
 
     $('#registrationForm').validate({
         onfocusout: function (e, event) {
@@ -79,7 +91,8 @@ $('document').ready(function () {
         rules: {
             email: {
                 required: true,
-                email: true
+                email: true,
+                emailNotCornell: true
             },
             password: {
                 minlength: 6,
@@ -104,7 +117,8 @@ $('document').ready(function () {
                 phoneUS: true
             },
             college: {
-                notEmpty: ['college', 'collegeid']
+                notEmpty: ['college', 'collegeid'],
+                schoolNotCornell: true
             },
             major: {
                 required: true
@@ -115,17 +129,22 @@ $('document').ready(function () {
                 accept: 'application/pdf'
             },
             q1: {
-                required: true
+                required: true,
+                maxlength: 5000
             },
             q2: {
-                required: true
+                required: true,
+                maxlength: 5000
             },
             linkedin: {
                 linkedinURL: true
+            },
+            anythingelse: {
+                required: false,
+                maxlength: 1000
             }
         },
         messages: {
-            email: "Please provide a valid email address",
             password: {
                 required: "Please provide a password",
                 minlength: "Your password must be at least 6 characters long"
