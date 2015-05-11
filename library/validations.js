@@ -60,7 +60,7 @@ var validator = function () {
             req.assert('cornellEmail', 'Email address is not valid.').isEmail()
         },
         anythingelse: function(req) {
-            req.assert('anythingelse', "Additional information must ").optionalOrLen(0, 5000);
+            req.assert('anythingelse', "Additional information must be less than 5000 characters.").optionalOrLen(0, 5000);
         }
     };
 
