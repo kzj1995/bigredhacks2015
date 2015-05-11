@@ -53,6 +53,7 @@ router.get('/dashboard', function (req, res, next) {
             resumeLink: results.resumeLink,
             team: results.members,
             userid: req.user.pubid,
+            teamwithcornell: req.user.internal.teamwithcornell,
             error: req.flash('error'),
             success: req.flash('success'),
             title: "Dashboard"
@@ -167,6 +168,18 @@ router.get('/team/leave', function (req, res, next) {
     })
 });
 //fixme both add and leave share similar callback function
+
+router.post('/team/cornell', function (req, res, next) {
+    var checked = (req.body.checked === "true");
+    var user = req.user;
+    user.internal.teamwithcornell = checked;
+    user.save(function(err) {
+        if (err) {
+            res.send(500);
+        }
+        else res.send(200);
+    });
+});
 
 /* POST upload a new resume*/
 router.post('/updateresume', function (req, res, next) {

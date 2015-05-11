@@ -44,6 +44,7 @@ var userSchema = new mongoose.Schema({
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
+        teamwithcornell: Boolean,
         busid: {type: String, default: null}, //@todo implement later
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},

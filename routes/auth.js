@@ -137,8 +137,7 @@ router.post('/register', function (req, res) {
                             q2: req.body.q2
                         },
                         experience: req.body.experienceDropdown
-                    },
-                    passwordtoken: ""
+                    }
                 });
                 newUser.save(function (err, doc) {
                     if (err) {

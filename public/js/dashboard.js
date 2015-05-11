@@ -18,6 +18,20 @@ $(document).ready( function() {
         checkUserId();
         checkResume();
     }, 200);
+
+    $("#cornellteamcheck").on("change",function() {
+        $(".checkbox").addClass("disabled");
+        var checked = this.checked;
+        $.ajax({
+            url: "/user/team/cornell",
+            type: "POST",
+            data: {checked: checked},
+            success: function(d) {
+                $(".checkbox").removeClass("disabled");
+            }
+        })
+    });
+
 });
 
 
@@ -40,3 +54,4 @@ function checkResume() {
         $('#resume-save').prop('disabled', true);
     }
 }
+

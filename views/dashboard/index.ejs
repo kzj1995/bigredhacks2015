@@ -3,6 +3,7 @@
 var team = team || []; //team members
 var error = error || []; //error flash message
 var success = success || []; //success flash message
+var teamwithcornell = teamwithcornell || false;
 %>
 
 <body>
@@ -65,6 +66,13 @@ var success = success || []; //success flash message
                 </ul>
                 <%- (team.length > 0) ? '<a class="btn btn-red" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="cornellteamcheck" value="" <%- teamwithcornell ? "checked" : "" %>> I plan to work with (a) Cornell student(s).
+                    </label>
+                </div>
             </div>
 
             <br/>
