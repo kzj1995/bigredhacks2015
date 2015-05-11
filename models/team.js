@@ -13,7 +13,7 @@ var teamSchema = new mongoose.Schema({
 });
 
 /**
- * find a team by priuvate user_id
+ * find a team by private user_id
  * @param user_id
  * @param callback
  */

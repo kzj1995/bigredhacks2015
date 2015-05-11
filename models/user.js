@@ -233,18 +233,23 @@ userSchema.methods.leaveTeam = function (callback) {
             if (err) {
                 return callback(err);
             }
-            user.internal.teamid.removeUser(user._id, function (err, team) {
-                if (err) {
-                    return callback(err);
-                }
-                user.internal.teamid = null;
-                user.save(function (err) {
-                    if (err) return callback(err);
-                    else {
-                        return callback(null, true);
+            try {
+                user.internal.teamid.removeUser(user._id, function (err, team) {
+                    if (err) {
+                        return callback(err);
                     }
-                });
-            })
+                    user.internal.teamid = null;
+                    user.save(function (err) {
+                        if (err) return callback(err);
+                        else {
+                            return callback(null, true);
+                        }
+                    });
+                })
+            }
+            catch(err) {
+                console.log("userSchema.methods.leaveTeam:",err);
+            }
         })
     }
 };
