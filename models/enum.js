@@ -8,7 +8,7 @@ var en = {
     user: {
         year: _generateYears(),
         dietary: "None Vegetarian Gluten-free".split(" "),
-        gender: "Female Male Other".split(" "),
+        gender: "Female/Male/Other/Prefer Not to Disclose".split("/"),
         tshirt: "XS S M L XL".split(" "),
         status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" "),
         experience: "Yes No".split(" "),//store boolean state as string for simplicity
