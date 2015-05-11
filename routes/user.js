@@ -76,7 +76,6 @@ router.get('/dashboard/edit', function (req, res, next) {
 router.post('/dashboard/edit', function (req, res, next) {
 
     var user = req.user;
-    console.log(validator);
 
     req = validator.validate(req,[
         'passwordOptional','phonenumber','dietary','tshirt','yearDropdown','major','linkedin','q1','q2','anythingelse', 'experienceDropdown'

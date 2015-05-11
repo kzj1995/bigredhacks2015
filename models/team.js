@@ -2,7 +2,7 @@
 var mongoose = require("mongoose");
 var User = require("./user");
 
-var MAX_TEAM_SIZE = 5;
+var MAX_TEAM_SIZE = 4;
 
 //todo cap size of team
 var teamSchema = new mongoose.Schema({
