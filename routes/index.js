@@ -10,7 +10,7 @@ var config = require('../config.js');
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {
-        title: 'Home',
+        title: 'Cornell\'s Ultimate Hackathon',
         error: req.flash('error'),
         success: req.flash('success')
     });
