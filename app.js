@@ -71,17 +71,6 @@ if (app.get('env') === 'production') {
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: oneDay}));
 
 }
-
-//set env variable to enable www redirect
-//@fixme temporary workaround
-if (app.get('www-redirect') === "true") {
-    //redirect non-www to www
-    app.get('/*', function(req, res, next) {
-        if (req.headers.host.match(/^www/) == null ) res.redirect('http://www.' + req.headers.host + req.url, 301);
-        else next();
-    });
-}
-
 else {
     app.use(express.static(path.join(__dirname, 'public')));
 }
@@ -152,7 +141,6 @@ if (app.get('env') === 'development') {
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('404', {
-        isUser: !!req.user
     });
 });
 

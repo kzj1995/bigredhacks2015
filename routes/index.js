@@ -33,11 +33,11 @@ router.post('/cornell/subscribe', function (req, res, next) {
                 else {
                     req.flash("error", "There was an error adding your email to the list.");
                 }
-                console.log(err);
+                //console.log(err);
 
             }
             else {
-                console.log(result);
+                //console.log(result);
                 req.flash("success", "Your email has been added to the mailing list.");
             }
             res.redirect('/');

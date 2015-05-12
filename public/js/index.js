@@ -70,25 +70,28 @@ function pad(num, size) {
 
     //registration modal stuff
     var footer, title;
+    var reg = $("#regModal");
     $("#regCornell").on("click", function (e) {
         e.preventDefault();
-        footer = $("#regModal .modal-footer").html();
-        $("#regModal .modal-footer .reg-select").addClass("hidden");
-        title = $("#regModal .modal-title").text();
-        $("#regModal .modal-title").text("Cornell/Ithaca Registration");
-        $("#regModal .modal-body").removeClass("hidden");
+        footer = reg.find(".modal-footer").html();
+        reg.find(".modal-footer .reg-select").addClass("hidden");
+        title = reg.find(".modal-title").text();
+        reg.find(".modal-title").text("Cornell/Ithaca Registration");
+        reg.find(".modal-body").removeClass("hidden");
         $("#cornell-submit").removeClass("hidden");
     });
 
-    $('#regModal').on('hidden.bs.modal', function (e) {
-        $("#regModal .modal-footer .reg-select").removeClass("hidden");
-        $("#regModal .modal-title").text(title);
-        $("#regModal .modal-body").addClass("hidden");
+    reg.on('hidden.bs.modal', function (e) {
+        reg.find(".modal-footer .reg-select").removeClass("hidden");
+        reg.find(".modal-title").text(title);
+        reg.find(".modal-body").addClass("hidden");
         $("#cornell-submit").addClass("hidden");
     });
 
     //fade out things that have fadeOut class
     $(".fadeOut").delay(2000).fadeOut(2000, "easeInCubic");
+
+
     /**
      * validator
      */
