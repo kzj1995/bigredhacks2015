@@ -1,7 +1,7 @@
 [BigRed//Hacks](http://www.bigredhacks.com)
 ==================
 The greatest hackathon management app of all time.
-
+ 
 ###Setup Instructions
 1. Make sure node.js and mongoDB are installed, with the latter running.
 1. Fetch all dependencies by running:
