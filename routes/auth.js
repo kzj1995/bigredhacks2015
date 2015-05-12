@@ -168,7 +168,7 @@ router.post('/register', function (req, res) {
                                     "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                     "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
                                     "that we have received your application." + "</p><p>" +
-                                    "You can log in to our website any time until the applicaton deadline " +
+                                    "You can log in to our website any time until the application deadline " +
                                     "to update your information or add team members." + "</p><p>" + 
                                     "If you haven't already, make sure to like us on Facebook and " +
                                     "follow us on Twitter!" + "</p><p>" +
