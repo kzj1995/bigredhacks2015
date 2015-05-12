@@ -332,7 +332,7 @@ router.post('/resetpassword', function (req, res) {
                         "name": "emailcontent",
                         "content": "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
-                        "<a style='color: #B31B1B" href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
+                        "<a style='color: #B31B1B' href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
                         "<p>If you did not request to change your password, please ignore and delete this email.</p>"
                         "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
                     }];
