@@ -63,11 +63,33 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
+
 if (app.get('env') === 'production') {
+
     app.use(require('express-uglify').middleware({src: path.join(__dirname, '/public'), logLevel: 'none'}));
     var oneDay = 86400000;
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: oneDay}));
+    app.all(/.*/, function(req, res, next) {
+        var host = req.header("host");
+        if (host.match(/^www\..*/i)) {
+            next();
+        } else {
+            res.redirect(301, "http://www." + host);
+        }
+    });
+
 }
+
+//set env variable to enable www redirect
+//@fixme temporary workaround
+if (app.get('www-redirect') === "true") {
+    //redirect non-www to www
+    app.get('/*', function(req, res, next) {
+        if (req.headers.host.match(/^www/) == null ) res.redirect('http://www.' + req.headers.host + req.url, 301);
+        else next();
+    });
+}
+
 else {
     app.use(express.static(path.join(__dirname, 'public')));
 }
