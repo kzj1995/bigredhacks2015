@@ -10,6 +10,7 @@
     "url": ""
   },
   "mailchimp": {
+    "_comment": "Mailchimp list ids",
     "l_interested": "",
     "l_applicants": ""
   }

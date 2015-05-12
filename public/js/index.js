@@ -61,14 +61,16 @@ function pad(num, size) {
     var numImages = images.length;
     var index = Math.floor(Math.random() * numImages);
     var image = images[index];
-    $('.intro').css({'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
-    'background-size': 'cover'});
+    $('.intro').css({
+        'background': 'url("/img/bgd/cornell_' + pad(index, 3) + '.jpg") no-repeat center center scroll',
+        'background-size': 'cover'
+    });
     $('.nav.navbar-nav').addClass(image.navbar);
-    $('#cover-photo-attribution').html("Cover photo by " + image.by+"/"+image.with+"<br/>");
+    $('#cover-photo-attribution').html("Cover photo by " + image.by + "/" + image.with + "<br/>");
 
     //registration modal stuff
     var footer, title;
-    $("#regCornell").on("click", function(e) {
+    $("#regCornell").on("click", function (e) {
         e.preventDefault();
         footer = $("#regModal .modal-footer").html();
         $("#regModal .modal-footer .reg-select").addClass("hidden");
@@ -85,7 +87,8 @@ function pad(num, size) {
         $("#cornell-submit").addClass("hidden");
     });
 
-
+    //fade out things that have fadeOut class
+    $(".fadeOut").delay(2000).fadeOut(2000, "easeInCubic");
     /**
      * validator
      */

@@ -31,11 +31,11 @@
 </nav>
 
 <% if (error.length > 0) { %>
-<%- '<div class="alert alert-danger float alert-dismissible" role="alert" ><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + error[0].toLowerCase() + '</div>' %>
+<%- '<div class="alert alert-danger float alert-dismissible fadeOut" role="alert" ><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + error[0].toLowerCase() + '</div>' %>
 <% } %>
 
 <% if (success.length > 0) { %>
-<%- '<div class="alert alert-success float alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + success[0].toLowerCase() + '</div>' %>
+<%- '<div class="alert alert-success float alert-dismissible fadeOut" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + success[0].toLowerCase() + '</div>' %>
 <% } %>
 
 <!-- Section: intro -->
@@ -226,11 +226,12 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <p class="footer">
-                    <a href="http://www.facebook.com/BigRedHacks" target="_blank"><img src="img/icon-bf.png"
-                                                                                       draggable="false"></a>&nbsp&nbsp
-                    <a href="http://www.twitter.com/BigRedHacks" target="_blank"><img src="img/icon-wt.png"
-                                                                                      draggable="false"></a>&nbsp&nbsp
-                    <a href="mailto:info@bigredhacks.com"><img src="img/icon-em.png" draggable="false"></a>&nbsp&nbsp
+                    <a href="http://www.facebook.com/BigRedHacks" target="_blank">
+                        <img class="s-icon" src="img/icon-bf.png" draggable="false"></a>&nbsp&nbsp
+                    <a href="http://www.twitter.com/BigRedHacks" target="_blank">
+                        <img class="s-icon" src="img/icon-wt.png" draggable="false"></a>&nbsp&nbsp
+                    <a href="mailto:info@bigredhacks.com">
+                        <img class="s-icon" src="img/icon-em.png" draggable="false"></a>&nbsp&nbsp
                 </p>
                 <br>
 
