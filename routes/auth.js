@@ -165,9 +165,13 @@ router.post('/register', function (req, res) {
                                 var template_name = "bigredhackstemplate";
                                 var template_content = [{
                                     "name": "emailcontent",
-                                    "content": "<p>Hello " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                    "Thank you so much for registering for BigRed//Hacks. We will keep you posted " +
-                                    "on the status of your application and other relevant information." + "</p><p>" +
+                                    "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                    "that we have received your application." + "</p><p>" +
+                                    "You can log in to our website any time until the applicaton deadline." +
+                                    "to update your information or add team members." + "</p><p>" +
+                                    "If you haven't already, make sure to like us on Facebook and " +
+                                    "follow us on Twitter!" + "</p><p>" +
                                     "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
                                 }];
 
