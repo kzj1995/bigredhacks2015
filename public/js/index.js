@@ -57,6 +57,7 @@ function pad(num, size) {
         }
     ];
 
+    //randomly select a background image
     var numImages = images.length;
     var index = Math.floor(Math.random() * numImages);
     var image = images[index];
@@ -91,7 +92,8 @@ function pad(num, size) {
 
     $.validator.addMethod("checkCornellEmail", function (val, elem, params) {
         return /^[^@]+@cornell\.edu$/i.test(val) || val === "";
-    }, 'Please enter a cornell.edu');
+    }, 'Please enter a cornell.edu email.');
+
 
     $('#subscribeEmail').validate({
         onfocusout: function (e, event) {

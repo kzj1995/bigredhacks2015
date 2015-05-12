@@ -19,8 +19,11 @@ $(document).ready( function() {
         checkResume();
     }, 200);
 
+    //working with cornell students checkbox event
     $("#cornellteamcheck").on("change",function() {
+        var _this = this;
         $(".checkbox").addClass("disabled");
+        $(_this).prop("disabled",true);
         var checked = this.checked;
         $.ajax({
             url: "/user/team/cornell",
@@ -28,6 +31,7 @@ $(document).ready( function() {
             data: {checked: checked},
             success: function(d) {
                 $(".checkbox").removeClass("disabled");
+                $(_this).prop("disabled",false);
             }
         })
     });
@@ -35,7 +39,7 @@ $(document).ready( function() {
 });
 
 
-
+//check length of user id input
 function checkUserId() {
     if ($('#addteamid').val().length > 0){
         $('#addteamid-submit').prop('disabled', false);
@@ -45,6 +49,7 @@ function checkUserId() {
     }
 }
 
+//check whether resume is present in upload
 function checkResume() {
     var files = $('input#resumeinput')[0].files;
     if (files.length > 0 && files[0].type === "application/pdf") {

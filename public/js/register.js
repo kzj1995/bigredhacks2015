@@ -56,25 +56,31 @@ $('document').ready(function () {
 
     });
 
+
     /*
      * Validator
      */
 
+    //check that two fields ae not simultaneously empty
     $.validator.addMethod("notEmpty", function (val, elem, params) {
         var f1 = $('#' + params[0]).val(),
             f2 = $('#' + params[1]).val();
         return f1 !== "" && f2 !== "";
     }, 'Enter a valid college. Enter "Unlisted" if your college is not listed.');
 
+    //valid linkedin url or optional
     $.validator.addMethod("linkedinURL", function (val, elem, params) {
         return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";
     });
 
     notCornellText = 'We aren\'t accepting applications from Cornell students right now.';
+
+    //fails for cornell email
     $.validator.addMethod("emailNotCornell", function (val, elem, params) {
         return !/^[^@]+@cornell\.edu$/i.test(val);
     }, notCornellText);
 
+    //fails for cornell school
     $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
         var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
         if (restrict.indexOf(val) == -1) {
