@@ -97,7 +97,7 @@ router.post('/dashboard/edit', function (req, res, next) {
         if (req.body.password !== "") {
             user.password = req.body.password;
         }
-        console.log(req.body);
+        //console.log(req.body);
         user.phone = req.body.phonenumber;
         user.school.major = req.body.major;
         user.app.questions.q1 = req.body.q1;
@@ -191,7 +191,7 @@ router.post('/updateresume', function (req, res, next) {
             req.flash('error', "Error parsing form.");
             return res.redirect('/user/dashboard');
         }
-        console.log(files);
+        //console.log(files);
         var resume = files.resumeinput[0];
         var options = {};
         // make sure the user has had a resume

@@ -27,7 +27,7 @@ var userSchema = new mongoose.Schema({
         anythingelse: String
     },
     school: {
-        id: {type: String, ref: "College", required: true},
+        id: {type: String, ref: "College", required: true, index: true},
         name: {type: String, required: true},
         year: {type: String, enum: en.user.year, required: true},
         major: {type: String, required: true}
@@ -44,7 +44,7 @@ var userSchema = new mongoose.Schema({
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
-        teamwithcornell: Boolean,
+        teamwithcornell: {type: Boolean, default: false},
         busid: {type: String, default: null}, //@todo implement later
         rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.status},
