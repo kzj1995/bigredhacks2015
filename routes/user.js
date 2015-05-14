@@ -21,14 +21,13 @@ router.get('/', function (req, res, next) {
 router.get('/dashboard', function (req, res, next) {
 
     var params = {Bucket: config.setup.AWS_S3_bucket, Key: 'resume/' + req.user.app.resume};
-    var resumeLink;
 
     async.parallel({
         resumeLink: function (done) {
             /*s3.getSignedUrl('getObject', params, function(err, url) {
              return done(err, url);
              });*/
-            return done(null, "https://" + config.setup.AWS_S3_bucket + ".s3.amazonaws.com/resume/" + req.user.app.resume);
+            return done(null, helper.s3url() + "/resume/" + req.user.app.resume);
         },
         members: function (done) {
             req.user.populate("internal.teamid", function (err, user) {

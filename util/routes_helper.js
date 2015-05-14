@@ -59,6 +59,19 @@ helper.reformatFields = function reformatFields(fields, castNumber) {
 };
 
 /**
+ * get the S3 display url based on node environment
+ * @returns {string}
+ */
+helper.s3url = function s3url() {
+    if (process.env.NODE_ENV == 'production') {
+        return "http://files.bigredhacks.com";
+    }
+    else {
+        return "https://" + config.setup.AWS_S3_bucket + ".s3.amazonaws.com";
+    }
+};
+
+/**
  * upload a resume to aws
  * resume must be a multiparty file object
  * @param resume

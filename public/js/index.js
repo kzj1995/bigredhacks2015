@@ -22,17 +22,18 @@ function pad(num, size) {
 
     //jQuery for page scrolling feature - requires jQuery Easing plugin
     $(function () {
+        var padding = 30;
         $('.navbar-nav li a').bind('click', function (event) {
             var $anchor = $(this);
             $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top
+                scrollTop: $($anchor.attr('href')).offset().top-padding
             }, 1000, 'easeInOutExpo');
             event.preventDefault();
         });
         $('.page-scroll a').bind('click', function (event) {
             var $anchor = $(this);
             $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top
+                scrollTop: $($anchor.attr('href')).offset().top-20-padding
             }, 1000, 'easeInOutExpo');
             event.preventDefault();
         });
