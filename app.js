@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var validator = require('validator');
-var session = require('express-session');
+var session = require('cookie-session');
 var flash = require('connect-flash');
 var compression = require('compression');
 
@@ -56,9 +56,8 @@ app.use(expressValidator({
 app.use(cookieParser());
 app.use(flash());
 app.use(session({
-    secret: config.setup.cookie_secret,
-    saveUninitialized: false,
-    resave: false
+    name: 'brh:sess',
+    secret: config.setup.cookie_secret
 }));
 app.use(passport.initialize());
 app.use(passport.session());

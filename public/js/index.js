@@ -26,15 +26,17 @@ function pad(num, size) {
         $('.navbar-nav li a').bind('click', function (event) {
             var $anchor = $(this);
             $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top-padding
+                scrollTop: $($anchor.attr('href')).offset().top - padding
             }, 1000, 'easeInOutExpo');
+            $(".navbar-main-collapse").collapse('hide');
             event.preventDefault();
         });
         $('.page-scroll a').bind('click', function (event) {
             var $anchor = $(this);
             $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top-20-padding
+                scrollTop: $($anchor.attr('href')).offset().top - padding
             }, 1000, 'easeInOutExpo');
+            $(".navbar-main-collapse").collapse('hide');
             event.preventDefault();
         });
     });
