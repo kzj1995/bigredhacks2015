@@ -10,12 +10,12 @@ var config = require('../config.js');
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {
-        title: 'Cornell\'s Ultimate Hackathon',
-        error: req.flash('error'),
-        success: req.flash('success')
+        title: 'Cornell\'s Ultimate Hackathon'
     });
 });
 
+
+/* POST subscribe a cornell student to the mailing list */
 router.post('/cornell/subscribe', function (req, res, next) {
     req = validator.validate(req, ['cornellEmail']);
     var email = req.body.cornellEmail;

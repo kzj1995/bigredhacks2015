@@ -30,12 +30,12 @@
     <!-- /.container -->
 </nav>
 
-<% if (error.length > 0) { %>
-<%- '<div class="alert alert-danger float alert-dismissible fadeOut" role="alert" ><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + error[0].toLowerCase() + '</div>' %>
+<% if (messages.error) { %>
+<%- '<div class="alert alert-danger float alert-dismissible fadeOut" role="alert" ><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + messages.error[0].toLowerCase() + '</div>' %>
 <% } %>
 
-<% if (success.length > 0) { %>
-<%- '<div class="alert alert-success float alert-dismissible fadeOut" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + success[0].toLowerCase() + '</div>' %>
+<% if (messages.success) { %>
+<%- '<div class="alert alert-success float alert-dismissible fadeOut" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + messages.success[0].toLowerCase() + '</div>' %>
 <% } %>
 
 <!-- Section: intro -->

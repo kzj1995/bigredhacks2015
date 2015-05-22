@@ -16,12 +16,12 @@ var teamwithcornell = teamwithcornell || false;
                 <h1 class="leaf">dashboard</h1>
             </div>
 
-            <% if (error.length > 0) { %>
-            <%- '<div class="alert alert-danger" role="alert">' + error[0].toLowerCase() + '</div>' %>
+            <% if (messages.error) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + messages.error[0].toLowerCase() + '</div>' %>
             <% } %>
 
-            <% if (success.length > 0) { %>
-            <%- '<div class="alert alert-success" role="alert">' + success[0].toLowerCase() + '</div>' %>
+            <% if (messages.success) { %>
+            <%- '<div class="alert alert-success" role="alert">' + messages.success[0].toLowerCase() + '</div>' %>
             <% } %>
 
             <p> welcome back, <%= name.first %> <%= name.last %>. </p>

@@ -13,6 +13,8 @@ var validator = require('../library/validations.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
+
+/* GET dashboard index page */
 router.get('/', function (req, res, next) {
     return res.redirect('/user/dashboard'); //todo there should be some relative redirect
 });
@@ -53,8 +55,6 @@ router.get('/dashboard', function (req, res, next) {
             team: results.members,
             userid: req.user.pubid,
             teamwithcornell: req.user.internal.teamwithcornell,
-            error: req.flash('error'),
-            success: req.flash('success'),
             title: "Dashboard"
         });
     })
@@ -66,12 +66,12 @@ router.get('/dashboard/edit', function (req, res, next) {
     res.render('dashboard/edit_app', {
         user: user,
         enums: enums,
-        error: req.flash('error'),
         title: "Edit Application"
     });
 });
 
 
+/* POST submit edited user data */
 router.post('/dashboard/edit', function (req, res, next) {
 
     var user = req.user;
@@ -87,7 +87,6 @@ router.post('/dashboard/edit', function (req, res, next) {
             user: user,
             title: 'Edit Application',
             message: 'The following errors occurred',
-            error: req.flash('error'),
             errors: errors,
             enums: enums
         });
@@ -167,6 +166,7 @@ router.get('/team/leave', function (req, res, next) {
 });
 //fixme both add and leave share similar callback function
 
+/* POST toggle state of team with cornell students */
 router.post('/team/cornell', function (req, res, next) {
     var checked = (req.body.checked === "true");
     var user = req.user;
@@ -178,6 +178,7 @@ router.post('/team/cornell', function (req, res, next) {
         else res.send(200);
     });
 });
+
 
 /* POST upload a new resume*/
 router.post('/updateresume', function (req, res, next) {
@@ -214,6 +215,8 @@ router.post('/updateresume', function (req, res, next) {
     })
 });
 
+
+/* GET logout the current user */
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');

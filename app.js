@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var validator = require('validator');
 var session = require('cookie-session');
-var flash = require('connect-flash');
+var flash = require('express-flash');
 var compression = require('compression');
 
 var config = require('./config.js');

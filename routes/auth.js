@@ -52,11 +52,14 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
+
+/* GET registration page */
 router.get('/register', function (req, res) {
     res.render("register",
         {title: "Register", enums: enums, error: req.flash('error')});
 });
 
+/* POST register a new user */
 router.post('/register', function (req, res) {
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
@@ -219,12 +222,16 @@ router.post('/register', function (req, res) {
     });
 });
 
-
+/* GET render the login page */
 router.get('/login', function (req, res, next) {
-    res.render('login', {title: 'Login', user: req.user, error: req.flash('error'), email: req.flash('email')});
+    res.render('login', {
+        title: 'Login',
+        user: req.user
+    });
 });
 
 
+/* POST login a user */
 router.post('/login',
     passport.authenticate('local', {
         successRedirect: '/user',
@@ -233,6 +240,7 @@ router.post('/login',
     })
 );
 
+/* GET reset password */
 router.get('/resetpass?', function (req, res) {
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null) {
@@ -242,13 +250,13 @@ router.get('/resetpass?', function (req, res) {
             res.render('forgotpassword', {
                 title: 'Reset Password',
                 page: 3,
-                error: req.flash('error'),
                 email: user.email
             });
         }
     });
 });
 
+/* POST reset password */
 router.post('/resetpass?', function (req, res) {
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null || req.query.token == "" || req.query.token == undefined) {
@@ -277,7 +285,6 @@ router.post('/resetpass?', function (req, res) {
                         res.render('forgotpassword', {
                             title: 'Reset Password',
                             page: 4,
-                            error: req.flash('error'),
                             email: user.email
                         });
                     }
@@ -287,16 +294,17 @@ router.post('/resetpass?', function (req, res) {
     });
 });
 
+//fixme merge with above
 router.get('/resetpassword', function (req, res) {
     res.render('forgotpassword', {
         title: 'Reset Password',
         page: 1,
         user: req.user,
-        error: req.flash('error'),
         email: req.flash('email')
     });
 });
 
+//fixme merge with above
 router.post('/resetpassword', function (req, res) {
     User.findOne({email: req.body.email}, function (err, user) {
         if (user == null) {
@@ -305,7 +313,6 @@ router.post('/resetpassword', function (req, res) {
                 title: 'Reset Password',
                 page: 1,
                 user: req.user,
-                error: req.flash('error'),
                 email: req.flash('email')
             });
         }
@@ -314,7 +321,6 @@ router.post('/resetpassword', function (req, res) {
                 title: 'Reset Password',
                 page: 2,
                 user: req.user,
-                error: req.flash('error'),
                 email: user.email
             });
             user.passwordtoken = uid(15);
