@@ -133,11 +133,12 @@ ul.team-list {
     &:last-child > a {
       border-bottom: @divider-size*2 @bg-light solid;
     }
-  }
-  > .active {
-    > a, a:hover, a:focus {
-      //color: #fff;
-      //background-color: #428bca;
+
+    > a.active {
+      &, &:hover, &:focus {
+        background-color: lighten(@bg-dark, 30%);
+        //background-color: #428bca;
+      }
     }
   }
 }

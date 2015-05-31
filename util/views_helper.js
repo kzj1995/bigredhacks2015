@@ -27,9 +27,9 @@ _export.generateOptions = function (arr, options) {
     options.selected = options.selected || "";
 
     for (var i = 0; i < array.length; i++) {
-        var params="";
-        if (options.selected === array[i]+""){
-            params +='selected="selected" '
+        var params = "";
+        if (options.selected === array[i] + "") {
+            params += 'selected="selected" '
         }
         var tag = '<option ' + params + ' value="{0}">{0}</option>';
         array[i] = tag.format(array[i]);
@@ -37,7 +37,24 @@ _export.generateOptions = function (arr, options) {
     return array.join('');
 };
 
-_export.require = function(arr, options) {
+/**
+ * generate <li><a href={url}>{name}</a></li>
+ * @param listItems array of {name,url}
+ * @param active url of active item
+ */
+_export.generateUrlList = function (listItems, active) {
+    var array = [];
+    for (var i = 0; i < listItems.length; i++) {
+        var classes = "";
+        if (active == listItems[i].url) {
+            classes += "active";
+        }
+        array[i] = '<li><a href="{0}" class="{1}">{2}</a></li>'.format(listItems[i].url,classes,listItems[i].name);
+    }
+    return array.join('');
+};
+
+_export.require = function (arr, options) {
 
 };
 

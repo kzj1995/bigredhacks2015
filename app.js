@@ -16,7 +16,9 @@ var config = require('./config.js');
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user');
-var apiRoute = require('./routes/api');
+var admin = require('./routes/admin');
+var apiRoute = require('./routes/api/api');
+var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth');
 
 var app = express();
@@ -95,10 +97,15 @@ var _requireAuthentication = function (req, res, next) {
     }
 };
 
+var _requireAdmin = function (req, res, next) {
+    //todo add admin check
+  next();
+};
 
 //generic middleware function
 app.use(function(req,res,next) {
     res.locals.isUser = !!req.user;
+    res.locals.currentUrl = req.url;
     next();
 });
 
@@ -111,6 +118,8 @@ app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 app.use('/', routes);
 app.use('/user', _requireAuthentication, user);
 app.use('/', _requireNoAuthentication, authRoute);
+app.use('/admin', _requireAdmin, admin);
+app.use('/api/admin', apiAdminRoute);
 app.use('/api', apiRoute);
 
 
