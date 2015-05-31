@@ -7,7 +7,8 @@
     "mailchimp_api_key": "",
     "cookie_secret": "",
     "mandrill_api_key": "",
-    "url": ""
+    "url": "",
+    "admin_password": ""
   },
   "mailchimp": {
     "_comment": "Mailchimp list ids",
