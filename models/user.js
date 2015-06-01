@@ -47,7 +47,7 @@ var userSchema = new mongoose.Schema({
         teamwithcornell: {type: Boolean, default: false},
         busid: {type: String, default: null}, //@todo implement later
         rating: {type: Number, min: 0, max: 5, default: 0},
-        status: {type: String, enum: en.status},
+        status: {type: String, enum: en.status, default: "pending"},
         going: {type: Boolean}
     },
     passwordtoken: String

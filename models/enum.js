@@ -10,7 +10,7 @@ var en = {
         dietary: "None Vegetarian Gluten-free".split(" "),
         gender: "Female/Male/Other/Prefer Not to Disclose".split("/"),
         tshirt: "XS S M L XL".split(" "),
-        status: "Incomplete Submitted Rejected Waitlisted Accepted".split(" "),
+        status: "Pending Rejected Waitlisted Accepted".split(" "), //take care when changing
         experience: "Yes No".split(" ")//store boolean state as string for simplicity
     }
 };
