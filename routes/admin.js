@@ -22,12 +22,7 @@ router.get('/dashboard', function (req, res, next) {
     async.parallel({
         applicants: function (done) {
             User.aggregate([
-                {
-                    $group: {
-                        _id: "$internal.status",
-                        total: {$sum: 1}
-                    }
-                }
+                {$group: {_id: "$internal.status", total: {$sum: 1}}}
             ], function (err, result) {
                 if (err) {
                     done(err);
@@ -52,6 +47,15 @@ router.get('/dashboard', function (req, res, next) {
                     done(null, result);
                 }
             })
+        },
+        schools: function (done) {
+            User.aggregate([
+                {$group: {_id: "$school.name", total: {$sum: 1}}},
+                {$sort: {total: -1, _id: 1}},
+                {$project: {_id: 0, name: "$_id", total: "$total"}}
+            ], function (err, res) {
+                return done(err,res);
+            })
         }
     }, function (err, result) {
         if (err) {
@@ -60,7 +64,8 @@ router.get('/dashboard', function (req, res, next) {
         console.log(result);
         res.render('admin/index', {
             title: 'Admin Dashboard',
-            applicants: result.applicants
+            applicants: result.applicants,
+            schools: result.schools
         })
     });
 
