@@ -17,6 +17,7 @@ router.get('/', function (req, res, next) {
 
 
 //{ $group: { _id: "$fieldName"}  },{ $group: { _id: 1, count: { $sum: 1 } } }
+/* GET admin dashboard */
 router.get('/dashboard', function (req, res, next) {
 
     async.parallel({
@@ -41,7 +42,7 @@ router.get('/dashboard', function (req, res, next) {
                     });
 
                     //fold null prop into pending
-                    //legacy support when internal.status in user model did not have default: 'pending'
+                    //legacy support when internal.status in user model did not have default: 'Pending'
                     result.pending += result["null"];
                     result = _.omit(result, "null");
                     done(null, result);
@@ -69,6 +70,20 @@ router.get('/dashboard', function (req, res, next) {
         })
     });
 
+});
+
+router.get('/user/:pubid', function(req, res, next) {
+    var pubid = req.params.pubid;
+    res.render('admin/user', {
+        title: 'Review User'
+    })
+});
+
+router.get('/team/:teamid', function(req, res, next) {
+    var teamid = req.params.teamid;
+    res.render('admin/team', {
+        title: 'Review Team'
+    })
 });
 
 router.get('/login', function (req, res, next) {

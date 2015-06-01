@@ -1,0 +1,33 @@
+<% include ../_header %>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">review user</h1>
+            </div>
+            <% include _usertemplate %>
+
+            <br/>
+
+            <div class="text-center">
+                Update application decision:
+                <form>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" id="rejected" value="Rejected"> Rejected
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" id="waitlisted" value="Waitlisted"> Waitlisted
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" id="accepted" value="Accepted"> Accepted
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../_footer %>

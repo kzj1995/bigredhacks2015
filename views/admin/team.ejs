@@ -1,0 +1,55 @@
+<% include ../_header %>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">review team</h1>
+            </div>
+            <h5>Team Information:</h5>
+            <ul>
+                <li>Team id: abcdef</li>
+                <li>No. Members: 2</li>
+            </ul>
+            <br/>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="user-heading-1">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#user-collapse-1"
+                               aria-expanded="true"
+                               aria-controls="user-collapse-1">
+                                Team Member 1
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="user-collapse-1" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="user-heading-1">
+                        <div class="panel-body">
+                            team member 1
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="user-heading-2">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#user-collapse-2"
+                               aria-expanded="false" aria-controls="user-collapse-2">
+                                Team Member 2
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="user-collapse-2" class="panel-collapse collapse" role="tabpanel"
+                         aria-labelledby="user-heading-2">
+                        <div class="panel-body">
+                            team member 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../_footer %>
