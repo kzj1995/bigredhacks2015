@@ -31,6 +31,14 @@ passport.use(new LocalStrategy({
             if (err) {
                 return done(err);
             }
+            if(req.originalUrl == "/admin/login"){
+                var adminemails=config.setup.admin_emails.split(" ");
+                if(adminemails.indexOf(email) <= -1) {
+                    return done(null, false, function () {
+                        req.flash('error', 'You are not authorized to access this resource.');
+                    }());
+                }
+            }
             if (user == null || !user.validPassword(password)) {
                 return done(null, false, function () {
                     req.flash('email', email);

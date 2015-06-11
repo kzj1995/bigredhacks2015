@@ -98,8 +98,19 @@ var _requireAuthentication = function (req, res, next) {
 };
 
 var _requireAdmin = function (req, res, next) {
-    //todo add admin check
-  next();
+    if(req.user) {
+        var adminemails = config.setup.admin_emails.split(" ");
+        if (adminemails.indexOf(req.user.email) > -1) {
+            next();
+        }
+    }
+    else if (req.originalUrl == "/admin/login") {
+        next();
+    }
+    else {
+        req.flash('error', 'Please login first.');
+        res.redirect('/admin/login');
+    }
 };
 
 //generic middleware function
@@ -116,9 +127,9 @@ app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 });*/
 //requireAuthentication must come before requireNoAuthentication to prevent redirect loops
 app.use('/', routes);
+app.use('/admin', _requireAdmin, admin);
 app.use('/user', _requireAuthentication, user);
 app.use('/', _requireNoAuthentication, authRoute);
-app.use('/admin', _requireAdmin, admin);
 app.use('/api/admin', apiAdminRoute);
 app.use('/api', apiRoute);
 

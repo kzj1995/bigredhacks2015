@@ -3,18 +3,18 @@ var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
 var async = require('async');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
-
 var config = require('../config.js');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.redirect('/admin/dashboard');
 });
-
 
 //{ $group: { _id: "$fieldName"}  },{ $group: { _id: 1, count: { $sum: 1 } } }
 /* GET admin dashboard */
@@ -88,12 +88,34 @@ router.get('/team/:teamid', function(req, res, next) {
 
 router.get('/login', function (req, res, next) {
     res.render('admin/login', {
-        title: 'Admin Login'
+        title: 'Admin Login',
+        user: req.user
+    })
+});
+
+/* POST login a user */
+router.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/admin',
+        failureRedirect: '/admin/login',
+        failureFlash: true
+    })
+);
+
+router.get('/search',function (req,res,next){
+    res.render('admin/search',{
+        title: 'Admin Dashboard - Search'
+    })
+});
+
+router.get('/review',function (req,res,next){
+    res.render('admin/review',{
+        title: 'Admin Dashboard - Review'
     })
 });
 
 router.get('/logout', function (req, res, next) {
-    //todo add admin logout
+    req.logout();
     res.redirect('/');
 });
 
