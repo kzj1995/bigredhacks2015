@@ -1,4 +1,10 @@
 <% include ../_header %>
+<link rel="stylesheet" href="/css/admin.css">
+
+<%
+var input = input || {}; //persist fields
+%>
+
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -7,8 +13,59 @@
             <div class="header-wrapper-leaf">
                 <h1 class="leaf">search</h1>
             </div>
+            <div id="searchparameters">
+                <h3>Search by College</h3>
+                <input type="hidden" id="collegeid" name="collegeid" class="form-control"
+                value="<%= input.collegeid || "" %>" required/>
+                <input type="text" id="college" name="college" class="form-control typeahead" placeholder="School Name"
+                value="<%= input.college || "" %>">
+                <h3>Search by Category</h3>
+                <select class="form-control" id="categoryselection" name="categoryselection">
+                    <option value="">Select Category</option>
+                    <option value="Gender">Gender</option>
+                    <option value="Major">Major</option>
+                    <option value="Name">Name</option>
+                    <option value="Email">Email</option>
+                    <option value="Year">Year</option>
+                </select>
+                <fieldset>
+                    <button type="submit" id="submit" class="btn btn-primary">search</button>
+                </fieldset>
+            </div>
+            <div id="searchresults">
+                <% for (var i=0; i<applicants.length; i=i+1) {%>
+                <div class="applicantinfo">
+                    <a href="/admin/search/applicant?id=<%= applicants[i].pubid %>">
+                        <div class="applicantinfotitle">
+                        <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
+                        </div>
+                        <ul class="applicantinfolist">
+                            <li>Gender: <%= applicants[i].gender %></li>
+                            <li>Major: <%= applicants[i].school.major %></li>
+                            <li>Email: <%= applicants[i].email %></li>
+                            <li>Year: <%= applicants[i].school.year %></li>
+                            <li>Application Status: <%= applicants[i].internal.status %></li>
+                        </ul>
+                    </a>
+                    <div class="decisionbuttons">
+                        <button id="accept" class="btn btn-primary" onclick="acceptApplicant('<%= applicants[i].pubid %>',<%= i %>);">
+                            Accept
+                        </button>
+                        <button id="reject" class="btn btn-primary" onclick="rejectApplicant('<%= applicants[i].pubid %>',<%= i %>);">
+                            Reject
+                        </button>
+                    </div>
+                </div>
+                <% } %>
+            </div>
         </div>
     </div>
 </div>
 
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
+<script src="/js/jquery.validate.options.js"></script>
+<script src="/js/vendor/typeahead.bundle.min.js"></script>
+<script src="/js/vendor/jquery.filepicker.min.js"></script>
+<script src="/js/admin.js"></script>
 <% include ../_footer %>
