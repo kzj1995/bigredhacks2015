@@ -111,20 +111,6 @@ router.get('/search',function (req,res,next){
     });
 });
 
-router.post('/accept', function(req,res,next){
-    User.findOne({pubid: req.query.id}, function (err, user) {
-        user.internal.status = "Accepted";
-        user.save(function (err, doc) {});
-    });
-});
-
-router.post('/reject', function(req,res,next){
-    User.findOne({pubid: req.query.id}, function (err, user) {
-        user.internal.status = "Rejected";
-        user.save(function (err, doc) {});
-    });
-});
-
 router.get('/review',function (req,res,next){
     res.render('admin/review',{
         title: 'Admin Dashboard - Review'
