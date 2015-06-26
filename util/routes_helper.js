@@ -130,6 +130,14 @@ helper.deleteResume = function deleteResume(location, callback) {
     });
 };
 
+/**
+ * add a subscriber to a mailchimp mailing list
+ * @param listid mailchimp listid
+ * @param email email to send to
+ * @param fname first name of recipeint
+ * @param lname last name of recipient
+ * @param callback
+ */
 helper.addSubscriber = function (listid, email, fname, lname, callback) {
     var mcReq = {
         id: listid,

@@ -1,9 +1,9 @@
-<% include _header %>
+<% include ../_header %>
 <link href="/css/index.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/login.css">
 
 <body>
-<% include _navbar-generic %>
+<% include ../_navbar-generic %>
 <div class="container">
 
     <div class="login center-block col-lg-5 col-md-5 col-sm-10">
@@ -14,37 +14,27 @@
         <%- '<div class="alert alert-danger" role="alert">' + messages.error[0].toLowerCase() + '</div>'; %>
         <% } %>
 
-        <% if (page == 1) { %>
-        <form action="/resetpassword" method="post">
-            <div class="form-group">
-                <label for="email">email address</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="email"
-                       value="<%= email || "" %>" required>
-            </div>
-            <button type="submit" class="btn btn-primary center-block ">submit</button>
-        </form>
-        <% } else if (page == 2) { %>
-        <label for="resetmessage">An email has been sent to <%= email %> with a link to reset your password.
-            <a href="/">Return to BigRed//Hacks Home Page</a></label>
-        <% } else if (page == 3) { %>
-        <form method="post">
+        <form id="resetPassForm" method="post">
             <div class="form-group">
                 <input type="email" class="form-control" id="email" name="email" placeholder="email"
                        value="<%= email %>" readonly>
+            </div>
+            <div class="form-group">
                 <label for="password">new password</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="password"
                        required/>
+            </div>
+            <div class="form-group">
                 <label for="confirmpassword">confirm password</label>
                 <input type="password" id="confirmpassword" name="confirmpassword" class="form-control"
                        placeholder="password" required/>
             </div>
             <button type="submit" class="btn btn-primary center-block ">Submit</button>
         </form>
-        <% } else if (page == 4) { %>
-        <label for="resetmessage">Your password has been successfully reset.
-            <a href="/">Return to BigRed//Hacks Home Page</a></label>
-        <% } %>
+
     </div>
 </div>
 
-<% include _footer %>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="/js/jquery.validate.options.js"></script>
+<script src="/js/resetpass_prompt.js"></script>

@@ -1,0 +1,28 @@
+<% include ../_header %>
+<link href="/css/index.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/login.css">
+
+<body>
+<% include ../_navbar-generic %>
+<div class="container">
+
+    <div class="login center-block col-lg-5 col-md-5 col-sm-10">
+        <h2>reset password</h2>
+        <br/>
+        <%
+        if (messages.error) { %>
+        <%- '<div class="alert alert-danger" role="alert">' + messages.error[0].toLowerCase() + '</div>'; %>
+        <% } %>
+
+        <form method="post">
+            <div class="form-group">
+                <label for="email">email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="email"
+                       value="<%= email || "" %>" required>
+            </div>
+            <button type="submit" class="btn btn-primary center-block ">submit</button>
+        </form>
+    </div>
+</div>
+
+<% include ../_footer %>
