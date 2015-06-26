@@ -83,10 +83,7 @@ $('document').ready(function () {
     //fails for cornell school
     $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
         var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
-        if (restrict.indexOf(val) == -1) {
-            return true;
-        }
-        else return false;
+        return (restrict.indexOf(val) == -1);
     }, notCornellText);
 
     $('#registrationForm').validate({
@@ -98,7 +95,8 @@ $('document').ready(function () {
             email: {
                 required: true,
                 email: true,
-                emailNotCornell: true
+                emailNotCornell: true,
+                remote: "/api/validEmail"
             },
             password: {
                 minlength: 6,
@@ -151,6 +149,9 @@ $('document').ready(function () {
             }
         },
         messages: {
+            email: {
+                remote: "A user with that email already exists."
+            },
             password: {
                 required: "Please provide a password",
                 minlength: "Your password must be at least 6 characters long"

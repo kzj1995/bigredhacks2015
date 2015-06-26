@@ -249,15 +249,17 @@ router.post('/login',
 );
 
 /* GET reset password */
-router.get('/resetpass?', function (req, res) {
+router.get('/resetpassword', function (req, res) {
+    if (req.query.token == undefined || req.query.token == "") {
+        res.redirect('/forgotpassword');
+    }
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null) {
             res.redirect('/');
         }
         else {
-            res.render('forgotpassword', {
+            res.render('forgotpassword/resetpass_prompt', {
                 title: 'Reset Password',
-                page: 3,
                 email: user.email
             });
         }
@@ -265,7 +267,7 @@ router.get('/resetpass?', function (req, res) {
 });
 
 /* POST reset password */
-router.post('/resetpass?', function (req, res) {
+router.post('/resetpassword', function (req, res) {
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null || req.query.token == "" || req.query.token == undefined) {
             res.redirect('/');
@@ -277,7 +279,7 @@ router.post('/resetpass?', function (req, res) {
             var errors = req.validationErrors();
             if (errors) {
                 req.flash('error', 'Password is not valid. 6 to 25 characters required.');
-                res.redirect('/resetpass?token=' + req.query.token);
+                res.redirect('/resetpassword?token=' + req.query.token);
             }
             else {
                 user.password = req.body.password;
@@ -286,13 +288,12 @@ router.post('/resetpass?', function (req, res) {
                     if (err) {
                         // If it failed, return error
                         console.log(err);
-                        req.flash("error", "An error occurred.");
-                        res.redirect('/login')
+                        req.flash("error", "An error occurred. Your password has not been reset.");
+                        res.redirect('/forgotpassword');
                     }
                     else {
-                        res.render('forgotpassword', {
+                        res.render('forgotpassword/resetpass_done', {
                             title: 'Reset Password',
-                            page: 4,
                             email: user.email
                         });
                     }
@@ -302,32 +303,25 @@ router.post('/resetpass?', function (req, res) {
     });
 });
 
-//fixme merge with above
-router.get('/resetpassword', function (req, res) {
-    res.render('forgotpassword', {
+
+router.get('/forgotpassword', function (req, res) {
+    res.render('forgotpassword/forgotpass_prompt', {
         title: 'Reset Password',
-        page: 1,
         user: req.user,
         email: req.flash('email')
     });
 });
 
-//fixme merge with above
-router.post('/resetpassword', function (req, res) {
+
+router.post('/forgotpassword', function (req, res) {
     User.findOne({email: req.body.email}, function (err, user) {
         if (user == null) {
             req.flash('error', 'No account is associated with that email.');
-            res.render('forgotpassword', {
-                title: 'Reset Password',
-                page: 1,
-                user: req.user,
-                email: req.flash('email')
-            });
+            res.redirect('/forgotpassword');
         }
         else {
-            res.render('forgotpassword', {
+            res.render('forgotpassword/forgotpass_done', {
                 title: 'Reset Password',
-                page: 2,
                 user: req.user,
                 email: user.email
             });
@@ -335,13 +329,13 @@ router.post('/resetpassword', function (req, res) {
             user.save(function (err, doc) {
                 if (err) {
                     // If it failed, return error
-                    console.log(err);
+                    console.err(err);
                     req.flash("error", "An error occurred.");
-                    res.redirect('/')
+                    res.redirect('/forgotpassword')
                 }
                 else {
                     var template_name = "bigredhackstemplate";
-                    var passwordreseturl = req.protocol + '://' + req.get('host') + "/resetpass?token=" + user.passwordtoken;
+                    var passwordreseturl = req.protocol + '://' + req.get('host') + "/resetpassword?token=" + user.passwordtoken;
                     var template_content = [{
                         "name": "emailcontent",
                         "content": "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
@@ -382,7 +376,7 @@ router.post('/resetpassword', function (req, res) {
                     }, function (result) {
                         console.log(result);
                     }, function (e) {
-                        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                        console.err('A mandrill error occurred: ' + e.name + ' - ' + e.message);
                     });
                 }
             });
