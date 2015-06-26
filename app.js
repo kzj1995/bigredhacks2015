@@ -16,9 +16,10 @@ var config = require('./config.js');
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user');
-var admin = require('./routes/admin');
+//fixme on merge with admin branch
+//var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
-var apiAdminRoute = require('./routes/api/admin');
+//var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth');
 
 var app = express();
@@ -118,8 +119,8 @@ app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 app.use('/', routes);
 app.use('/user', _requireAuthentication, user);
 app.use('/', _requireNoAuthentication, authRoute);
-app.use('/admin', _requireAdmin, admin);
-app.use('/api/admin', apiAdminRoute);
+//app.use('/admin', _requireAdmin, admin);
+//app.use('/api/admin', apiAdminRoute);
 app.use('/api', apiRoute);
 
 
