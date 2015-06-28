@@ -25,7 +25,7 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
 });
 
 /* PATCH set status of entire team */
-router.patch('/setTeamStatus', function (req, res, next) {
+router.patch('/team/:teamid/setStatus', function (req, res, next) {
 
 });
 
