@@ -85,6 +85,15 @@ router.get('/team/:teamid', function (req, res, next) {
     })
 });
 
+router.get('/search', function (req, res, next) {
+    User.find({}).sort('name.last').exec(function (err, applicants) {
+        res.render('admin/search', {
+            title: 'Admin Dashboard - Search',
+            applicants: applicants
+        })
+    });
+});
+
 /* POST Search based on inputted fields */
 router.post('/search', function (req, res, next) {
     //Boolean variables indicating whether a field was searched for

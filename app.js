@@ -89,7 +89,7 @@ var _requireNoAuthentication = function (req, res, next) {
 
 var _requireAuthentication = function (req, res, next) {
     if (req.user) {
-        next();
+        return next();
     }
     else {
         req.flash('error', 'Please login first.');
@@ -98,10 +98,8 @@ var _requireAuthentication = function (req, res, next) {
 };
 
 var _requireAdmin = function (req, res, next) {
-    if (req.user) {
-        if (req.user.role == "admin" || req.user.email === config.admin.email) {
-            next();
-        }
+    if (req.user && (req.user.role === "admin" || req.user.email == config.admin.email)) {
+        return next();
     }
     else {
         req.flash('error', 'Please login first.');

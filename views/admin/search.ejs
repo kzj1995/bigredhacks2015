@@ -15,51 +15,47 @@ var input = input || {}; //persist fields
             </div>
             <div id="searchparameters">
                 <form action="/admin/search" method="post">
-                <h3>Search by College</h3>
-                <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                value="<%= input.collegeid || "" %>" required/>
-                <input type="text" id="college" name="college" class="form-control typeahead" placeholder="School Name"
-                value="<%= input.college || "" %>">
-                <h3>Search by Category</h3>
-                <select class="form-control" id="categoryselection" name="categoryselection">
-                    <option value="Select Category">Select Category</option>
-                    <option value="User Id">User Id</option>
-                    <option value="Email">Email</option>
-                    <option value="Name">Name</option>
-                </select>
-                <fieldset>
-                    <button type="submit" id="submit" class="btn btn-primary">search</button>
-                </fieldset>
+                    <h3>Search by College</h3>
+                    <input type="hidden" id="collegeid" name="collegeid" class="form-control"
+                           value="<%= input.collegeid || "" %>" required/>
+                    <input type="text" id="college" name="college" class="form-control typeahead"
+                           placeholder="School Name"
+                           value="<%= input.college || "" %>">
+
+                    <h3>Search by Category</h3>
+                    <select class="form-control" id="categoryselection" name="categoryselection">
+                        <option value="Select Category">Select Category</option>
+                        <option value="User Id">User Id</option>
+                        <option value="Email">Email</option>
+                        <option value="Name">Name</option>
+                    </select>
+                    <fieldset>
+                        <button type="submit" id="submit" class="btn btn-primary">search</button>
+                    </fieldset>
                 </form>
             </div>
             <div id="searchresults">
-                <% for (var i=0; i<applicants.length; i=i+1) {%>
-                <div class="applicantinfo">
-                    <a id = "applicantlink" href="/admin/search/applicant?id=<%= applicants[i].pubid %>">
+                <% for (var i = 0; i < applicants.length; i = i + 1) { %>
+                <div class="applicantinfo" data-pubid="<%= applicants[i].pubid %>">
+                    <a class="applicantlink" href="/admin/user/<%= applicants[i].pubid %>">
                         <div class="applicantinfotitle">
-                        <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
+                            <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
                         </div>
                     </a>
                     <ul class="applicantinfolist">
-                        <li>Gender: <%= applicants[i].gender %></li>
-                        <li>Major: <%= applicants[i].school.major %></li>
-                        <li>Email: <%= applicants[i].email %></li>
-                        <li>School: <%= applicants[i].school.name %></li>
-                        <li>Year: <%= applicants[i].school.year %></li>
-                        <li><a href="https://bigredhacks.s3.amazonaws.com/resume/<%= applicants[i].app.resume %>">Resume</a></li>
+                        <li><b>Major:</b> <%= applicants[i].school.major %></li>
+                        <li><b>Email:</b> <%= applicants[i].email %></li>
+                        <li><b>School:</b> <%= applicants[i].school.name %></li>
+                        <li><b>Year:</b> <%= applicants[i].school.year %></li>
+                        <li>
+                            <a href="http://files.bigredhacks.com/resume/<%= applicants[i].app.resume %>">Resume</a>
+                        </li>
                         <li>Application Status: <%= applicants[i].internal.status %></li>
                     </ul>
                     <div class="decisionbuttons">
-                        <button id="accept" class="btn btn-primary">
-                            Accept
-                        </button>
-                        <button id="waitlist" class="btn btn-primary">
-                            Waitlist
-                        </button>
-                        <button id="reject" class="btn btn-primary">
-                            Reject
-                        </button>
-                        <input id="applicantid" value = "<%= applicants[i].pubid %>" type = "hidden">
+                        <button class="btn btn-primary btn-accept">Accept</button>
+                        <button class="btn btn-primary btn-waitlist">Waitlist</button>
+                        <button class="btn btn-primary btn-reject">Reject</button>
                     </div>
                 </div>
                 <% } %>
