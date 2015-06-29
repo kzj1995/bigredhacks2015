@@ -24,7 +24,6 @@ router.use(function (req, res, next) {
  * */
 router.patch('/user/:pubid/setStatus', function (req, res, next) {
     User.findOne({pubid: req.params.pubid}, function (err, user) {
-        console.log(err, user);
         if (err || !user) {
             return res.sendStatus(500);
         }

@@ -1,93 +1,58 @@
 $('document').ready(function () {
-    /*
-     * Typeahead
-     */
-    var engine = new Bloodhound({
-        name: 'colleges',
-        prefetch: '/api/colleges',
-        datumTokenizer: function (d) {
-            return Bloodhound.tokenizers.whitespace(d.name);
-        },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        limit: 5,
-        sorter: function (a, b) {
 
-            //case insensitive matching
-            var input = $('#college').val().toLowerCase();
-            a = a.name.toLowerCase();
-            b = b.name.toLowerCase();
-
-            //move exact matches to top
-            if (input === a) {
-                return -1;
-            }
-            if (input === b) {
-                return 1;
-            }
-
-            //move beginning matches to top
-            if (a.lastIndexOf(input, 0) === 0) {
-                return -1;
-            }
-            if (b.lastIndexOf(input, 0) === 0) {
-                return 1;
-            }
-        }
-    });
-
-    engine.initialize();
-
-    $('.typeahead').typeahead({
-        hint: true,
-        highlight: true,
-        autoselect: false,
-        minLength: 3
-    }, {
-        displayKey: 'name', // if not set, will default to 'value',
-        source: engine.ttAdapter()
-    }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-        $("#collegeid").val(datum.id);
-    });
-
-    $( ".applicantinfo" ).hover(
-        function() {
-            $( this ).css("background-color", "#78DEFC");
-        }, function() {
-            $( this ).css("background-color", "#ECFEFF");
-        }
-    );
 
     $(".decisionbuttons button").click(function () {
-        var applicantboxindex = parseInt($(".decisionbuttons button").index(this) / 3);
-        var decision = "";
-        if($(this).index() == 0)
-            decision = "Accept";
-        else if($(this).index() == 1)
-            decision = "Waitlist";
-        else if($(this).index() == 2)
-            decision = "Reject";
-        var applicantid = $(".decisionbuttons #applicantid").eq(applicantboxindex).val();
+        var _this = this;
+        var buttongroup = $(this).parent();
+        var buttons = $(this).parent().find(".btn");
+        var newStatus = $(_this).data("status");
+        var pubid = $(_this).parents(".applicant").data("pubid");
+
+        $(buttons).prop("disabled", true).removeClass("active");
+
         $.ajax({
-            type: "POST",
-            url: "/admin/updateStatus?id="+applicantid+"&decision="+decision
+            type: "PATCH",
+            url: "/api/admin/user/" + pubid + "/setStatus",
+            data: {
+                status: newStatus
+            },
+            success: function (data) {
+                $(_this).parent().siblings(".status-text").text(newStatus);
+                $(buttons).prop("disabled", false);
+                $(_this).addClass("active");
+            },
+            error: function (e) {
+                //todo more descriptive errors
+                console.log("Update failed!");
+            }
         });
-        $(".applicantinfolist li:last-child").eq(applicantboxindex).text("Application Status: "+decision);
+
     });
 
-    $("#categoryselection").change(function(){
-        var category = $(this).val();
-        $("#categoryinput").remove();
-        if(category == "User Id"){
-            $("<input id='categoryinput' class='form-control' type='text' name='userid' " +
-            "placeholder='User Id' />").insertAfter("#categoryselection");
+    var searchCategories = {
+        pubid: {
+            name: "pubid",
+            placeholder: "Public User ID"
+        },
+        email: {
+            name: "email",
+            placeholder: "Email"
+        },
+        name: {
+            name: "name",
+            placeholder: "Name"
         }
-        else if(category == "Email"){
-            $("<input id='categoryinput' class='form-control' type='text' name='email' " +
-            "placeholder='Email' />").insertAfter("#categoryselection");
+    };
+    $("#categoryselection").change(function () {
+        var catString = $(this).val();
+        var category = searchCategories[catString];
+
+        if (typeof category === "undefined") {
+            console.log(catString, "Is not a valid category!");
         }
-        else if(category == "Name"){
-            $("<input id='categoryinput' class='form-control' type='text' name='name' " +
-            "placeholder='Name' />").insertAfter("#categoryselection");
+        else {
+            var inputElem = '<input class="form-control" type="text" name="' + category.name + '" placeholder="' + category.placeholder + '" />';
+            $(".category-input").html(inputElem);
         }
     });
 

@@ -80,10 +80,10 @@ app.use(subdomain({base: config.setup.url}));
 
 var _requireNoAuthentication = function (req, res, next) {
     if (req.user) {
-        res.redirect('/user/dashboard')
+        return res.redirect('/user/dashboard')
     }
     else {
-        next();
+        return next();
     }
 };
 
@@ -93,7 +93,7 @@ var _requireAuthentication = function (req, res, next) {
     }
     else {
         req.flash('error', 'Please login first.');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
 };
 
@@ -103,7 +103,7 @@ var _requireAdmin = function (req, res, next) {
     }
     else {
         req.flash('error', 'Please login first.');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
 };
 

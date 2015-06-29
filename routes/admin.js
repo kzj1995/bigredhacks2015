@@ -185,12 +185,4 @@ router.get('/review', function (req, res, next) {
     })
 });
 
-router.post('/updateStatus', function (req, res, next) {
-    User.findOne({pubid: req.query.id}, function (err, user) {
-        user.internal.status = req.query.decision;
-        user.save(function (err, doc) {
-        });
-    });
-});
-
 module.exports = router;
