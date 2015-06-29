@@ -29,6 +29,15 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 else {
                     console.log(result);
+                    //make all values lowercase
+                    result = _.map(result, function (x) {
+                        return _.mapObject(x, function (val, key) {
+                            return (typeof val == 'string') ? val.toLowerCase() : val;
+                        });
+                    });
+                    console.log(result);
+
+                    //remap values to key,value pairs and fill defaults
                     result = _.defaults(_.object(_.map(result, _.values)), {
                         null: 0,
                         accepted: 0,
@@ -42,6 +51,7 @@ router.get('/dashboard', function (req, res, next) {
 
                     //fold null prop into pending
                     //legacy support when internal.status in user model did not have default: 'Pending'
+                    //todo consider removing in 2016+ deployments
                     result.pending += result["null"];
                     result = _.omit(result, "null");
                     done(null, result);
