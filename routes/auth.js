@@ -31,13 +31,6 @@ passport.use(new LocalStrategy({
             if (err) {
                 return done(err);
             }
-            if(req.originalUrl == "/admin/login"){
-                if(user.role != "admin") {
-                    return done(null, false, function () {
-                        req.flash('error', 'You are not authorized to access this resource.');
-                    }());
-                }
-            }
             if (user == null || !user.validPassword(password)) {
                 return done(null, false, function () {
                     req.flash('email', email);
@@ -242,10 +235,13 @@ router.get('/login', function (req, res, next) {
 /* POST login a user */
 router.post('/login',
     passport.authenticate('local', {
-        successRedirect: '/user',
         failureRedirect: '/login',
         failureFlash: true
-    })
+    }), function(req, res) {
+        // successful auth, user is set at req.user.  redirect as necessary.
+        if (req.user.role === "admin" || req.user.email === config.admin.email) { return res.redirect('/admin'); }
+        else {return res.redirect('/user')}
+    }
 );
 
 /* GET reset password */

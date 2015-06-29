@@ -11,7 +11,8 @@ var en = {
         gender: "Female/Male/Other/Prefer Not to Disclose".split("/"),
         tshirt: "XS S M L XL".split(" "),
         status: "Pending Rejected Waitlisted Accepted".split(" "), //take care when changing
-        experience: "Yes No".split(" ")//store boolean state as string for simplicity
+        experience: "Yes No".split(" "), //store boolean state as string for simplicity
+        role: "user admin".split(" ")
     }
 };
 

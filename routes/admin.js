@@ -4,7 +4,6 @@ var router = express.Router();
 var _ = require('underscore');
 var async = require('async');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
@@ -55,7 +54,7 @@ router.get('/dashboard', function (req, res, next) {
                 {$sort: {total: -1, _id: 1}},
                 {$project: {_id: 0, name: "$_id", total: "$total"}}
             ], function (err, res) {
-                return done(err,res);
+                return done(err, res);
             })
         }
     }, function (err, result) {
@@ -72,146 +71,117 @@ router.get('/dashboard', function (req, res, next) {
 
 });
 
-router.get('/user/:pubid', function(req, res, next) {
+router.get('/user/:pubid', function (req, res, next) {
     var pubid = req.params.pubid;
     res.render('admin/user', {
         title: 'Review User'
     })
 });
 
-router.get('/team/:teamid', function(req, res, next) {
+router.get('/team/:teamid', function (req, res, next) {
     var teamid = req.params.teamid;
     res.render('admin/team', {
         title: 'Review Team'
     })
 });
 
-router.get('/login', function (req, res, next) {
-    res.render('admin/login', {
-        title: 'Admin Login',
-        user: req.user
-    })
-});
-
-/* POST login a user */
-router.post('/login',
-    passport.authenticate('local', {
-        successRedirect: '/admin',
-        failureRedirect: '/admin/login',
-        failureFlash: true
-    })
-);
-
-router.get('/search',function (req,res,next){
-    User.find({}).sort('name.last').exec(function (err, applicants) {
-        res.render('admin/search',{
-            title: 'Admin Dashboard - Search',
-            applicants: applicants
-        })
-    });
-});
-
 /* POST Search based on inputted fields */
-router.post('/search',function (req,res,next){
+router.post('/search', function (req, res, next) {
     //Boolean variables indicating whether a field was searched for
     var collegesearched, useridsearched, emailsearched, namesearched;
     //If name was searched, get the first and last name
     var firstname, lastname;
-    if (req.body.college != ""){
+    if (req.body.college != "") {
         collegesearched = true
     }
-    if(typeof req.body.userid != "undefined" && req.body.userid != ""){
-        useridsearched=true
+    if (typeof req.body.userid != "undefined" && req.body.userid != "") {
+        useridsearched = true
     }
-    if(typeof req.body.email!= "undefined" && req.body.email != ""){
-        emailsearched=true
+    if (typeof req.body.email != "undefined" && req.body.email != "") {
+        emailsearched = true
     }
-    if(typeof req.body.name != "undefined" && req.body.name != "") {
-        namesearched = true
+    if (typeof req.body.name != "undefined" && req.body.name != "") {
+        namesearched = true;
         var name = req.body.name.split(" ");
         firstname = name[0];
         lastname = name[1];
     }
-    if(collegesearched && useridsearched) {
+    if (collegesearched && useridsearched) {
         User.find({'school.name': req.body.college, pubid: req.body.userid}).sort
         ('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(collegesearched && emailsearched) {
+    else if (collegesearched && emailsearched) {
         User.find({'school.name': req.body.college, email: req.body.email}).sort
         ('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(collegesearched && namesearched) {
-        User.find({'school.name': req.body.college,'name.first': firstname,'name.last':lastname}).sort
+    else if (collegesearched && namesearched) {
+        User.find({'school.name': req.body.college, 'name.first': firstname, 'name.last': lastname}).sort
         ('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(collegesearched) {
+    else if (collegesearched) {
         User.find({'school.name': req.body.college}).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(useridsearched) {
+    else if (useridsearched) {
         User.find({pubid: req.body.userid}).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(emailsearched) {
+    else if (emailsearched) {
         User.find({email: req.body.email}).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else if(namesearched) {
-        User.find({'name.first': firstname,'name.last':lastname}).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search',{
+    else if (namesearched) {
+        User.find({'name.first': firstname, 'name.last': lastname}).sort('name.last').exec(function (err, applicants) {
+            res.render('admin/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
         });
     }
-    else{
+    else {
         res.redirect('/admin/search');
     }
 });
 
-router.get('/review',function (req,res,next){
-    res.render('admin/review',{
+router.get('/review', function (req, res, next) {
+    res.render('admin/review', {
         title: 'Admin Dashboard - Review'
     })
 });
 
-router.post('/updateStatus',function(req,res,next){
+router.post('/updateStatus', function (req, res, next) {
     User.findOne({pubid: req.query.id}, function (err, user) {
         user.internal.status = req.query.decision;
-        user.save(function (err, doc) {});
+        user.save(function (err, doc) {
+        });
     });
-})
-
-router.get('/logout', function (req, res, next) {
-    req.logout();
-    res.redirect('/');
 });
 
 module.exports = router;

@@ -98,22 +98,19 @@ var _requireAuthentication = function (req, res, next) {
 };
 
 var _requireAdmin = function (req, res, next) {
-    if(req.user) {
-        if (req.user.role == "admin") {
+    if (req.user) {
+        if (req.user.role == "admin" || req.user.email === config.admin.email) {
             next();
         }
     }
-    else if (req.originalUrl == "/admin/login") {
-        next();
-    }
     else {
         req.flash('error', 'Please login first.');
-        res.redirect('/admin/login');
+        res.redirect('/login');
     }
 };
 
 //generic middleware function
-app.use(function(req,res,next) {
+app.use(function (req, res, next) {
     res.locals.isUser = !!req.user;
     res.locals.currentUrl = req.url;
     next();
@@ -122,8 +119,8 @@ app.use(function(req,res,next) {
 //setup routes
 app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 /*app.use('/subdomain/fa15/', function(req,res,next) {
-   // res.redirect('/*');
-});*/
+ // res.redirect('/*');
+ });*/
 //requireAuthentication must come before requireNoAuthentication to prevent redirect loops
 app.use('/', routes);
 app.use('/api/admin', apiAdminRoute);
@@ -131,7 +128,6 @@ app.use('/api', apiRoute);
 app.use('/admin', _requireAdmin, admin);
 app.use('/user', _requireAuthentication, user);
 app.use('/', _requireNoAuthentication, authRoute);
-
 
 
 // catch 404 and forward to error handler
@@ -159,8 +155,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('404', {
-    });
+    res.render('404', {});
 });
 
 

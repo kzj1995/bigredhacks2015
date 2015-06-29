@@ -51,7 +51,7 @@ var userSchema = new mongoose.Schema({
         going: {type: Boolean}
     },
     passwordtoken: String,
-    role: String
+    role: {type: String, enum: en.user.role, default: "user"}
 });
 
 //full name of user

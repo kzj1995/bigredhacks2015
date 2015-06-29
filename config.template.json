@@ -13,5 +13,8 @@
     "_comment": "Mailchimp list ids",
     "l_interested": "",
     "l_applicants": ""
+  },
+  "admin": {
+    "email": ""
   }
 }
