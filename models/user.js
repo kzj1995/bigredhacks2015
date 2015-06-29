@@ -50,7 +50,9 @@ var userSchema = new mongoose.Schema({
         status: {type: String, enum: en.status},
         going: {type: Boolean}
     },
-    passwordtoken: String
+    passwordtoken: String,
+    created_at: {type: Date, default: Date.now},
+    modified_at: {type: Date, default: Date.now}
 });
 
 //full name of user
@@ -60,23 +62,28 @@ userSchema.virtual('name.full').get(function () {
 
 //todo validate existence of college
 userSchema.pre('save', function (next) {
-    var user = this;
+    var _this = this;
 
     //add a public uid for the user
     //TODO consider moving to create
-    if (typeof user.pubid === "undefined") {
-        user.pubid = uid(10);
+    if (typeof _this.pubid === "undefined") {
+        _this.pubid = uid(10);
+    }
+
+    //check if user was modified
+    if (_this.isModified()) {
+        _this.modified_at = Date.now();
     }
 
     //verify password is present
-    if (!user.isModified('password')) return next();
+    if (!_this.isModified('password')) return next();
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
         if (err) return next(err);
 
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
+        bcrypt.hash(_this.password, salt, null, function (err, hash) {
             if (err) return next(err);
-            user.password = hash;
+            _this.password = hash;
             next();
         });
     });
