@@ -57,22 +57,42 @@ $('document').ready(function () {
         }
     );
 
+    $(".decisionbuttons button").click(function () {
+        var applicantboxindex = parseInt($(".decisionbuttons button").index(this) / 3);
+        var decision = "";
+        if($(this).index() == 0)
+            decision = "Accept";
+        else if($(this).index() == 1)
+            decision = "Waitlist";
+        else if($(this).index() == 2)
+            decision = "Reject";
+        var applicantid = $(".decisionbuttons #applicantid").eq(applicantboxindex).val();
+        $.ajax({
+            type: "POST",
+            url: "/admin/updateStatus?id="+applicantid+"&decision="+decision
+        });
+        $(".applicantinfolist li:last-child").eq(applicantboxindex).text("Application Status: "+decision);
+    });
+
+    $("#categoryselection").change(function(){
+        var category = $(this).val();
+        $("#categoryinput").remove();
+        if(category == "User Id"){
+            $("<input id='categoryinput' class='form-control' type='text' name='userid' " +
+            "placeholder='User Id' />").insertAfter("#categoryselection");
+        }
+        else if(category == "Email"){
+            $("<input id='categoryinput' class='form-control' type='text' name='email' " +
+            "placeholder='Email' />").insertAfter("#categoryselection");
+        }
+        else if(category == "Name"){
+            $("<input id='categoryinput' class='form-control' type='text' name='name' " +
+            "placeholder='Name' />").insertAfter("#categoryselection");
+        }
+    });
+
 });
 
-function acceptApplicant(applicantid, htmlid){
-    $.ajax({
-        type: "POST",
-        url: "/admin/accept?id="+applicantid
-    });
-    $(".applicantinfolist li:last-child").eq(htmlid).text("Application Status: Accepted");
-}
 
-function rejectApplicant(applicantid, htmlid){
-    $.ajax({
-        type: "POST",
-        url: "/admin/reject?id="+applicantid
-    });
-    $(".applicantinfolist li:last-child").eq(htmlid).text("Application Status: Rejected");
-}
 
 

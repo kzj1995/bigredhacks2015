@@ -111,11 +111,103 @@ router.get('/search',function (req,res,next){
     });
 });
 
+/* POST Search based on inputted fields */
+router.post('/search',function (req,res,next){
+    //Boolean variables indicating whether a field was searched for
+    var collegesearched, useridsearched, emailsearched, namesearched;
+    //If name was searched, get the first and last name
+    var firstname, lastname;
+    if (req.body.college != ""){
+        collegesearched = true
+    }
+    if(typeof req.body.userid != "undefined" && req.body.userid != ""){
+        useridsearched=true
+    }
+    if(typeof req.body.email!= "undefined" && req.body.email != ""){
+        emailsearched=true
+    }
+    if(typeof req.body.name != "undefined" && req.body.name != "") {
+        namesearched = true
+        var name = req.body.name.split(" ");
+        firstname = name[0];
+        lastname = name[1];
+    }
+    if(collegesearched && useridsearched) {
+        User.find({'school.name': req.body.college, pubid: req.body.userid}).sort
+        ('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(collegesearched && emailsearched) {
+        User.find({'school.name': req.body.college, email: req.body.email}).sort
+        ('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(collegesearched && namesearched) {
+        User.find({'school.name': req.body.college,'name.first': firstname,'name.last':lastname}).sort
+        ('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(collegesearched) {
+        User.find({'school.name': req.body.college}).sort('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(useridsearched) {
+        User.find({pubid: req.body.userid}).sort('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(emailsearched) {
+        User.find({email: req.body.email}).sort('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else if(namesearched) {
+        User.find({'name.first': firstname,'name.last':lastname}).sort('name.last').exec(function (err, applicants) {
+            res.render('admin/search',{
+                title: 'Admin Dashboard - Search',
+                applicants: applicants
+            })
+        });
+    }
+    else{
+        res.redirect('/admin/search');
+    }
+});
+
 router.get('/review',function (req,res,next){
     res.render('admin/review',{
         title: 'Admin Dashboard - Review'
     })
 });
+
+router.post('/updateStatus',function(req,res,next){
+    User.findOne({pubid: req.query.id}, function (err, user) {
+        user.internal.status = req.query.decision;
+        user.save(function (err, doc) {});
+    });
+})
 
 router.get('/logout', function (req, res, next) {
     req.logout();

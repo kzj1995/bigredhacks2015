@@ -1,7 +1,7 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-var colleges = require('../../models/college.js');
+var Colleges = require('../../models/college.js');
 var User = require('../../models/user.js');
 
 +router.get('/colleges', function (req, res, next) {

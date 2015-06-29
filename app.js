@@ -99,8 +99,7 @@ var _requireAuthentication = function (req, res, next) {
 
 var _requireAdmin = function (req, res, next) {
     if(req.user) {
-        var adminemails = config.setup.admin_emails.split(" ");
-        if (adminemails.indexOf(req.user.email) > -1) {
+        if (req.user.role == "admin") {
             next();
         }
     }

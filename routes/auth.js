@@ -32,8 +32,7 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
             if(req.originalUrl == "/admin/login"){
-                var adminemails=config.setup.admin_emails.split(" ");
-                if(adminemails.indexOf(email) <= -1) {
+                if(user.role != "admin") {
                     return done(null, false, function () {
                         req.flash('error', 'You are not authorized to access this resource.');
                     }());
@@ -148,7 +147,8 @@ router.post('/register', function (req, res) {
                             q2: req.body.q2
                         },
                         experience: req.body.experienceDropdown
-                    }
+                    },
+                    role: "user"
                 });
                 newUser.save(function (err, doc) {
                     if (err) {

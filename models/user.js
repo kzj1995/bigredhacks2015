@@ -50,7 +50,8 @@ var userSchema = new mongoose.Schema({
         status: {type: String, enum: en.status, default: "Pending"},
         going: {type: Boolean}
     },
-    passwordtoken: String
+    passwordtoken: String,
+    role: String
 });
 
 //full name of user
