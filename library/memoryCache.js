@@ -5,4 +5,4 @@ var memoryCache = module.exports = function () {
         get: function (key) { return cache[key]; },
         set: function (key, val) { cache[key] = val; }
     }
-}
+};

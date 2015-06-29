@@ -34,7 +34,6 @@ router.post('/cornell/subscribe', function (req, res, next) {
                     req.flash("error", "There was an error adding your email to the list.");
                 }
                 //console.log(err);
-
             }
             else {
                 //console.log(result);
