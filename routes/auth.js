@@ -52,7 +52,6 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
-
 /* GET registration page */
 router.get('/register', function (req, res) {
     res.render("register",
