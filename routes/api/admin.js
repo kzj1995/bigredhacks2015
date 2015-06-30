@@ -7,11 +7,6 @@ var User = require('../../models/user.js');
 var async = require('async');
 
 
-router.use(function (req, res, next) {
-    //todo add admin authentication middleware
-    next();
-});
-
 /**
  * @api PATCH /user/:pubid/setStatus Set status of a single user
  * @apiname setstatus

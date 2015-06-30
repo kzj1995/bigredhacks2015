@@ -82,6 +82,7 @@ router.post('/register', function (req, res) {
             'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'experienceDropdown', 'yearDropdown'
         ]);
 
+
         var errors = req.validationErrors();
         //console.log(errors);
         if (errors) {
@@ -143,6 +144,13 @@ router.post('/register', function (req, res) {
                     },
                     role: "user"
                 });
+
+                //set user as admin if designated in config for easy setup
+                if (newUser.email === config.admin.email) {
+                    newUser.role = "admin";
+                }
+
+
                 newUser.save(function (err, doc) {
                     if (err) {
                         // If it failed, return error
