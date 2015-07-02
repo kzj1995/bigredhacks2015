@@ -1,0 +1,34 @@
+<table class="table table-striped">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>School</th>
+        <th>Year</th>
+        <th>Status</th>
+        <th>Status</th>
+    </tr>
+    <% for (var i = 0; i < applicants.length; i++) { %>
+
+    <tr data-pubid="<%= applicants[i].pubid %>">
+        <td><a href="/admin/user/<%= applicants[i].pubid %>"><%= applicants[i].name.last %>
+                , <%= applicants[i].name.first %></a></td>
+        <td><%= applicants[i].email %></td>
+        <td><%= applicants[i].school.name %></td>
+        <td><%= applicants[i].school.year %></td>
+        <td><%= applicants[i].internal.status %></td>
+        <td>
+            <div class="decision-radio">
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="Accepted">Accepted
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="Waitlisted">Waitlisted
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="Rejected">Rejected
+                </label>
+            </div>
+        </td>
+    </tr>
+    <% } %>
+</table>

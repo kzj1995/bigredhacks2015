@@ -1,0 +1,26 @@
+<% for (var i = 0; i < applicants.length; i++) { %>
+<div class="applicant" data-pubid="<%= applicants[i].pubid %>">
+    <a class="page" href="/admin/user/<%= applicants[i].pubid %>">
+        <div class="name">
+            <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
+        </div>
+    </a>
+    <ul class="info">
+        <li><b>Email:</b> <%= applicants[i].email %></li>
+        <li><b>School:</b> <%= applicants[i].school.name %></li>
+        <li><b>Year:</b> <%= applicants[i].school.year %></li>
+        <li>
+            <a href="http://files.bigredhacks.com/resume/<%= applicants[i].app.resume %>">Resume</a>
+        </li>
+    </ul>
+    <div class="decisionbuttons">
+        <span class="status-text"><%= applicants[i].internal.status %></span> <br/>
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success btn-accept" data-status="Accepted">Accept</button>
+            <button class="btn btn-primary btn-waitlist" data-status="Waitlisted">Waitlist</button>
+            <button class="btn btn-danger btn-reject" data-status="Rejected">Reject</button>
+        </div>
+    </div>
+</div>
+<% } %>

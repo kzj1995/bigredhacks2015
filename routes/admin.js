@@ -97,12 +97,11 @@ router.get('/team/:teamid', function (req, res, next) {
 
 
 /* POST Search based on inputted fields */
-//todo refactor query execution logic
 router.get('/search', function (req, res, next) {
 
     if (!req.query) {
         User.find({}).sort('name.last').limit(100).exec(function (err, applicants) {
-            res.render('admin/search', {
+            res.render('admin/search/search', {
                 title: 'Admin Dashboard - Search',
                 applicants: applicants
             })
@@ -120,7 +119,7 @@ router.get('/search', function (req, res, next) {
     if (_.size(query.project) > 0) {
         query.project.document = '$$ROOT'; //return the actual document
         query.project.lastname = '$name.last'; //be able to sort by last name
-        console.log(query);
+
         User.aggregate()
             .project(query.project)
             .match(query.match)
@@ -142,20 +141,18 @@ router.get('/search', function (req, res, next) {
     }
 
     function endOfCall(err, applicants) {
-        console.log(applicants);
         if (err) console.error(err);
         else {
-            res.render('admin/search', {
+            res.render('admin/search/search', {
                 title: 'Admin Dashboard - Search Results',
-                applicants: applicants
+                applicants: applicants,
+                params: req.query,
+                render: req.query.render //table, box
             })
         }
     }
 
-})
-;
-
-//todo refactor this
+});
 
 
 router.get('/review', function (req, res, next) {

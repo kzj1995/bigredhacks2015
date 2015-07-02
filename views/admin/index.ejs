@@ -60,12 +60,16 @@
                             <th>School Name</th>
                             <th>Applicants</th>
                             <th>Accepted</th>
+                            <th>Waitlisted</th>
+                            <th>Rejected</th>
                         </tr>
                         <% for (var i = 0; i < schools.length; i++) { %>
                         <tr>
                             <td><%= i + 1 %></td>
                             <td><%= schools[i].name %></td>
                             <td><%= schools[i].total %></td>
+                            <td>NA</td>
+                            <td>NA</td>
                             <td>NA</td>
                         </tr>
                         <% } %>
