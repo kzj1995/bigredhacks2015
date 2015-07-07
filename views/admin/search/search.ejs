@@ -14,9 +14,20 @@ var render = render || "box"; //default to box view
             <div class="header-wrapper-leaf">
                 <h1 class="leaf">search</h1>
             </div>
+            <form class="render-option form-inline">
+                <div class="form-group">
+                    <label for="render">Render: </label>
+                    <select name="render" id="render" class="form-control">
+                        <%- viewHelper.generateOptions("box table".split(" "),{selected: render}); %>
+                    </select>
+                </div>
+            </form>
             <div id="searchparameters" class="col-md-12">
+                <p>All fields are optional.</p>
+
                 <form action="/admin/search" method="GET">
-                    <input type="hidden" name="render" value="<%= render%>"/>
+                    <input type="hidden" name="render" value="<%= render %>"/>
+
                     <div class="form-group">
                         <label for="college">Search by College</label>
                         <input type="hidden" id="collegeid" name="collegeid" class="form-control"
@@ -58,19 +69,20 @@ var render = render || "box"; //default to box view
                 </form>
             </div>
             <div id="searchresults" class="col-md-12">
-                <%= applicants.length %> results found.
+                <p id="result-count" class="text-right"><%= applicants.length %> results found.</p>
 
-                <% if (render == 'box') {%>
+                <% if (render == 'box') { %>
                 <% include _boxview %>
-                <% } else if (render == 'table') {%>
+                <% } else if (render == 'table') { %>
                 <% include _tableview %>
                 <% } %>
 
                 <% if (applicants.length == 0) {
                 %>
                 <p>Print search query here!</p>
+
                 <p>No results found.</p>
-                <% }%>
+                <% } %>
 
             </div>
         </div>
