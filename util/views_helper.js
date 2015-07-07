@@ -38,6 +38,35 @@ _export.generateOptions = function (arr, options) {
 };
 
 /**
+ * generate a list of inline HTML radio inputs w/ a bootstrap wrapper
+ * @param arr array to generate options on
+ * @param {object} options - valid options are checked (string of checked value), name
+ * @returns {string}
+ */
+_export.generateInlineRadio = function(arr, options) {
+    var array = arr.slice(); //clone the array
+    options = options || {};
+    options.checked = options.checked || ""; //value of checked item
+    options.name = options.name || ""; //name of inputs
+    options.label = options.label || arr; //text to display next to inputs, defaults to array
+
+    for (var i = 0; i < array.length; i++) {
+        var itemOpenWrapper = '<label class="radio-inline">';
+        var itemCloseWrapper = '</label>';
+        var params = "";
+        if (options.checked === array[i] + "") {
+            params += 'checked="checked" '
+        }
+        if (options.name.length > 0) {
+            params += 'name=' + options.name;
+        }
+        var tag = '<input type="radio" ' + params + ' value="{0}">{1}</option>';
+        array[i] = itemOpenWrapper + tag.format(array[i],options.label[i]) + itemCloseWrapper;
+    }
+    return array.join('');
+};
+
+/**
  * generate <li><a href={url}>{name}</a></li>
  * @param listItems array of {name,url}
  * @param active url of active item

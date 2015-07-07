@@ -16,7 +16,7 @@ var render = render || "box"; //default to box view
             </div>
             <div id="searchparameters" class="col-md-12">
                 <form action="/admin/search" method="GET">
-
+                    <input type="hidden" name="render" value="<%= render%>"/>
                     <div class="form-group">
                         <label for="college">Search by College</label>
                         <input type="hidden" id="collegeid" name="collegeid" class="form-control"
