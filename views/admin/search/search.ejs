@@ -15,7 +15,7 @@ var render = render || "box"; //default to box view
                 <h1 class="leaf">search</h1>
             </div>
             <form class="render-option form-inline">
-                <div class="form-group">
+                <div class="form-group hidden-xs">
                     <label for="render">Render: </label>
                     <select name="render" id="render" class="form-control">
                         <%- viewHelper.generateOptions("box table".split(" "),{selected: render}); %>

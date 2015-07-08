@@ -22,7 +22,8 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="summary">
                     <h2>Applicants</h2>
-                    <h5>Welcome back! There are currently <%= applicants.total %> applicants from 20 different schools.
+                    <h5>Welcome back! There are currently <%= applicants.total %> applicants from <%= schools.length %>
+                        different schools.
                         Here's a
                         rough breakdown of application status:</h5>
                     <ul>
@@ -34,7 +35,7 @@
                     Our max capacity is 410 people. With an estimated 10% attrition rate, we should accept 450 people.
 
                     <h2>Attendees</h2>
-                    Out of 20 we accepted:
+                    Out of <%= applicants.accepted %> we accepted:
                     <ul>
                         <li>10 accepted their invitations</li>
                         <li>10 declined their invitations</li>
@@ -58,19 +59,21 @@
                         <tr>
                             <th>Rank</th>
                             <th>School Name</th>
-                            <th>Applicants</th>
-                            <th>Accepted</th>
-                            <th>Waitlisted</th>
-                            <th>Rejected</th>
+                            <th class="text-center">Applicants</th>
+                            <th class="text-center">Accepted</th>
+                            <th class="text-center">Waitlisted</th>
+                            <th class="text-center">Rejected</th>
+                            <th class="text-center">Pending</th>
                         </tr>
                         <% for (var i = 0; i < schools.length; i++) { %>
                         <tr>
                             <td><%= i + 1 %></td>
                             <td><%= schools[i].name %></td>
-                            <td><%= schools[i].total %></td>
-                            <td>NA</td>
-                            <td>NA</td>
-                            <td>NA</td>
+                            <td class="text-center"><%= schools[i].total %></td>
+                            <td class="text-center"><%= schools[i].accepted %></td>
+                            <td class="text-center"><%= schools[i].waitlisted %></td>
+                            <td class="text-center"><%= schools[i].rejected %></td>
+                            <td class="text-center"><%= schools[i].pending %></td>
                         </tr>
                         <% } %>
                     </table>

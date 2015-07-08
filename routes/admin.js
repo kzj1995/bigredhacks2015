@@ -60,9 +60,40 @@ router.get('/dashboard', function (req, res, next) {
         },
         schools: function (done) {
             User.aggregate([
-                {$group: {_id: "$school.name", total: {$sum: 1}}},
-                {$sort: {total: -1, _id: 1}},
-                {$project: {_id: 0, name: "$_id", total: "$total"}}
+                {$group: {_id: {name: "$school.name", status: "$internal.status"}, total: {$sum: 1}}},
+                {
+                    $project: {
+                        accepted: {$cond: [{$eq: ["$_id.status", "Accepted"]}, "$total", 0]},
+                        waitlisted: {$cond: [{$eq: ["$_id.status", "Waitlisted"]}, "$total", 0]},
+                        rejected: {$cond: [{$eq: ["$_id.status", "Rejected"]}, "$total", 0]},
+                        //$ifnull returns first argument if not null, which is truthy in this case
+                        //therefore, need a conditional to check whether the second argument is returned.
+                        //todo the $ifnull conditional is for backwards compatibility: consider removing in 2016 deployment
+                        pending: {$cond: [{$or: [{$eq: ["$_id.status", "Pending"]}, {$cond: [{$eq: [{$ifNull: ["$_id.status", null]}, null]}, true, false]}]}, "$total", 0]}
+                    }
+                },
+                {
+                    $group: {
+                        _id: {name: "$_id.name"},
+                        accepted: {$sum: "$accepted"},
+                        waitlisted: {$sum: "$waitlisted"},
+                        rejected: {$sum: "$rejected"},
+                        pending: {$sum: "$pending"}
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        name: "$_id.name",
+                        accepted: "$accepted",
+                        waitlisted: "$waitlisted",
+                        rejected: "$rejected",
+                        pending: "$pending",
+                        total: {$add: ["$accepted", "$pending", "$waitlisted", "$rejected"]}
+                    }
+                },
+                {$sort: {total: -1, name: 1}}
+
             ], function (err, res) {
                 return done(err, res);
             })
