@@ -138,13 +138,17 @@ router.get('/team/:teamid', function (req, res, next) {
 /* POST Search based on inputted fields */
 router.get('/search', function (req, res, next) {
 
-    if (!req.query) {
-        User.find({}).sort('name.last').limit(100).exec(function (err, applicants) {
+    var queryKeys = Object.keys(req.query);
+    if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
+        User.find().limit(50).sort('name.last').exec(function (err, applicants) {
             res.render('admin/search/search', {
                 title: 'Admin Dashboard - Search',
-                applicants: applicants
+                applicants: applicants,
+                params: req.query,
+                render: req.query.render
             })
         });
+        return;
     }
 
     //for a mapping of searchable fields, look at searchable.ejs
