@@ -242,14 +242,14 @@ router.post('/login',
 /* GET reset password */
 router.get('/resetpassword', function (req, res) {
     if (req.query.token == undefined || req.query.token == "") {
-        res.redirect('/forgotpassword');
+        return res.redirect('/forgotpassword');
     }
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null) {
-            res.redirect('/');
+            return res.redirect('/');
         }
         else {
-            res.render('forgotpassword/resetpass_prompt', {
+            return res.render('forgotpassword/resetpass_prompt', {
                 title: 'Reset Password',
                 email: user.email
             });
@@ -261,7 +261,7 @@ router.get('/resetpassword', function (req, res) {
 router.post('/resetpassword', function (req, res) {
     User.findOne({passwordtoken: req.query.token}, function (err, user) {
         if (user == null || req.query.token == "" || req.query.token == undefined) {
-            res.redirect('/');
+            return res.redirect('/');
         }
         else {
             req = validator.validate(req, [
@@ -280,10 +280,10 @@ router.post('/resetpassword', function (req, res) {
                         // If it failed, return error
                         console.log(err);
                         req.flash("error", "An error occurred. Your password has not been reset.");
-                        res.redirect('/forgotpassword');
+                        return res.redirect('/forgotpassword');
                     }
                     else {
-                        res.render('forgotpassword/resetpass_done', {
+                        return res.render('forgotpassword/resetpass_done', {
                             title: 'Reset Password',
                             email: user.email
                         });
@@ -311,6 +311,7 @@ router.post('/forgotpassword', function (req, res) {
             res.redirect('/forgotpassword');
         }
         else {
+            //fixme possible header error (promises?)
             res.render('forgotpassword/forgotpass_done', {
                 title: 'Reset Password',
                 user: req.user,
