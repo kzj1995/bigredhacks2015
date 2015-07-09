@@ -57,7 +57,7 @@ $('document').ready(function () {
 
     });
 
-    //handle decision radio buttons
+    //handle decision radio buttons for search view
     $('input[type=radio][name=status]').on('change', function () {
         var _this = this;
         var newStatus = $(_this).val();
@@ -69,6 +69,15 @@ $('document').ready(function () {
             $(radios).prop("disabled", false);
         })
     });
+
+    //handle decision radio buttons for individual(detail) view
+    $('input[type=radio][name=individualstatus]').on('change', function () {
+        var _this = this;
+        var newStatus = $(_this).val();
+        var pubid = $("#pubid").text().slice(1);
+        updateStatus(pubid, newStatus, function (data) {});
+    });
+
 
     //switch render location
     $('#render').on('change', function() {

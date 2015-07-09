@@ -14,20 +14,17 @@
 
             <div class="text-center">
                 Update application decision:
-                <form>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" id="rejected" value="Rejected"> Rejected
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" id="waitlisted" value="Waitlisted"> Waitlisted
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" id="accepted" value="Accepted"> Accepted
-                    </label>
+                <form class="decision-radio">
+                    <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
+                        checked: user.internal.status, //set default value
+                        name: "individualstatus", //name attr of each input
+                        label: enums.virtual.status.long //label of the input different from actual input
+                    }); %>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script src="/js/admin.js"></script>
 <% include ../_footer %>

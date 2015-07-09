@@ -114,9 +114,17 @@ router.get('/dashboard', function (req, res, next) {
 
 router.get('/user/:pubid', function (req, res, next) {
     var pubid = req.params.pubid;
-    res.render('admin/user', {
-        title: 'Review User'
-    })
+    User.where({pubid: pubid}).findOne(function (err, user) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render('admin/user', {
+                user: user,
+                title: 'Review User'
+            })
+        }
+    });
 });
 
 router.get('/team/:teamid', function (req, res, next) {
