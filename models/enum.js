@@ -2,7 +2,7 @@
 var _ = require('underscore');
 
 /*
-Consistent list of enums used throughout the app
+Consistent list of enums used throughout the app.
  */
 var en = {
     user: { //user params enforce database integrity

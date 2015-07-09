@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
     res.redirect('/admin/dashboard');
 });
 
-//{ $group: { _id: "$fieldName"}  },{ $group: { _id: 1, count: { $sum: 1 } } }
+
 /* GET admin dashboard */
 router.get('/dashboard', function (req, res, next) {
 
@@ -28,14 +28,14 @@ router.get('/dashboard', function (req, res, next) {
                     done(err);
                 }
                 else {
-                    console.log(result);
+                    //console.log(result);
                     //make all values lowercase
                     result = _.map(result, function (x) {
                         return _.mapObject(x, function (val, key) {
                             return (typeof val == 'string') ? val.toLowerCase() : val;
                         });
                     });
-                    console.log(result);
+                    //console.log(result);
 
                     //remap values to key,value pairs and fill defaults
                     result = _.defaults(_.object(_.map(result, _.values)), {
@@ -102,7 +102,7 @@ router.get('/dashboard', function (req, res, next) {
         if (err) {
             console.log(err);
         }
-        console.log(result);
+        //console.log(result);
         res.render('admin/index', {
             title: 'Admin Dashboard',
             applicants: result.applicants,

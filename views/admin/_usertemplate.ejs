@@ -34,9 +34,16 @@
     <div class="col-md-12">
         <br/>
         <h4>Application</h4>
-        <a type="button" class="btn btn-default" href="https://bigredhacks.s3.amazonaws.com/resume/<%= user.app.resume %>" target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
-        <a type="button" class="btn btn-default" href="https://github.com/<%= user.app.github %>" target="_blank"><i class="fa fa-github"></i> Github</a>
-        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"><i class="fa my-fa-linkedin-square"></i> Linkedin</a>
+        <%
+        //disable buttons if properties don't exist
+        var gh_disabled = user.app.github == "" ? "disabled" : "";
+        var lk_disabled = user.app.linkedin == "" ? "disabled" : "";
+        //normalize github
+        var gh_url = user.app.github.toLowerCase().indexOf("github.com") == -1 ? "https://github.com/" : "";
+        %>
+        <a type="button" class="btn btn-default" href="http://files.bigredhacks.com/resume/<%= user.app.resume %>" target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
+        <a type="button" class="btn btn-default" href="<%= gh_url + user.app.github %>" target="_blank"<%= gh_disabled %>><i class="fa fa-github"></i> Github</a>
+        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"<%= lk_disabled %>><i class="fa my-fa-linkedin-square"></i> Linkedin</a>
         <br/><br/>
 
         <div>

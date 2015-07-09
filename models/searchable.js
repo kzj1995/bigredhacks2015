@@ -1,14 +1,16 @@
 "use strict";
 
 /**
- * searchable is a basic index which maps searchable fields in the front end to their representations in the backend.
+ * searchable is a basic schema which maps searchable fields in the front end to their representations in the backend.
  *
- * *Derivative parsers should adhere to the following properties:
- * @name searchable Array Schema describing property searchability.
+ * IMPORTANT: Derivative parsers should adhere to the following properties:
+ * @name searchable Array
+ *          Schema describing property searchability.
  * @prop alias String
  *          Front end name of the property.
  * @prop path String
- *          Either a single path (in dot notation) or a space separated list of paths to the property in the model schema. If a path is excluded, it will default to the alias.
+ *          Either a single path (in dot notation) or a space separated list of paths to the property in the model schema.
+ *          If a path is excluded, it will default to the alias.
  * @prop fuzzytext Boolean
  *          Whether to perform fuzzy matching on the field.
  *
