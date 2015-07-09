@@ -166,7 +166,7 @@ router.get('/search', function (req, res, next) {
             .exec(function (err, applicants) {
                 if (err) endOfCall(err);
                 else {
-                    endOfCall(err, _.map(applicants, function (x) {
+                    endOfCall(null, _.map(applicants, function (x) {
                         return x.document
                     }));
                 }

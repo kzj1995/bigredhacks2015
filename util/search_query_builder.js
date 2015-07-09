@@ -61,7 +61,8 @@ var builder = function queryBuilder(query, schema) {
                 match[k] = valToMatch;
             }
             else {
-                match[path] = valToMatch;
+                project[k] = "$" + path;
+                match[k] = valToMatch;
             }
         }
     );
