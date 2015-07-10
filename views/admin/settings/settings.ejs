@@ -1,0 +1,62 @@
+<% include ../../_header %>
+<link rel="stylesheet" href="/css/admin.css">
+
+<%
+var input = params || {}; //persist fields
+%>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include ../_adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">settings: setting roles</h1>
+            </div>
+            <div id="searchparameters" class="col-md-12">
+                <p>All fields are optional.</p>
+
+                <form action="/admin/settings" method="GET">
+
+                    <div class="form-group">
+                        <label for="college">Search by College</label>
+                        <input type="hidden" id="collegeid" name="collegeid" class="form-control"
+                               value="<%= input.collegeid || "" %>" required/>
+                        <input type="text" name="college" id="college" class="form-control typeahead"
+                               placeholder="School Name"
+                               value="<%= input.college || "" %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoryselection">Search by Category</label>
+                        <select class="form-control" id="categoryselection">
+                            <option value="">Select Category</option>
+                            <option value="pubid">Public User Id</option>
+                            <option value="email">Email</option>
+                            <option value="name">Name</option>
+                        </select>
+                    </div>
+                    <div class="form-group category-input"></div>
+                    <fieldset>
+                        <button type="submit" id="submit" class="btn btn-primary">search</button>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="searchresults" class="col-md-12">
+                <p id="result-count" class="text-right"><%= applicants.length %> results found.</p>
+                <% include _tableview %>
+                <% if (applicants.length == 0) {
+                %>
+                <p>Print search query here!</p>
+
+                <p>No results found.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/vendor/typeahead.bundle.min.js"></script>
+<script src="/js/typeahead_college.js"></script>
+<script src="/js/admin.js"></script>
+<% include ../../_footer %>

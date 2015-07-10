@@ -19,6 +19,24 @@ $('document').ready(function () {
         });
     };
 
+    //generic ajax to update role
+    var updateRole = function updateRole(pubid, newRole, callback) {
+        $.ajax({
+            type: "PATCH",
+            url: "/api/admin/user/" + pubid + "/setRole",
+            data: {
+                role: newRole
+            },
+            success: function (data) {
+                callback(data);
+            },
+            error: function (e) {
+                //todo more descriptive errors
+                console.log("Update failed!");
+            }
+        });
+    };
+
     var updateUrlParam = function updateUrlParam(url, param, paramVal){
         var newAdditionalURL = "";
         var tempArray = url.split("?");
@@ -76,6 +94,15 @@ $('document').ready(function () {
         var newStatus = $(_this).val();
         var pubid = $("#pubid").text().slice(1);
         updateStatus(pubid, newStatus, function (data) {});
+    });
+
+    //handle decision radio buttons for settings view
+    $('input[type=radio][name=role]').on('change', function () {
+        var _this = this;
+        var newRole = $(_this).val();
+        var radios = $(_this).parents(".role-radio").find("input[type=radio]");
+        var pubid = $(_this).parents(".applicant").data("pubid");
+        updateRole(pubid, newRole, function (data) {});
     });
 
 
