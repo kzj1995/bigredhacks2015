@@ -18,6 +18,9 @@ var en = {
         status: {
             long: "Accepted Waitlisted Rejected".split(" "), //longhand array
             short: "A W R".split(" ") //shorthand array
+        },
+        role: {
+            long: "admin".split()//remove "user item"
         }
     }
 };

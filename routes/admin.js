@@ -136,19 +136,18 @@ router.get('/team/:teamid', function (req, res, next) {
 });
 
 /* GET Settings page to set user roles */
-router.get('/settings', function(req, res, next) {
-    var queryKeys = Object.keys(req.query);
-    if (queryKeys.length == 0) {
-        User.find().sort('name.last').exec(function (err, applicants) {
-            res.render('admin/settings/settings', {
-                title: 'Admin Dashboard - Settings',
-                applicants: applicants,
-                params: req.query
-            })
-        });
-        return;
-    }
-    performQuery("Settings", req, res)
+router.get('/settings', function (req, res, next) {
+
+    //todo change to {role: {$ne: "user"}} in 2016 deployment
+    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, applicants) {
+        if (err) console.log(err);
+        console.log(applicants);
+        res.render('admin/settings/settings', {
+            title: 'Admin Dashboard - Settings',
+            applicants: applicants,
+            params: req.query
+        })
+    });
 });
 
 /* GET Search page to find applicants */
@@ -165,16 +164,26 @@ router.get('/search', function (req, res, next) {
         });
         return;
     }
-    performQuery("Search", req, res)
+    _performQuery(req.query, function (err, applicants) {
+        if (err) console.error(err);
+        else {
+            res.render('admin/search/search', {
+                title: 'Admin Dashboard - Search',
+                applicants: applicants,
+                params: req.query,
+                render: req.query.render //table, box
+            })
+        }
+    })
 });
 
 /* Helper function to perform a search query (used by applicant page search("/search") and settings page
-* search("/settings"))
-* @param pageName "Search" or "Settings" to distinguish between "/search" and "/settings"
-* @param req request object
-* @param res response object
-*/
-function performQuery(pageName, req, res){
+ * search("/settings"))
+ * @param pageName "Search" or "Settings" to distinguish between "/search" and "/settings"
+ * @param req request object
+ * @param res response object
+ */
+function _performQuery(queryString, callback) {
     /*
      * two types of search approaches:
      * 1. simple query (over single fields)
@@ -182,7 +191,7 @@ function performQuery(pageName, req, res){
      */
 
     //for a mapping of searchable fields, look at searchable.ejs
-    var query = queryBuilder(req.query, "user");
+    var query = queryBuilder(queryString, "user");
 
     if (_.size(query.project) > 0) {
         query.project.document = '$$ROOT'; //return the actual document
@@ -195,7 +204,7 @@ function performQuery(pageName, req, res){
             .exec(function (err, applicants) {
                 if (err) endOfCall(err);
                 else {
-                    endOfCall(null, _.map(applicants, function (x) {
+                    callback(null, _.map(applicants, function (x) {
                         return x.document
                     }));
                 }
@@ -205,30 +214,9 @@ function performQuery(pageName, req, res){
         //run a simple query (because it's faster)
         User.find(query.match)
             .sort('name.last')
-            .exec(endOfCall);
+            .exec(callback);
     }
 
-    function endOfCall(err, applicants) {
-        if (err) console.error(err);
-        else {
-            if (pageName == "Search") {
-                res.render('admin/search/search', {
-                    title: 'Admin Dashboard - Search',
-                    applicants: applicants,
-                    params: req.query,
-                    render: req.query.render //table, box
-                })
-            }
-            else if (pageName == "Settings") {
-                res.render('admin/settings/settings', {
-                    title: 'Admin Dashboard - Settings',
-                    applicants: applicants,
-                    params: req.query
-                })
-            }
-
-        }
-    }
 }
 
 router.get('/review', function (req, res, next) {

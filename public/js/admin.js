@@ -20,10 +20,10 @@ $('document').ready(function () {
     };
 
     //generic ajax to update role
-    var updateRole = function updateRole(pubid, newRole, callback) {
+    var updateRole = function updateRole(email, newRole, callback) {
         $.ajax({
             type: "PATCH",
-            url: "/api/admin/user/" + pubid + "/setRole",
+            url: "/api/admin/user/" + email + "/setRole",
             data: {
                 role: newRole
             },
@@ -37,7 +37,7 @@ $('document').ready(function () {
         });
     };
 
-    var updateUrlParam = function updateUrlParam(url, param, paramVal){
+    var updateUrlParam = function updateUrlParam(url, param, paramVal) {
         var newAdditionalURL = "";
         var tempArray = url.split("?");
         var baseURL = tempArray[0];
@@ -45,8 +45,8 @@ $('document').ready(function () {
         var temp = "";
         if (additionalURL) {
             tempArray = additionalURL.split("&");
-            for (var i=0; i<tempArray.length; i++){
-                if(tempArray[i].split('=')[0] != param){
+            for (var i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
                     newAdditionalURL += temp + tempArray[i];
                     temp = "&";
                 }
@@ -93,21 +93,12 @@ $('document').ready(function () {
         var _this = this;
         var newStatus = $(_this).val();
         var pubid = $("#pubid").text().slice(1);
-        updateStatus(pubid, newStatus, function (data) {});
+        updateStatus(pubid, newStatus, function (data) {
+        });
     });
-
-    //handle decision radio buttons for settings view
-    $('input[type=radio][name=role]').on('change', function () {
-        var _this = this;
-        var newRole = $(_this).val();
-        var radios = $(_this).parents(".role-radio").find("input[type=radio]");
-        var pubid = $(_this).parents(".applicant").data("pubid");
-        updateRole(pubid, newRole, function (data) {});
-    });
-
 
     //switch render location
-    $('#render').on('change', function() {
+    $('#render').on('change', function () {
         var redirect = updateUrlParam(window.location.href, "render", $(this).val());
         window.location.assign(redirect);
     });
@@ -138,6 +129,52 @@ $('document').ready(function () {
         }
     });
 
+
+    /*
+     *Role settings
+     */
+
+    //edit button
+    $(".btn-edit").on('click', function() {
+        $(this).siblings(".btn-save").eq(0).prop("disabled", function(idx, oldProp) {
+            return !oldProp;
+        });
+        $(this).closest("tr").find(".roleDropdown").prop("disabled", function(idx, oldProp) {
+            return !oldProp;
+        });
+    });
+
+    //save button
+    $(".btn-save").on('click', function() {
+        var _this = this;
+        var email = $(this).parents("tr").find(".email").text();
+        var role = $(this).closest("tr").find(".roleDropdown").val();
+        updateRole(email, role, function(data) {
+            $(_this).siblings(".btn-save").eq(0).prop("disabled", true);
+            $(_this).closest("tr").find(".roleDropdown").prop("disabled", true);
+        })
+    });
+
+    //remove button
+    $(".btn-remove").on('click', function() {
+        var _this = this;
+        var email = $(this).parents("tr").find(".email").text();
+        updateRole(email, "user", function(data) {
+            $(_this).parents("tr").remove();
+        });
+
+    });
+
+    //handle decision radio buttons for settings view
+    $('#btn-add-user').on('click', function() {
+        var email = $(this).closest("form").find("#new-email").val();
+        var role = $(this).closest("form").find("#new-role").val();
+        updateRole(email, role, function(data) {
+            //todo dynamic update
+            //$("#user-roles").append('<tr>name coming soon</tr><tr>'+email+'</tr><tr>'+role+'</tr>');
+            location.reload();
+        })
+    })
 });
 
 

@@ -73,17 +73,17 @@ router.patch('/team/:teamid/setStatus', function (req, res, next) {
 });
 
 /**
- * @api PATCH /user/:pubid/setRole Set role of a single user
+ * @api PATCH /user/:email/setRole Set role of a single user
  * @apiname setrole
  * @apigroup User
  *
- * @apiParam {string="User","Admin"} role New role to set
+ * @apiParam {string="user","admin"} role New role to set
  *
  * @apiSuccess (200)
  * @apiError (500)
  * */
-router.patch('/user/:pubid/setRole', function (req, res, next) {
-    User.findOne({pubid: req.params.pubid}, function (err, user) {
+router.patch('/user/:email/setRole', function (req, res, next) {
+    User.findOne({email: req.params.email}, function (err, user) {
         if (err || !user) {
             return res.sendStatus(500);
         }

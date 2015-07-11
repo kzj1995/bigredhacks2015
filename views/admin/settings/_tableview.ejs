@@ -1,23 +1,47 @@
-<table class="table table-striped">
+<table class="table table-striped" id="user-roles">
     <tr>
         <th>Name</th>
         <th>Email</th>
         <th>Role</th>
+        <th width="200px"></th>
     </tr>
     <% for (var i = 0; i < applicants.length; i++) { %>
-    <tr class="applicant" data-pubid="<%= applicants[i].pubid %>">
+    <tr class="user" data-pubid="<%= applicants[i].pubid %>">
         <td><a href="/admin/user/<%= applicants[i].pubid %>" target="_blank"><%= applicants[i].name.last %>
                 , <%= applicants[i].name.first %></a></td>
-        <td><%= applicants[i].email %></td>
+        <td class="email"><%= applicants[i].email %></td>
         <td>
-            <form class="role-radio">
-                <%- viewHelper.generateInlineRadio(enums.user.role, {
-                    checked: applicants[i].role, //set default value
-                    name: "role", //name attr of each input
-                    label: enums.user.role //label of the input different from actual input
-                }); %>
+            <form class="form-inline">
+                <div class="form-group">
+                    <select class="form-control roleDropdown" name="roleDropdown" data-revert="<%= applicants[i].role %>" disabled>
+                        <%- viewHelper.generateOptions(enums.virtual.role.long, {//exclude "user"
+                            selected: applicants[i].role //set default value
+                        }); %>
+                    </select>
+                </div>
             </form>
+        </td>
+        <td>
+            <button class="btn btn-primary btn-edit">edit</button>
+            <button class="btn btn-success btn-save" disabled>save</button>
+            <button class="btn btn-danger btn-remove">remove</button>
         </td>
     </tr>
     <% } %>
 </table>
+<form class="form-inline">
+    <div class="form-group">
+        <label>Add a User: </label>
+    </div>
+    <div class="form-group">
+        <input type="email" class="form-control" id="new-email" name="new-email" placeholder="email">
+    </div>
+    <div class="form-group">
+        <select class="form-control" id="new-role" name="new-role" required>
+            <%- viewHelper.generateOptions(enums.virtual.role.long); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-success" id="btn-add-user">Create</button>
+    </div>
+</form>
