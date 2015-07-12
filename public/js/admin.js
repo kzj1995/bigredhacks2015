@@ -135,41 +135,45 @@ $('document').ready(function () {
      */
 
     //edit button
-    $(".btn-edit").on('click', function() {
-        $(this).siblings(".btn-save").eq(0).prop("disabled", function(idx, oldProp) {
+    $(".btn-edit").on('click', function () {
+        $(this).siblings(".btn-save").eq(0).prop("disabled", function (idx, oldProp) {
             return !oldProp;
         });
-        $(this).closest("tr").find(".roleDropdown").prop("disabled", function(idx, oldProp) {
+        $(this).closest("tr").find(".roleDropdown").prop("disabled", function (idx, oldProp) {
             return !oldProp;
         });
     });
 
     //save button
-    $(".btn-save").on('click', function() {
+    $(".btn-save").on('click', function () {
         var _this = this;
         var email = $(this).parents("tr").find(".email").text();
         var role = $(this).closest("tr").find(".roleDropdown").val();
-        updateRole(email, role, function(data) {
-            $(_this).siblings(".btn-save").eq(0).prop("disabled", true);
+        updateRole(email, role, function (data) {
+            $(_this).prop("disabled", true);
             $(_this).closest("tr").find(".roleDropdown").prop("disabled", true);
         })
     });
 
     //remove button
-    $(".btn-remove").on('click', function() {
+    $(".btn-remove").on('click', function () {
         var _this = this;
         var email = $(this).parents("tr").find(".email").text();
-        updateRole(email, "user", function(data) {
-            $(_this).parents("tr").remove();
-        });
+        var c = confirm("Are you sure you want to remove " + email + "?");
+        if (c) {
+            updateRole(email, "user", function (data) {
+                $(_this).parents("tr").remove();
+            });
+        }
+
 
     });
 
     //handle decision radio buttons for settings view
-    $('#btn-add-user').on('click', function() {
+    $('#btn-add-user').on('click', function () {
         var email = $(this).closest("form").find("#new-email").val();
         var role = $(this).closest("form").find("#new-role").val();
-        updateRole(email, role, function(data) {
+        updateRole(email, role, function (data) {
             //todo dynamic update
             //$("#user-roles").append('<tr>name coming soon</tr><tr>'+email+'</tr><tr>'+role+'</tr>');
             location.reload();
