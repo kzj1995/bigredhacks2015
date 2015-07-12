@@ -18,7 +18,8 @@ if (!String.prototype.format) {
 /**
  * generate a list of HTML <option> items for a dropdown
  * @param arr array to generate options on
- * @param {object}  options - valid options are selected (string of default value)
+ * @param {object}  options
+ *                  options.selected: string corresponding to default value
  * @returns {string}
  */
 _export.generateOptions = function (arr, options) {
@@ -40,7 +41,10 @@ _export.generateOptions = function (arr, options) {
 /**
  * generate a list of inline HTML radio inputs w/ a bootstrap wrapper
  * @param arr array to generate options on
- * @param {object} options - valid options are checked (string of checked value), name
+ * @param {object} options
+ *                  options.checked: string corresponding to default value
+ *                  options.name: "name" of radio button set
+ *                  options.label: label of radio button set
  * @returns {string}
  */
 _export.generateInlineRadio = function(arr, options) {
@@ -68,11 +72,13 @@ _export.generateInlineRadio = function(arr, options) {
 
 /**
  * generate <li><a href={url}>{name}</a></li>
+ * Used to generate the sidebars
  * @param listItems array of {name,url}
  * @param active url of active item
  */
 _export.generateUrlList = function (listItems, active) {
     var array = [];
+    active = url.split(/[?#]/)[0];; //remove query string, hash
     for (var i = 0; i < listItems.length; i++) {
         var classes = "";
         if (active == listItems[i].url) {
