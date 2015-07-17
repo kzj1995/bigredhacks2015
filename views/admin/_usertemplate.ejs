@@ -2,7 +2,7 @@
     <%= user.name.first %> <%= user.name.last %> (<i class="fa fa-user"></i> <span id="pubid"> <%= user.pubid %></span>)
 </h2>
 <div class="row">
-    <div class="col-sm-4 col-md-4">
+    <div class="col-sm-3 col-md-3">
         <h4>Basic Info</h4>
         <ul>
             <li>Gender: <%= user.gender %></li>
@@ -11,7 +11,7 @@
         </ul>
     </div>
 
-    <div class="col-sm-4 col-md-4">
+    <div class="col-sm-3 col-md-3">
         <h4>Education</h4>
         <ul>
             <li>School: <%= user.school.name %></li>
@@ -20,13 +20,31 @@
         </ul>
     </div>
 
-    <div class="col-sm-4 col-md-4">
+    <div class="col-sm-3 col-md-3">
         <h4>Logistics</h4>
         <ul>
             <li>Bus: <%= user.internal.busid %></li>
             <li>T-shirt Size: <%= user.logistics.tshirt %></li>
             <li>Dietary Restrictions: <%= user.logistics.dietary %></li>
         </ul>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+        <h4>Team Members</h4>
+        <% if (teamMembers[0].length > 0) { %>
+        <ul>
+        <% for (var j = 0; j < teamMembers[0].length; j++) { %>
+        <% if (teamMembers[0][j].name != (user.name.first + " " + user.name.last)) { %>
+        <li>
+            <a href="/admin/user/<%= teamMembers[0][j].id %>">
+                <%= teamMembers[0][j].name %>
+            </a>
+        </li>
+        <% } %>
+        <% } %>
+        </ul>
+        <% } %>
+
     </div>
 </div>
 

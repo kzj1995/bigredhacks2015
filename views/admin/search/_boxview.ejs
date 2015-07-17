@@ -9,6 +9,22 @@
         <li><b>Email:</b> <%= applicants[i].email %></li>
         <li><b>School:</b> <%= applicants[i].school.name %></li>
         <li><b>Year:</b> <%= applicants[i].school.year %></li>
+        <% if (teamMembers[i].length > 0) { %>
+        <li>
+            <b>Team Members</b>
+            <ul>
+                <% for (var j = 0; j < teamMembers[i].length; j++) { %>
+                <% if (teamMembers[i][j].name != (applicants[i].name.first + " " + applicants[i].name.last)) { %>
+                <li>
+                    <a href="/admin/user/<%= teamMembers[i][j].id %>">
+                        <%= teamMembers[i][j].name %>
+                    </a>
+                </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </li>
+        <% } %>
         <li>
             <a href="http://files.bigredhacks.com/resume/<%= applicants[i].app.resume %>">Resume</a>
         </li>

@@ -6,6 +6,7 @@ var async = require('async');
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
+var Team = require('../models/team.js')
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -120,10 +121,13 @@ router.get('/user/:pubid', function (req, res, next) {
             console.log(err);
         }
         else {
-            res.render('admin/user', {
-                user: user,
-                title: 'Review User'
-            })
+            getTeamMembers([user], function(teamMembers){
+                res.render('admin/user', {
+                    user: user,
+                    title: 'Review User',
+                    teamMembers: teamMembers
+                })
+            });
         }
     });
 });
@@ -155,33 +159,65 @@ router.get('/search', function (req, res, next) {
     var queryKeys = Object.keys(req.query);
     if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
         User.find().limit(50).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search/search', {
-                title: 'Admin Dashboard - Search',
-                applicants: applicants,
-                params: req.query,
-                render: req.query.render
-            })
+            getTeamMembers(applicants, function(teamMembers){
+                res.render('admin/search/search', {
+                    title: 'Admin Dashboard - Search',
+                    applicants: applicants,
+                    params: req.query,
+                    teamMembers: teamMembers,
+                    render: req.query.render
+                })
+            });
         });
         return;
     }
+
     _performQuery(req.query, function (err, applicants) {
         if (err) console.error(err);
         else {
-            res.render('admin/search/search', {
-                title: 'Admin Dashboard - Search',
-                applicants: applicants,
-                params: req.query,
-                render: req.query.render //table, box
-            })
+            getTeamMembers(applicants, function(teamMembers){
+                res.render('admin/search/search', {
+                    title: 'Admin Dashboard - Search',
+                    applicants: applicants,
+                    params: req.query,
+                    teamMembers: teamMembers,
+                    render: req.query.render //table, box
+                })
+            });
         }
     })
 });
 
-/* Helper function to perform a search query (used by applicant page search("/search") and settings page
+/**
+ * Helper function to get team members of each applicant in the passed in Array to display their
+ * names (and a link to them) in box view
+ * @param applicants Array of applicants to obtain team members of
+ * @param callback function that given teamMembers, renders the page
+ */
+function getTeamMembers(applicants, callback){
+    var teamMembers = [];
+    for (var i = 0; i < applicants.length; i++){
+        (function(i){
+            applicants[i].populate("internal.teamid", function (err, user) {
+                if (err) console.error(err);
+                //Add team members of this applicant to a list at current index
+                if (user.internal.teamid !== null) {
+                    teamMembers[i] = user.internal.teamid.members;
+                }
+                else{
+                    teamMembers[i] = []
+                }
+                if (i == applicants.length - 1) callback(teamMembers);
+            })
+        }(i));
+    }
+}
+
+/**
+ * Helper function to perform a search query (used by applicant page search("/search") and settings page
  * search("/settings"))
- * @param pageName "Search" or "Settings" to distinguish between "/search" and "/settings"
- * @param req request object
- * @param res response object
+ * @param queryString String representing the query parameters
+ * @param callback function that performs rendering
  */
 function _performQuery(queryString, callback) {
     /*
