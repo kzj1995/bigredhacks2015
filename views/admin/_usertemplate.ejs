@@ -34,10 +34,10 @@
         <% if (teamMembers[0].length > 0) { %>
         <ul>
         <% for (var j = 0; j < teamMembers[0].length; j++) { %>
-        <% if (teamMembers[0][j].name != (user.name.first + " " + user.name.last)) { %>
+        <% if (teamMembers[0][j].pubid != user.pubid) { %>
         <li>
-            <a href="/admin/user/<%= teamMembers[0][j].id %>">
-                <%= teamMembers[0][j].name %>
+            <a href="/admin/user/<%= teamMembers[0][j].pubid %>">
+                <%= teamMembers[0][j].name.last %>, <%= teamMembers[0][j].name.first %>
             </a>
         </li>
         <% } %>

@@ -11,13 +11,13 @@
         <li><b>Year:</b> <%= applicants[i].school.year %></li>
         <% if (teamMembers[i].length > 0) { %>
         <li>
-            <b>Team Members</b>
+            <b>Team Members: </b>
             <ul>
                 <% for (var j = 0; j < teamMembers[i].length; j++) { %>
-                <% if (teamMembers[i][j].name != (applicants[i].name.first + " " + applicants[i].name.last)) { %>
+                <% if (teamMembers[i][j].pubid != applicants[i].pubid) { %>
                 <li>
-                    <a href="/admin/user/<%= teamMembers[i][j].id %>">
-                        <%= teamMembers[i][j].name %>
+                    <a href="/admin/user/<%= teamMembers[i][j].pubid %>">
+                        <%= teamMembers[i][j].name.last %>, <%= teamMembers[i][j].name.first %>
                     </a>
                 </li>
                 <% } %>

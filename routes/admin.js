@@ -200,17 +200,37 @@ function getTeamMembers(applicants, callback){
         (function(i){
             applicants[i].populate("internal.teamid", function (err, user) {
                 if (err) console.error(err);
-                //Add team members of this applicant to a list at current index
-                if (user.internal.teamid !== null) {
-                    teamMembers[i] = user.internal.teamid.members;
-                }
-                else{
-                    teamMembers[i] = []
-                }
-                if (i == applicants.length - 1) callback(teamMembers);
+                getUsersFromTeamId(user.internal.teamid, function(members){
+                    teamMembers[i] = members;
+                    if (i == applicants.length - 1) callback(teamMembers);
+                });
             })
         }(i));
     }
+}
+
+/**
+ * Helper function which given a team id, provides as an argument to a callback an array of the team members as
+ * User objects with that team id
+ * @param teamid id of team to get members of
+ * @param maincallback
+ */
+function getUsersFromTeamId(teamid, maincallback){
+    var teamMembers = []
+    if(teamid == null) return maincallback([]);
+    Team.findOne({_id: teamid}, function (err, team) {
+        team.populate('members.id', function (err, team) {
+            if (err) console.error(err);
+            var counter = 0;
+            async.each(team.members, function (user, callback) {
+                teamMembers.push(user.id);
+                counter = counter + 1;
+                if (counter == team.members.length) callback(teamMembers)
+            }, function (teamMembers) {
+                maincallback(teamMembers);
+            });
+        });
+    });
 }
 
 /**
