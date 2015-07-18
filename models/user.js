@@ -51,7 +51,8 @@ var userSchema = new mongoose.Schema({
         going: {type: Boolean}
     },
     passwordtoken: String,
-    role: {type: String, enum: en.user.role, default: "user"}
+    role: {type: String, enum: en.user.role, default: "user"},
+    teammembers: Array //virtual property
 });
 
 //full name of user

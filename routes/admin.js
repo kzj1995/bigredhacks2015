@@ -6,7 +6,7 @@ var async = require('async');
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
-var Team = require('../models/team.js')
+var Team = require('../models/team.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -119,6 +119,7 @@ router.get('/user/:pubid', function (req, res, next) {
     User.where({pubid: pubid}).findOne(function (err, user) {
         if (err) {
             console.log(err);
+            //todo return on error
         }
         else {
             getTeamMembers([user], function(teamMembers){
@@ -159,12 +160,11 @@ router.get('/search', function (req, res, next) {
     var queryKeys = Object.keys(req.query);
     if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
         User.find().limit(50).sort('name.last').exec(function (err, applicants) {
-            getTeamMembers(applicants, function(teamMembers){
+            getTeamMembers(applicants, function(err, applicants){
                 res.render('admin/search/search', {
                     title: 'Admin Dashboard - Search',
                     applicants: applicants,
                     params: req.query,
-                    teamMembers: teamMembers,
                     render: req.query.render
                 })
             });
@@ -175,12 +175,11 @@ router.get('/search', function (req, res, next) {
     _performQuery(req.query, function (err, applicants) {
         if (err) console.error(err);
         else {
-            getTeamMembers(applicants, function(teamMembers){
+            getTeamMembers(applicants, function(err, applicants){
                 res.render('admin/search/search', {
                     title: 'Admin Dashboard - Search',
                     applicants: applicants,
                     params: req.query,
-                    teamMembers: teamMembers,
                     render: req.query.render //table, box
                 })
             });
@@ -195,40 +194,33 @@ router.get('/search', function (req, res, next) {
  * @param callback function that given teamMembers, renders the page
  */
 function getTeamMembers(applicants, callback){
-    var teamMembers = [];
-    for (var i = 0; i < applicants.length; i++){
-        (function(i){
-            applicants[i].populate("internal.teamid", function (err, user) {
-                if (err) console.error(err);
-                getUsersFromTeamId(user.internal.teamid, function(members){
-                    teamMembers[i] = members;
-                    if (i == applicants.length - 1) callback(teamMembers);
-                });
-            })
-        }(i));
-    }
+    async.map(applicants, function(applicant, done) {
+        getUsersFromTeamId(applicant.internal.teamid, function(err,teamMembers) {
+            applicant.teammembers = teamMembers;
+            return done(err, applicant);
+        });
+    }, function(err, results) {
+        if (err) console.error(err);
+        return callback(null, results);
+    });
 }
 
 /**
  * Helper function which given a team id, provides as an argument to a callback an array of the team members as
  * User objects with that team id
  * @param teamid id of team to get members of
- * @param maincallback
+ * @param callback
  */
-function getUsersFromTeamId(teamid, maincallback){
-    var teamMembers = []
-    if(teamid == null) return maincallback([]);
+function getUsersFromTeamId(teamid, callback){
+    var teamMembers = [];
+    if(teamid == null) return callback(null, teamMembers);
     Team.findOne({_id: teamid}, function (err, team) {
         team.populate('members.id', function (err, team) {
             if (err) console.error(err);
-            var counter = 0;
-            async.each(team.members, function (user, callback) {
-                teamMembers.push(user.id);
-                counter = counter + 1;
-                if (counter == team.members.length) callback(teamMembers)
-            }, function (teamMembers) {
-                maincallback(teamMembers);
+            team.members.forEach(function (val,ind) {
+                teamMembers.push(val.id);
             });
+            callback(null, teamMembers);
         });
     });
 }
