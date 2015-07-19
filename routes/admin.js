@@ -144,12 +144,17 @@ router.get('/team/:teamid', function (req, res, next) {
 router.get('/settings', function (req, res, next) {
 
     //todo change to {role: {$ne: "user"}} in 2016 deployment
-    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, applicants) {
+    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, users) {
         if (err) console.log(err);
-        console.log(applicants);
-        res.render('admin/settings/settings', {
+
+        //add config admin to beginning
+        var configUser = {};
+        configUser.email = config.admin.email;
+        users.unshift(configUser);
+
+        res.render('admin/settings', {
             title: 'Admin Dashboard - Settings',
-            applicants: applicants,
+            users: users,
             params: req.query
         })
     });
