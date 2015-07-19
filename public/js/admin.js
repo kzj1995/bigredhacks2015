@@ -1,11 +1,29 @@
 $('document').ready(function () {
 
 
-    //generic ajax to update status
-    var updateStatus = function updateStatus(pubid, newStatus, callback) {
+    //generic ajax to update individual status
+    var updateIndividualStatus = function updateIndividualStatus(pubid, newStatus, callback) {
         $.ajax({
             type: "PATCH",
             url: "/api/admin/user/" + pubid + "/setStatus",
+            data: {
+                status: newStatus
+            },
+            success: function (data) {
+                callback(data);
+            },
+            error: function (e) {
+                //todo more descriptive errors
+                console.log("Update failed!");
+            }
+        });
+    };
+
+    //generic ajax to update team status
+    var updateTeamStatus = function updateTeamStatus(teamid, newStatus, callback) {
+        $.ajax({
+            type: "PATCH",
+            url: "/api/admin/team/" + teamid + "/setStatus",
             data: {
                 status: newStatus
             },
@@ -66,7 +84,7 @@ $('document').ready(function () {
 
         $(buttons).prop("disabled", true).removeClass("active");
 
-        updateStatus(pubid, newStatus, function (data) {
+        updateIndividualStatus(pubid, newStatus, function (data) {
             $(_this).parent().siblings(".status-text").text(newStatus);
             $(buttons).prop("disabled", false);
             $(_this).addClass("active");
@@ -83,7 +101,7 @@ $('document').ready(function () {
         var pubid = $(_this).parents(".applicant").data("pubid");
 
         $(radios).prop("disabled", true);
-        updateStatus(pubid, newStatus, function (data) {
+        updateIndividualStatus(pubid, newStatus, function (data) {
             $(radios).prop("disabled", false);
         })
     });
@@ -93,7 +111,16 @@ $('document').ready(function () {
         var _this = this;
         var newStatus = $(_this).val();
         var pubid = $("#pubid").text().slice(1);
-        updateStatus(pubid, newStatus, function (data) {
+        updateIndividualStatus(pubid, newStatus, function (data) {
+        });
+    });
+
+    //handle decision radio buttons for team view
+    $('input[type=radio][name=teamstatus]').on('change', function () {
+        var _this = this;
+        var newStatus = $(_this).val();
+        var teamid = $("#teamid").text();
+        updateTeamStatus(teamid, newStatus, function (data) {
         });
     });
 

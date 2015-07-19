@@ -31,20 +31,20 @@
 
     <div class="col-sm-3 col-md-3">
         <h4>Team Members</h4>
-        <% if (teamMembers[0].length > 0) { %>
+        <% if (user.teammembers.length > 0) { %>
         <ul>
-        <% for (var j = 0; j < teamMembers[0].length; j++) { %>
-        <% if (teamMembers[0][j].pubid != user.pubid) { %>
-        <li>
-            <a href="/admin/user/<%= teamMembers[0][j].pubid %>">
-                <%= teamMembers[0][j].name.last %>, <%= teamMembers[0][j].name.first %>
-            </a>
-        </li>
-        <% } %>
-        <% } %>
+            <% for (var j = 0; j < user.teammembers.length; j++) { %>
+            <% if (user.teammembers[j].pubid != user.pubid) { %>
+            <li>
+                <a href="/admin/user/<%= user.teammembers[j].pubid %>">
+                    <%= user.teammembers[j].name.first %> <%= user.teammembers[j].name.last %>
+                </a>
+            </li>
+            <% } %>
+            <% } %>
         </ul>
+        <a type="button" class="btn btn-default" href="/admin/team/<%= user.internal.teamid %>">View Team Page</a>
         <% } %>
-
     </div>
 </div>
 

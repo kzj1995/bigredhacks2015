@@ -122,11 +122,10 @@ router.get('/user/:pubid', function (req, res, next) {
             //todo return on error
         }
         else {
-            getTeamMembers([user], function(teamMembers){
+            getTeamMembers([user], function(err, user){
                 res.render('admin/user', {
-                    user: user,
-                    title: 'Review User',
-                    teamMembers: teamMembers
+                    user: user[0],
+                    title: 'Review User'
                 })
             });
         }
@@ -135,9 +134,12 @@ router.get('/user/:pubid', function (req, res, next) {
 
 router.get('/team/:teamid', function (req, res, next) {
     var teamid = req.params.teamid;
-    res.render('admin/team', {
-        title: 'Review Team'
-    })
+    User.find({'internal.teamid':teamid}).exec(function (err, teamMembers){
+        res.render('admin/team', {
+            title: 'Review Team',
+            teamMembers: teamMembers
+        })
+    });
 });
 
 /* GET Settings page to set user roles */
