@@ -11,10 +11,11 @@ var user = currentUser || {}; %>
             </div>
             <% include _usertemplate %>
 
-            <h5>Team Information:</h5>
+            <h4>Team Information:</h4>
             <ul>
-                <li>Team id: <a id="<%= currentUser.internal.teamid %>"
-                                href="/admin/team/<%= currentUser.internal.teamid %>" target="_blank"><%= currentUser.internal.teamid %></a>
+                <li>Team id: <a id="teamid"
+                                href="/admin/team/<%= currentUser.internal.teamid %>"
+                                target="_blank"><%= currentUser.internal.teamid %></a>
                 </li>
                 <li>No. Members: <%= currentUser.team.length %></li>
             </ul>
@@ -23,7 +24,6 @@ var user = currentUser || {}; %>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <% for (var i = 0; i < currentUser.team.length; i++) {
                     user = currentUser.team[i]; //redefine user object
-                    console.log(user);
                 %>
 
                 <div class="panel panel-default">
