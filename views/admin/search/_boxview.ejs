@@ -13,7 +13,7 @@
         <li>
             <b>Team Members: </b>
             <ul>
-                <% for (var j = 0; j < applicants[i].teammembers.length; j++) { console.log(applicants[i].teammembers[j]);%>
+                <% for (var j = 0; j < applicants[i].teammembers.length; j++) { %>
                 <% if (applicants[i].teammembers[j].pubid != applicants[i].pubid) { %>
                 <li>
                     <a href="/admin/user/<%= applicants[i].teammembers[j].pubid %>">
