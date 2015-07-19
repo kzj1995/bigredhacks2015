@@ -28,23 +28,25 @@
             <li>Dietary Restrictions: <%= user.logistics.dietary %></li>
         </ul>
     </div>
+    <% if (user.team.length > 0) { %>
     <div class="col-sm-3 col-md-3">
         <h4>Team Members</h4>
-        <% if (user.team.length > 0) { %>
         <ul>
-        <% for (var j = 0; j < user.team.length; j++) { %>
-        <% if (user.team[j].pubid != user.pubid) { %>
-        <li>
-            <a href="/admin/user/<%= user.team[j].pubid %>">
-                <%= user.team[j].name.last %>, <%= user.team[j].name.first %>
-            </a>
-        </li>
-        <% } %>
-        <% } %>
+            <% for (var j = 0; j < user.team.length; j++) { %>
+            <% if (user.team[j].pubid != user.pubid) { %>
+            <li>
+                <a href="/admin/user/<%= user.team[j].pubid %>">
+                    <%= user.team[j].name.last %>, <%= user.team[j].name.first %>
+                </a>
+            </li>
+            <% } %>
+            <% } %>
         </ul>
-        <a type="button" class="btn btn-default" href="/admin/team/<%=user.team[0].internal.teamid %>">View Team Page</a>
-        <% } %>
+        <a type="button" class="btn btn-default" href="/admin/team/<%= user.team[0].internal.teamid %>">View Team
+            Page</a>
+
     </div>
+    <% } %>
 </div>
 
 <div class="row">
@@ -58,9 +60,12 @@
         //normalize github
         var gh_url = user.app.github.toLowerCase().indexOf("github.com") == -1 ? "https://github.com/" : "";
         %>
-        <a type="button" class="btn btn-default" href="http://files.bigredhacks.com/resume/<%= user.app.resume %>" target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
-        <a type="button" class="btn btn-default" href="<%= gh_url + user.app.github %>" target="_blank"<%= gh_disabled %>><i class="fa fa-github"></i> Github</a>
-        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"<%= lk_disabled %>><i class="fa my-fa-linkedin-square"></i> Linkedin</a>
+        <a type="button" class="btn btn-default" href="http://files.bigredhacks.com/resume/<%= user.app.resume %>"
+           target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
+        <a type="button" class="btn btn-default" href="<%= gh_url + user.app.github %>"
+           target="_blank"<%= gh_disabled %>><i class="fa fa-github"></i> Github</a>
+        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"<%= lk_disabled %>><i
+                    class="fa my-fa-linkedin-square"></i> Linkedin</a>
         <br/><br/>
 
         <div>
