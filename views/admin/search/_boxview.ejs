@@ -9,15 +9,15 @@
         <li><b>Email:</b> <%= applicants[i].email %></li>
         <li><b>School:</b> <%= applicants[i].school.name %></li>
         <li><b>Year:</b> <%= applicants[i].school.year %></li>
-        <% if (applicants[i].teammembers.length > 0) { %>
+        <% if (applicants[i].team.length > 0) { %>
         <li>
             <b>Team Members: </b>
             <ul>
-                <% for (var j = 0; j < applicants[i].teammembers.length; j++) { %>
-                <% if (applicants[i].teammembers[j].pubid != applicants[i].pubid) { %>
+                <% for (var j = 0; j < applicants[i].team.length; j++) { %>
+                <% if (applicants[i].team[j].pubid != applicants[i].pubid) { %>
                 <li>
-                    <a href="/admin/user/<%= applicants[i].teammembers[j].pubid %>">
-                        <%= applicants[i].teammembers[j].name.last %>, <%= applicants[i].teammembers[j].name.first %>
+                    <a href="/admin/user/<%= applicants[i].team[j].pubid %>">
+                        <%= applicants[i].team[j].name.last %>, <%= applicants[i].team[j].name.first %>
                     </a>
                 </li>
                 <% } %>

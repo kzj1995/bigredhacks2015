@@ -124,7 +124,7 @@ router.get('/user/:pubid', function (req, res, next) {
         else {
             _fillTeamMembers([user], function (teamMembers) {
                 res.render('admin/user', {
-                    user: user,
+                    currentUser: user,
                     title: 'Review User',
                     teamMembers: teamMembers
                 })
@@ -200,7 +200,7 @@ router.get('/search', function (req, res, next) {
 function _fillTeamMembers(applicants, callback) {
     async.map(applicants, function (applicant, done) {
         _getUsersFromTeamId(applicant.internal.teamid, function (err, teamMembers) {
-            applicant.teammembers = teamMembers;
+            applicant.team = teamMembers;
             return done(err, applicant);
         });
     }, function (err, results) {

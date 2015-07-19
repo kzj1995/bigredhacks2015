@@ -42,3 +42,15 @@ div.btn-group {
   display: inline-block;
 }
 
+.status {
+  float: right;
+  &.Accepted {
+    color: @success;
+  }
+  &.Waitlisted {
+    color: @neutral;
+  }
+  &.Rejected {
+    color: @error;
+  }
+}

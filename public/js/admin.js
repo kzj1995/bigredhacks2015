@@ -37,7 +37,7 @@ $('document').ready(function () {
         });
     };
 
-    var updateUrlParam = function updateUrlParam(url, param, paramVal) {
+    var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
         var newAdditionalURL = "";
         var tempArray = url.split("?");
         var baseURL = tempArray[0];
@@ -97,9 +97,19 @@ $('document').ready(function () {
         });
     });
 
+    //decision radio buttons for entire team
+    $('input[type=radio][name=teamstatus]').on('change', function () {
+        var _this = this;
+        var newStatus = $(_this).val();
+        var pubid = $("#teamid").text().slice(1);
+        updateStatus(pubid, newStatus, function (data) {
+        });
+    });
+
+
     //switch render location
     $('#render').on('change', function () {
-        var redirect = updateUrlParam(window.location.href, "render", $(this).val());
+        var redirect = _updateUrlParam(window.location.href, "render", $(this).val());
         window.location.assign(redirect);
     });
     var searchCategories = {

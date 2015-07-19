@@ -2,7 +2,7 @@
     <%= user.name.first %> <%= user.name.last %> (<i class="fa fa-user"></i> <span id="pubid"> <%= user.pubid %></span>)
 </h2>
 <div class="row">
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-4 col-md-4">
         <h4>Basic Info</h4>
         <ul>
             <li>Gender: <%= user.gender %></li>
@@ -11,7 +11,7 @@
         </ul>
     </div>
 
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-4 col-md-4">
         <h4>Education</h4>
         <ul>
             <li>School: <%= user.school.name %></li>
@@ -20,31 +20,13 @@
         </ul>
     </div>
 
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-4 col-md-4">
         <h4>Logistics</h4>
         <ul>
             <li>Bus: <%= user.internal.busid %></li>
             <li>T-shirt Size: <%= user.logistics.tshirt %></li>
             <li>Dietary Restrictions: <%= user.logistics.dietary %></li>
         </ul>
-    </div>
-
-    <div class="col-sm-3 col-md-3">
-        <h4>Team Members</h4>
-        <% if (teamMembers[0].length > 0) { %>
-        <ul>
-        <% for (var j = 0; j < teamMembers[0].length; j++) { %>
-        <% if (teamMembers[0][j].pubid != user.pubid) { %>
-        <li>
-            <a href="/admin/user/<%= teamMembers[0][j].pubid %>">
-                <%= teamMembers[0][j].name.last %>, <%= teamMembers[0][j].name.first %>
-            </a>
-        </li>
-        <% } %>
-        <% } %>
-        </ul>
-        <% } %>
-
     </div>
 </div>
 
@@ -88,6 +70,19 @@
         <div>
             Is there anything else you'd like to tell us?
             <p><%= user.logistics.anythingelse %></p>
+        </div>
+
+        <br/>
+
+        <div class="text-center">
+            Update user application decision:
+            <form class="decision-radio user">
+                <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
+                    checked: user.internal.status, //set default value
+                    name: "individualstatus", //name attr of each input
+                    label: enums.virtual.status.long //label of the input different from actual input
+                }); %>
+            </form>
         </div>
     </div>
 </div>
