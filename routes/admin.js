@@ -213,7 +213,7 @@ router.get('/review', function (req, res, next) {
  */
 function _fillTeamMembers(applicants, callback) {
     //single user
-    if (typeof applicants == "object") {
+    if (typeof applicants == "object" && !(applicants instanceof Array)) {
         _getUsersFromTeamId(applicants.internal.teamid, function(err, teamMembers) {
             applicants.team = teamMembers;
             return callback(err, applicants);
