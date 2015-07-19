@@ -41,6 +41,9 @@ searchable.user = [
     {
         alias: "status",
         path: "internal.status"
+    },
+    {
+        alias: "role"
     }
 ];
 

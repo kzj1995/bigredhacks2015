@@ -35,6 +35,10 @@ div.applicant {
   margin-top: 15px;
 }
 
+.set-decision{
+  display: inline;
+}
+
 div.btn-group {
   margin: 0 auto;
   text-align: center;
@@ -42,3 +46,31 @@ div.btn-group {
   display: inline-block;
 }
 
+.status {
+  float: right;
+  &.Accepted {
+    color: @success;
+  }
+  &.Waitlisted {
+    color: @neutral;
+  }
+  &.Rejected {
+    color: @error;
+  }
+}
+
+
+/*
+REVIEW APPS
+*/
+.review-body {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.review-footer {
+  a.btn {
+    float: right;
+  }
+}

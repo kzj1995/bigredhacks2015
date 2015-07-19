@@ -6,6 +6,7 @@ var async = require('async');
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
+var Team = require('../models/team.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -118,37 +119,50 @@ router.get('/user/:pubid', function (req, res, next) {
     User.where({pubid: pubid}).findOne(function (err, user) {
         if (err) {
             console.log(err);
+            //todo return on error
         }
         else {
-            res.render('admin/user', {
-                user: user,
-                title: 'Review User'
-            })
+            _fillTeamMembers(user, function (err, user) {
+                if (err) {
+                    console.log(err);
+                }
+                res.render('admin/user', {
+                    currentUser: user,
+                    title: 'Review User'
+                })
+            });
         }
     });
 });
 
 router.get('/team/:teamid', function (req, res, next) {
     var teamid = req.params.teamid;
-    res.render('admin/team', {
-        title: 'Review Team'
-    })
+    User.find({'internal.teamid': teamid}).exec(function (err, teamMembers) {
+        res.render('admin/team', {
+            title: 'Review Team',
+            teamMembers: teamMembers
+        })
+    });
 });
 
 /* GET Settings page to set user roles */
-router.get('/settings', function(req, res, next) {
-    var queryKeys = Object.keys(req.query);
-    if (queryKeys.length == 0) {
-        User.find().sort('name.last').exec(function (err, applicants) {
-            res.render('admin/settings/settings', {
-                title: 'Admin Dashboard - Settings',
-                applicants: applicants,
-                params: req.query
-            })
-        });
-        return;
-    }
-    performQuery("Settings", req, res)
+router.get('/settings', function (req, res, next) {
+
+    //todo change to {role: {$ne: "user"}} in 2016 deployment
+    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, users) {
+        if (err) console.log(err);
+
+        //add config admin to beginning
+        var configUser = {};
+        configUser.email = config.admin.email;
+        users.unshift(configUser);
+
+        res.render('admin/settings', {
+            title: 'Admin Dashboard - Settings',
+            users: users,
+            params: req.query
+        })
+    });
 });
 
 /* GET Search page to find applicants */
@@ -156,25 +170,105 @@ router.get('/search', function (req, res, next) {
     var queryKeys = Object.keys(req.query);
     if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
         User.find().limit(50).sort('name.last').exec(function (err, applicants) {
-            res.render('admin/search/search', {
-                title: 'Admin Dashboard - Search',
-                applicants: applicants,
-                params: req.query,
-                render: req.query.render
-            })
+            if (req.query.render == "table") //dont need to populate for tableview
+                endOfCall(err, applicants);
+            else _fillTeamMembers(applicants, endOfCall);
         });
         return;
     }
-    performQuery("Search", req, res)
+
+    _runQuery(req.query, function (err, applicants) {
+        if (req.query.render == "table") {
+            endOfCall(err, applicants);
+        }
+        else {
+            _fillTeamMembers(applicants, endOfCall);
+        }
+    });
+
+    function endOfCall(err, applicants) {
+        if (err) console.error(err);
+        res.render('admin/search/search', {
+            title: 'Admin Dashboard - Search',
+            applicants: applicants,
+            params: req.query,
+            render: req.query.render //table, box
+        })
+    }
 });
 
-/* Helper function to perform a search query (used by applicant page search("/search") and settings page
-* search("/settings"))
-* @param pageName "Search" or "Settings" to distinguish between "/search" and "/settings"
-* @param req request object
-* @param res response object
-*/
-function performQuery(pageName, req, res){
+router.get('/review', function (req, res, next) {
+    //todo remove exists in 2016 deployment
+    var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
+    User.count(query, function (err, count) {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            var rand = Math.floor(Math.random() * count);
+            User.findOne(query).skip(rand).exec( function (err, user) {
+                if (err) console.error(err);
+                res.render('admin/review', {
+                    title: 'Admin Dashboard - Review',
+                    user: user
+                })
+            });
+        }
+    });
+});
+
+/**
+ * Helper function to fill team members in teammember prop
+ * @param applicants Array|Object of applicants to obtain team members of
+ * @param callback function that given teamMembers, renders the page
+ */
+function _fillTeamMembers(applicants, callback) {
+    //single user
+    if (typeof applicants == "object" && !(applicants instanceof Array)) {
+        _getUsersFromTeamId(applicants.internal.teamid, function (err, teamMembers) {
+            applicants.team = teamMembers;
+            return callback(err, applicants);
+        })
+    }
+    //array of users
+    else async.map(applicants, function (applicant, done) {
+        _getUsersFromTeamId(applicant.internal.teamid, function (err, teamMembers) {
+            applicant.team = teamMembers;
+            return done(err, applicant);
+        });
+    }, function (err, results) {
+        if (err) console.error(err);
+        return callback(err, results);
+    });
+}
+
+/**
+ * Helper function which given a team id, provides as an argument to a callback an array of the team members as
+ * User objects with that team id
+ * @param teamid id of team to get members of
+ * @param callback
+ */
+function _getUsersFromTeamId(teamid, callback) {
+    var teamMembers = [];
+    if (teamid == null) return callback(null, teamMembers);
+    Team.findOne({_id: teamid}, function (err, team) {
+        team.populate('members.id', function (err, team) {
+            if (err) console.error(err);
+            team.members.forEach(function (val, ind) {
+                teamMembers.push(val.id);
+            });
+            callback(null, teamMembers);
+        });
+    });
+}
+
+/**
+ * Helper function to perform a search query (used by applicant page search("/search") and settings page
+ * search("/settings"))
+ * @param queryString String representing the query parameters
+ * @param callback function that performs rendering
+ */
+function _runQuery(queryString, callback) {
     /*
      * two types of search approaches:
      * 1. simple query (over single fields)
@@ -182,7 +276,7 @@ function performQuery(pageName, req, res){
      */
 
     //for a mapping of searchable fields, look at searchable.ejs
-    var query = queryBuilder(req.query, "user");
+    var query = queryBuilder(queryString, "user");
 
     if (_.size(query.project) > 0) {
         query.project.document = '$$ROOT'; //return the actual document
@@ -195,7 +289,7 @@ function performQuery(pageName, req, res){
             .exec(function (err, applicants) {
                 if (err) endOfCall(err);
                 else {
-                    endOfCall(null, _.map(applicants, function (x) {
+                    callback(null, _.map(applicants, function (x) {
                         return x.document
                     }));
                 }
@@ -205,36 +299,9 @@ function performQuery(pageName, req, res){
         //run a simple query (because it's faster)
         User.find(query.match)
             .sort('name.last')
-            .exec(endOfCall);
+            .exec(callback);
     }
 
-    function endOfCall(err, applicants) {
-        if (err) console.error(err);
-        else {
-            if (pageName == "Search") {
-                res.render('admin/search/search', {
-                    title: 'Admin Dashboard - Search',
-                    applicants: applicants,
-                    params: req.query,
-                    render: req.query.render //table, box
-                })
-            }
-            else if (pageName == "Settings") {
-                res.render('admin/settings/settings', {
-                    title: 'Admin Dashboard - Settings',
-                    applicants: applicants,
-                    params: req.query
-                })
-            }
-
-        }
-    }
 }
-
-router.get('/review', function (req, res, next) {
-    res.render('admin/review', {
-        title: 'Admin Dashboard - Review'
-    })
-});
 
 module.exports = router;
