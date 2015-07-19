@@ -123,7 +123,9 @@ router.get('/user/:pubid', function (req, res, next) {
         }
         else {
             _fillTeamMembers(user, function (err, user) {
-                if (err){ console.log(err);}
+                if (err) {
+                    console.log(err);
+                }
                 res.render('admin/user', {
                     currentUser: user,
                     title: 'Review User'
@@ -135,7 +137,7 @@ router.get('/user/:pubid', function (req, res, next) {
 
 router.get('/team/:teamid', function (req, res, next) {
     var teamid = req.params.teamid;
-    User.find({'internal.teamid':teamid}).exec(function (err, teamMembers){
+    User.find({'internal.teamid': teamid}).exec(function (err, teamMembers) {
         res.render('admin/team', {
             title: 'Review Team',
             teamMembers: teamMembers
@@ -196,14 +198,23 @@ router.get('/search', function (req, res, next) {
 });
 
 router.get('/review', function (req, res, next) {
-    User.findOne( {$or: [{'internal.status': "Pending"},{'internal.status':{$exists: false}}]}, function(err, user) {
-        if (err) console.error(err);
-        res.render('admin/review', {
-            title: 'Admin Dashboard - Review',
-            user: user
-        })
+    //todo remove exists in 2016 deployment
+    var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
+    User.count(query, function (err, count) {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            var rand = Math.floor(Math.random() * count);
+            User.findOne(query).skip(rand).exec( function (err, user) {
+                if (err) console.error(err);
+                res.render('admin/review', {
+                    title: 'Admin Dashboard - Review',
+                    user: user
+                })
+            });
+        }
     });
-
 });
 
 /**
@@ -214,7 +225,7 @@ router.get('/review', function (req, res, next) {
 function _fillTeamMembers(applicants, callback) {
     //single user
     if (typeof applicants == "object" && !(applicants instanceof Array)) {
-        _getUsersFromTeamId(applicants.internal.teamid, function(err, teamMembers) {
+        _getUsersFromTeamId(applicants.internal.teamid, function (err, teamMembers) {
             applicants.team = teamMembers;
             return callback(err, applicants);
         })
