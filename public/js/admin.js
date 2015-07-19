@@ -55,7 +55,7 @@ $('document').ready(function () {
         });
     };
 
-    var updateUrlParam = function updateUrlParam(url, param, paramVal) {
+    var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
         var newAdditionalURL = "";
         var tempArray = url.split("?");
         var baseURL = tempArray[0];
@@ -121,12 +121,14 @@ $('document').ready(function () {
         var newStatus = $(_this).val();
         var teamid = $("#teamid").text();
         updateTeamStatus(teamid, newStatus, function (data) {
+            $('.status').text(newStatus);
+            $('.status').attr("class","status "+newStatus);
         });
     });
 
     //switch render location
     $('#render').on('change', function () {
-        var redirect = updateUrlParam(window.location.href, "render", $(this).val());
+        var redirect = _updateUrlParam(window.location.href, "render", $(this).val());
         window.location.assign(redirect);
     });
     var searchCategories = {

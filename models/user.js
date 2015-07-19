@@ -52,7 +52,7 @@ var userSchema = new mongoose.Schema({
     },
     passwordtoken: String,
     role: {type: String, enum: en.user.role, default: "user"},
-    teammembers: Array //virtual property
+    team: Array //virtual property used to populate team members
 });
 
 //full name of user

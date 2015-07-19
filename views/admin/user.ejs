@@ -1,5 +1,6 @@
 <% include ../_header %>
-
+<% var allTeam;
+var user = currentUser || {}; %>
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -9,19 +10,6 @@
                 <h1 class="leaf">review user</h1>
             </div>
             <% include _usertemplate %>
-
-            <br/>
-
-            <div class="text-center">
-                Update application decision:
-                <form class="decision-radio">
-                    <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
-                        checked: user.internal.status, //set default value
-                        name: "individualstatus", //name attr of each input
-                        label: enums.virtual.status.long //label of the input different from actual input
-                    }); %>
-                </form>
-            </div>
         </div>
     </div>
 </div>

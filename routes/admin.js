@@ -122,10 +122,11 @@ router.get('/user/:pubid', function (req, res, next) {
             //todo return on error
         }
         else {
-            getTeamMembers([user], function(err, user){
+            _fillTeamMembers([user], function (teamMembers) {
                 res.render('admin/user', {
-                    user: user[0],
-                    title: 'Review User'
+                    currentUser: user,
+                    title: 'Review User',
+                    teamMembers: teamMembers
                 })
             });
         }
@@ -146,12 +147,17 @@ router.get('/team/:teamid', function (req, res, next) {
 router.get('/settings', function (req, res, next) {
 
     //todo change to {role: {$ne: "user"}} in 2016 deployment
-    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, applicants) {
+    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, users) {
         if (err) console.log(err);
-        console.log(applicants);
-        res.render('admin/settings/settings', {
+
+        //add config admin to beginning
+        var configUser = {};
+        configUser.email = config.admin.email;
+        users.unshift(configUser);
+
+        res.render('admin/settings', {
             title: 'Admin Dashboard - Settings',
-            applicants: applicants,
+            users: users,
             params: req.query
         })
     });
@@ -162,46 +168,45 @@ router.get('/search', function (req, res, next) {
     var queryKeys = Object.keys(req.query);
     if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
         User.find().limit(50).sort('name.last').exec(function (err, applicants) {
-            getTeamMembers(applicants, function(err, applicants){
-                res.render('admin/search/search', {
-                    title: 'Admin Dashboard - Search',
-                    applicants: applicants,
-                    params: req.query,
-                    render: req.query.render
-                })
-            });
+            if (req.query.render == "table") //dont need to populate for tableview
+                endOfCall(err, applicants);
+            else _fillTeamMembers(applicants, endOfCall);
         });
         return;
     }
 
-    _performQuery(req.query, function (err, applicants) {
-        if (err) console.error(err);
-        else {
-            getTeamMembers(applicants, function(err, applicants){
-                res.render('admin/search/search', {
-                    title: 'Admin Dashboard - Search',
-                    applicants: applicants,
-                    params: req.query,
-                    render: req.query.render //table, box
-                })
-            });
+    _runQuery(req.query, function (err, applicants) {
+        if (req.query.render == "table") {
+            endOfCall(err, applicants);
         }
-    })
+        else {
+            _fillTeamMembers(applicants, endOfCall);
+        }
+    });
+
+    function endOfCall(err, applicants) {
+        if (err) console.error(err);
+        res.render('admin/search/search', {
+            title: 'Admin Dashboard - Search',
+            applicants: applicants,
+            params: req.query,
+            render: req.query.render //table, box
+        })
+    }
 });
 
 /**
- * Helper function to get team members of each applicant in the passed in Array to display their
- * names (and a link to them) in box view
+ * Helper function to fill team members in teammember prop
  * @param applicants Array of applicants to obtain team members of
  * @param callback function that given teamMembers, renders the page
  */
-function getTeamMembers(applicants, callback){
-    async.map(applicants, function(applicant, done) {
-        getUsersFromTeamId(applicant.internal.teamid, function(err,teamMembers) {
-            applicant.teammembers = teamMembers;
+function _fillTeamMembers(applicants, callback) {
+    async.map(applicants, function (applicant, done) {
+        _getUsersFromTeamId(applicant.internal.teamid, function (err, teamMembers) {
+            applicant.team = teamMembers;
             return done(err, applicant);
         });
-    }, function(err, results) {
+    }, function (err, results) {
         if (err) console.error(err);
         return callback(null, results);
     });
@@ -213,13 +218,13 @@ function getTeamMembers(applicants, callback){
  * @param teamid id of team to get members of
  * @param callback
  */
-function getUsersFromTeamId(teamid, callback){
+function _getUsersFromTeamId(teamid, callback) {
     var teamMembers = [];
-    if(teamid == null) return callback(null, teamMembers);
+    if (teamid == null) return callback(null, teamMembers);
     Team.findOne({_id: teamid}, function (err, team) {
         team.populate('members.id', function (err, team) {
             if (err) console.error(err);
-            team.members.forEach(function (val,ind) {
+            team.members.forEach(function (val, ind) {
                 teamMembers.push(val.id);
             });
             callback(null, teamMembers);
@@ -233,7 +238,7 @@ function getUsersFromTeamId(teamid, callback){
  * @param queryString String representing the query parameters
  * @param callback function that performs rendering
  */
-function _performQuery(queryString, callback) {
+function _runQuery(queryString, callback) {
     /*
      * two types of search approaches:
      * 1. simple query (over single fields)

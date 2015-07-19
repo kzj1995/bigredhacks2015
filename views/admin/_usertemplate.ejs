@@ -28,22 +28,21 @@
             <li>Dietary Restrictions: <%= user.logistics.dietary %></li>
         </ul>
     </div>
-
     <div class="col-sm-3 col-md-3">
         <h4>Team Members</h4>
-        <% if (user.teammembers.length > 0) { %>
+        <% if (user.team.length > 0) { %>
         <ul>
-            <% for (var j = 0; j < user.teammembers.length; j++) { %>
-            <% if (user.teammembers[j].pubid != user.pubid) { %>
-            <li>
-                <a href="/admin/user/<%= user.teammembers[j].pubid %>">
-                    <%= user.teammembers[j].name.first %> <%= user.teammembers[j].name.last %>
-                </a>
-            </li>
-            <% } %>
-            <% } %>
+        <% for (var j = 0; j < user.team.length; j++) { %>
+        <% if (user.team[j].pubid != user.pubid) { %>
+        <li>
+            <a href="/admin/user/<%= user.team[j].pubid %>">
+                <%= user.team[j].name.last %>, <%= user.team[j].name.first %>
+            </a>
+        </li>
+        <% } %>
+        <% } %>
         </ul>
-        <a type="button" class="btn btn-default" href="/admin/team/<%= user.internal.teamid %>">View Team Page</a>
+        <a type="button" class="btn btn-default" href="/admin/team/<%=user.team[0].internal.teamid %>">View Team Page</a>
         <% } %>
     </div>
 </div>
@@ -88,6 +87,19 @@
         <div>
             Is there anything else you'd like to tell us?
             <p><%= user.logistics.anythingelse %></p>
+        </div>
+
+        <br/>
+
+        <div class="text-center">
+            Update user application decision:
+            <form class="decision-radio user">
+                <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
+                    checked: user.internal.status, //set default value
+                    name: "individualstatus", //name attr of each input
+                    label: enums.virtual.status.long //label of the input different from actual input
+                }); %>
+            </form>
         </div>
     </div>
 </div>

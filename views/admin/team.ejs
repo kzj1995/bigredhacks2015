@@ -29,6 +29,9 @@ var teamdecision = teamMembers[0].internal.status; //variable that determines th
                                aria-controls="user-collapse-<%= i + 1 %>">
                                  Team Member <%= i + 1 %>
                             </a>
+                            <span class="status <%= teamMembers[i].internal.status %>">
+                                <%=teamMembers[i].internal.status %>
+                            </span>
                         </h4>
                     </div>
                     <div id="user-collapse-<%= i + 1 %>" class="panel-collapse collapse in" role="tabpanel"
