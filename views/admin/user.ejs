@@ -1,6 +1,5 @@
 <% include ../_header %>
-<% var allTeam;
-var user = currentUser || {}; %>
+<% var user = currentUser || {};%>
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -24,7 +23,6 @@ var user = currentUser || {}; %>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <% for (var i = 0; i < currentUser.team.length; i++) {
                     user = currentUser.team[i]; //redefine user object
-                    console.log(user);
                 %>
 
                 <div class="panel panel-default">
@@ -59,7 +57,6 @@ var user = currentUser || {}; %>
                         label: enums.virtual.status.long //label of the input different from actual input
                     }); %>
                 </form>
-                }
             </div>
         </div>
     </div>

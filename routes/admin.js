@@ -122,11 +122,11 @@ router.get('/user/:pubid', function (req, res, next) {
             //todo return on error
         }
         else {
-            _fillTeamMembers([user], function (teamMembers) {
+            _fillTeamMembers(user, function (err, user) {
+                if (err){ console.log(err);}
                 res.render('admin/user', {
                     currentUser: user,
-                    title: 'Review User',
-                    teamMembers: teamMembers
+                    title: 'Review User'
                 })
             });
         }
@@ -195,20 +195,39 @@ router.get('/search', function (req, res, next) {
     }
 });
 
+router.get('/review', function (req, res, next) {
+    User.findOne( {$or: [{'internal.status': "Pending"},{'internal.status':{$exists: false}}]}, function(err, user) {
+        if (err) console.error(err);
+        res.render('admin/review', {
+            title: 'Admin Dashboard - Review',
+            user: user
+        })
+    });
+
+});
+
 /**
  * Helper function to fill team members in teammember prop
- * @param applicants Array of applicants to obtain team members of
+ * @param applicants Array|Object of applicants to obtain team members of
  * @param callback function that given teamMembers, renders the page
  */
 function _fillTeamMembers(applicants, callback) {
-    async.map(applicants, function (applicant, done) {
+    //single user
+    if (typeof applicants == "object") {
+        _getUsersFromTeamId(applicants.internal.teamid, function(err, teamMembers) {
+            applicants.team = teamMembers;
+            return callback(err, applicants);
+        })
+    }
+    //array of users
+    else async.map(applicants, function (applicant, done) {
         _getUsersFromTeamId(applicant.internal.teamid, function (err, teamMembers) {
             applicant.team = teamMembers;
             return done(err, applicant);
         });
     }, function (err, results) {
         if (err) console.error(err);
-        return callback(null, results);
+        return callback(err, results);
     });
 }
 
@@ -273,11 +292,5 @@ function _runQuery(queryString, callback) {
     }
 
 }
-
-router.get('/review', function (req, res, next) {
-    res.render('admin/review', {
-        title: 'Admin Dashboard - Review'
-    })
-});
 
 module.exports = router;
