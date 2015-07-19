@@ -1,11 +1,19 @@
 $('document').ready(function () {
 
-
-    //generic ajax to update individual status
-    var updateIndividualStatus = function updateIndividualStatus(pubid, newStatus, callback) {
+    /**
+     * generic ajax to update status
+     * @param type team,user
+     * @param id
+     * @param newStatus
+     * @param callback
+     */
+    var updateStatus = function updateStatus(type, id, newStatus, callback) {
+        if (type != "user" && type != "team") {
+            console.error("Unrecognized update type in updateStatus!");
+        }
         $.ajax({
             type: "PATCH",
-            url: "/api/admin/user/" + pubid + "/setStatus",
+            url: "/api/admin/" + type + "/" + id + "/setStatus",
             data: {
                 status: newStatus
             },
@@ -84,7 +92,7 @@ $('document').ready(function () {
 
         $(buttons).prop("disabled", true).removeClass("active");
 
-        updateIndividualStatus(pubid, newStatus, function (data) {
+        updateStatus("user", pubid, newStatus, function (data) {
             $(_this).parent().siblings(".status-text").text(newStatus);
             $(buttons).prop("disabled", false);
             $(_this).addClass("active");
@@ -101,7 +109,8 @@ $('document').ready(function () {
         var pubid = $(_this).parents(".applicant").data("pubid");
 
         $(radios).prop("disabled", true);
-        updateIndividualStatus(pubid, newStatus, function (data) {
+
+        updateStatus("user", pubid, newStatus, function (data) {
             $(radios).prop("disabled", false);
         })
     });
@@ -110,8 +119,8 @@ $('document').ready(function () {
     $('input[type=radio][name=individualstatus]').on('change', function () {
         var _this = this;
         var newStatus = $(_this).val();
-        var pubid = $("#pubid").text().slice(1);
-        updateIndividualStatus(pubid, newStatus, function (data) {
+        var pubid = $("#pubid").text();
+        updateStatus("user", pubid, newStatus, function (data) {
         });
     });
 
@@ -120,7 +129,7 @@ $('document').ready(function () {
         var _this = this;
         var newStatus = $(_this).val();
         var teamid = $("#teamid").text();
-        updateTeamStatus(teamid, newStatus, function (data) {
+        updateStatus("team", teamid, newStatus, function (data) {
             $('.status').text(newStatus);
             $('.status').attr("class","status "+newStatus);
         });

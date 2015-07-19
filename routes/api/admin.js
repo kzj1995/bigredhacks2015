@@ -5,7 +5,7 @@ var Colleges = require('../../models/college.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var async = require('async');
-
+var mongoose = require('mongoose');
 
 /**
  * @api PATCH /user/:pubid/setStatus Set status of a single user
@@ -43,17 +43,22 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
  * @apiError (500)
  * */
 router.patch('/team/:teamid/setStatus', function (req, res, next) {
-    console.log(req.body);
-    Team.findOne({_id: req.params.teamid}, function (err, team) {
+    var id = mongoose.Types.ObjectId(req.params.teamid);
+    Team.findById(id, function (err, team) {
         if (err) {
-            res.sendStatus(500);
+            console.error(err);
+            return res.sendStatus(500);
         }
         if (!team) {
-            res.sendStatus(500);
+            console.log("No such team found.");
+            return res.sendStatus(500);
         }
         else {
             team.populate('members.id', function (err, team) {
-                if (err) res.sendStatus(500);
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(500);
+                }
                 else {
                     async.each(team.members, function (user, callback) {
                         user = user.id;
@@ -62,7 +67,10 @@ router.patch('/team/:teamid/setStatus', function (req, res, next) {
                             callback(err);
                         });
                     }, function (err) {
-                        if (err) return res.sendStatus(500);
+                        if (err) {
+                            console.log(err);
+                            return res.sendStatus(500);
+                        }
                         else return res.sendStatus(200);
                     });
 
