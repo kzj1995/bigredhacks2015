@@ -1,0 +1,115 @@
+<% include ../_header %>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _dashboardside.ejs %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">dashboard</h1>
+            </div>
+
+            <% if (messages.error) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + messages.error[0].toLowerCase() + '</div>' %>
+            <% } %>
+
+            <% if (messages.success) { %>
+            <%- '<div class="alert alert-success" role="alert">' + messages.success[0].toLowerCase() + '</div>' %>
+            <% } %>
+
+            <p> welcome back, <%= name.first %> <%= name.last %>. </p>
+
+
+            <br/>
+
+            <div class="header-wrapper">
+                <h2 class="page-title">status</h2>
+            </div>
+            <% if (user.internal.status==="rejected") { %>
+                <p>thank you so much for applying to bigred//hacks! the application pool this year was more competitive than it's ever been and unfortunately, due to logistical constraints, we are unable to offer you a spot at bigred//hacks.</p>
+
+                <p>don't be disheartened! there are a ton of great hackathons out there if you still want to make awesome things, meet amazing people, and improve your chances of going to bigred//hacks next year. you can see a schedule of other hackathons coming up this fall <a href="http://mlh.io/seasons/f2015/events">here</a>.
+
+                <p>we are eagerly anticipating your next application.</p>
+
+                <p>--the bigred//hacks team</p>
+
+            <% } else if (user.internal.status==="waitlisted") {%>
+                <p>thank you so much for applying to bigred//hacks! unfortunately, due to logistical constraints, we are unable to guarantee a spot for you at this time. however, we have placed you on the waitlist, so there’s still a chance you'll get in!</p>
+
+                <p>we will email you whether we can offer you a spot soon, so make sure that our emails are not going to spam. stay tuned!</p>
+
+                <p>--the bigred//hacks team</p>
+
+            <% } else if (user.internal.status==="accepted") { %>
+                <p>congratulations!</p>
+                <p>the organizers of bigred//hacks have reviewed your application and you're officially invited to participate in bigred//hacks 2015!</p>
+                <p>bigred//hacks 2015 is the second iteration of cornell university's ultimate hackathon. join students from all over the world for an amazing weekend of hacking, networking, and competing for over _______ in prizes! be a part of something big.</p>
+                <p>you can view your travel allowance below. please rsvp within ______ days so we'll be able to reserve you a spot. also, please make sure to upload your receipt(s) within the same ______ day period or else your reimbursement might be re-allotted to someone else.</p>
+            
+                <p>--the bigred//hacks team</p>
+
+                <br/>
+
+                <div class="header-wrapper">
+                    <h2 class="page-title">transportation</h2>
+                </div>
+                <p>method: charter bus/public transportation/drive</p>
+                <p>allowance: n/a for charter bus, $__ for public transportion, $___/mile for drive</p>
+                <p>please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.</p>
+
+                <button type="button">upload receipts</button>
+
+                <br/>
+
+
+                <div class="header-wrapper">
+                    <h2 class="page-title">rsvp</h2>
+                </div>
+                <p><b>are you coming?</b></p>
+                <select class="rsvp">
+                    <option value>select</option>
+                    <option value="yes">yes</option>
+                    <option value="no">no</option>
+                </select>
+
+                <p>before reserving your spot, you must read and accept to the following codes of conduct from us and major league hacking.</p>
+
+                <button type="button" onclick=window.open("http://static.mlh.io/docs/mlh-code-of-conduct.pdf")>mlh</button>
+                <button type="button">bigred//hacks</button>
+
+                <input type="checkbox" name="legal" name="legal"/> by checking this box, you agree to abide by the codes of conduct
+
+                <button type="submit" id="rsvp" class="btn btn-primary">submit</button>
+
+                <br/>
+
+
+
+
+                <div class="header-wrapper">
+                    <h2 class="page-title">resume</h2>
+                </div>
+                <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
+                <button class="btn btn-red" id="resume-update">update my resume</button>
+
+                <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
+                      enctype="multipart/form-data">
+                    <label>upload a new resume (.pdf)</label><br/>
+
+                    <div class="form-group has-error">
+                        <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resumeinput"
+                               name="resumeinput" accept=".pdf" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-red" id="resume-save" disabled>Save</button>
+                    </div>
+                </form>
+            <% } %>
+        </div>
+    </div>
+</div>
+<script src="/js/vendor/jquery.filepicker.min.js"></script>
+<script src="/js/dashboard.js"></script>
+<% include ../_footer %>
