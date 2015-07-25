@@ -78,7 +78,7 @@ _export.generateInlineRadio = function(arr, options) {
  */
 _export.generateUrlList = function (listItems, active) {
     var array = [];
-    active = url.split(/[?#]/)[0];; //remove query string, hash
+    active = active.split(/[?#]/)[0]; //remove query string, hash
     for (var i = 0; i < listItems.length; i++) {
         var classes = "";
         if (active == listItems[i].url) {

@@ -45,10 +45,9 @@ var userSchema = new mongoose.Schema({
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
         teamwithcornell: {type: Boolean, default: false},
-        busid: {type: String, default: null}, //@todo implement later
-        rating: {type: Number, min: 0, max: 5, default: 0},
+        busid: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
-        going: {type: Boolean}
+        going: {type: Boolean, default: null}
     },
     passwordtoken: String,
     role: {type: String, enum: en.user.role, default: "user"},
@@ -62,23 +61,23 @@ userSchema.virtual('name.full').get(function () {
 
 //todo validate existence of college
 userSchema.pre('save', function (next) {
-    var user = this;
+    var _this = this;
 
     //add a public uid for the user
     //TODO consider moving to create
-    if (typeof user.pubid === "undefined") {
-        user.pubid = uid(10);
+    if (typeof _this.pubid === "undefined") {
+        _this.pubid = uid(10);
     }
 
     //verify password is present
-    if (!user.isModified('password')) return next();
+    if (!_this.isModified('password')) return next();
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
         if (err) return next(err);
 
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
+        bcrypt.hash(_this.password, salt, null, function (err, hash) {
             if (err) return next(err);
-            user.password = hash;
+            _this.password = hash;
             next();
         });
     });
