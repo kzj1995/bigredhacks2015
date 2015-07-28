@@ -1,5 +1,5 @@
 <% include ../_header %>
-<% var user = currentUser || {};%>
+<% var user = currentUser || {}; %>
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -50,7 +50,7 @@
 
             <div class="text-center">
                 Update team application decision:
-                <form class="decision-radio team">
+                <form class="decision-radio team np-enabled">
                     <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
                         checked: null, //set default value
                         name: "teamstatus", //name attr of each input
@@ -60,6 +60,6 @@
             </div>
         </div>
     </div>
-
-    <script src="/js/admin.js"></script>
+</div>
+<script src="/js/admin.js"></script>
 <% include ../_footer %>

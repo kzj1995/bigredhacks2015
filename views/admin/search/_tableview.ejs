@@ -13,7 +13,7 @@
         <td><%= applicants[i].email %></td>
         <td><%= applicants[i].school.name %></td>
         <td>
-            <form class="decision-radio">
+            <form class="decision-radio np-enabled">
                 <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
                     checked: applicants[i].internal.status, //set default value
                     name: "status", //name attr of each input
