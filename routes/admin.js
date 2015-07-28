@@ -11,6 +11,10 @@ var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
 
+//filter out admin users in aggregate queries.
+//todo change to {role: "user"} in 2016 deployment
+var USER_FILTER = {$or: [{role: {$ne: "admin"}}, {role: {$exists: false}}]};
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.redirect('/admin/dashboard');
@@ -23,6 +27,7 @@ router.get('/dashboard', function (req, res, next) {
     async.parallel({
         applicants: function (done) {
             User.aggregate([
+                {$match: USER_FILTER},
                 {$group: {_id: "$internal.status", total: {$sum: 1}}}
             ], function (err, result) {
                 if (err) {
@@ -61,6 +66,7 @@ router.get('/dashboard', function (req, res, next) {
         },
         schools: function (done) {
             User.aggregate([
+                {$match: USER_FILTER},
                 {$group: {_id: {name: "$school.name", status: "$internal.status"}, total: {$sum: 1}}},
                 {
                     $project: {
@@ -200,13 +206,14 @@ router.get('/search', function (req, res, next) {
 router.get('/review', function (req, res, next) {
     //todo remove exists in 2016 deployment
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
+    query = _.extend(query,USER_FILTER);
     User.count(query, function (err, count) {
         if (err) {
             console.log(err)
         }
         else {
             var rand = Math.floor(Math.random() * count);
-            User.findOne(query).skip(rand).exec( function (err, user) {
+            User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
                 res.render('admin/review', {
                     title: 'Admin Dashboard - Review',

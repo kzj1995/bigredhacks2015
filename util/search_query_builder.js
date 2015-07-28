@@ -5,7 +5,7 @@ var _ = require("underscore");
 /**
  * Builds an aggregate or simple query
  * @param query Object Raw req.query input
- * @param searchSchema Searchable fields as defined in searchable.js
+ * @param schema Searchable fields as defined in searchable.js
  *          a string corresponding to the search must be passed in.
  * @return Object out
  *              out.match: object to match
