@@ -55,8 +55,6 @@ $('document').ready(function () {
 
     /**
      * Check whether use is in non-participation mode
-     * NOTE: Results are inverted since we are determining /no/ participation mode.
-     * This is the ONLY place that inversion needs to occur.
      * @type {*|jQuery}
      */
     var getNp = function () {
@@ -64,15 +62,14 @@ $('document').ready(function () {
             type: "GET",
             url: "/api/admin/np",
             success: function (data) {
-                //the toggle call inverted
                 if (data == "true" || data == "1") {
-                    toggleNp(false);
+                    toggleNp(true);
                     //third parameter skips on change event
                     npCheckbox.bootstrapSwitch("state",true, true); //set starting state
                 }
                 else {
                     npCheckbox.bootstrapSwitch("state",false, true);
-                    return toggleNp(true);
+                    return toggleNp(false);
 
                 }
             },
@@ -110,7 +107,6 @@ $('document').ready(function () {
     };
 
     npCheckbox.on('switchChange.bootstrapSwitch', function(event, state) {
-        console.log(event);
         setNp(state);
     });
 

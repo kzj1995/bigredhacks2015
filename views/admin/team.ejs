@@ -17,6 +17,7 @@ var teamdecision = teamMembers[0].internal.status; //variable that determines th
             <ul>
                 <li>Team ID: <span id="teamid" ><%= teamMembers[0].internal.teamid %></span></li>
                 <li>No. Members: <%= teamMembers.length %></li>
+                <li>Team with Cornell: <%= teamMembers[0].internal.teamwithcornell ? "Yes" : "No" %></li>
             </ul>
             <br/>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
