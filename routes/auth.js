@@ -246,8 +246,13 @@ router.post('/login',
         failureFlash: true
     }), function(req, res) {
         // successful auth, user is set at req.user.  redirect as necessary.
-        if (req.user.role === "admin" || req.user.email === config.admin.email) { return res.redirect('/admin'); }
-        else {return res.redirect('/user')}
+        if (req.user.role === "admin" || req.user.email === config.admin.email) {
+            req.session.np = true; //enable no participation mode
+            return res.redirect('/admin');
+        }
+        else {
+            return res.redirect('/user')
+        }
     }
 );
 
