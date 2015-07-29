@@ -1,0 +1,110 @@
+<h2>
+    <%= user.name.first %> <%= user.name.last %> (<i class="fa fa-user"></i> <span id="pubid"><%= user.pubid %></span>)
+</h2>
+<div class="row">
+    <div class="col-sm-3 col-md-3">
+        <h4>Basic Info</h4>
+        <ul>
+            <li>Gender: <%= user.gender %></li>
+            <li>Email: <%= user.email %></li>
+            <li>Phone: <%= user.phone %></li>
+        </ul>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+        <h4>Education</h4>
+        <ul>
+            <li>School: <%= user.school.name %></li>
+            <li>Major: <%= user.school.major %></li>
+            <li>Year: <%= user.school.year %></li>
+        </ul>
+    </div>
+
+    <div class="col-sm-3 col-md-3">
+        <h4>Logistics</h4>
+        <ul>
+            <li>Bus: <%= user.internal.busid %></li>
+            <li>T-shirt Size: <%= user.logistics.tshirt %></li>
+            <li>Dietary Restrictions: <%= user.logistics.dietary %></li>
+        </ul>
+    </div>
+    <% if (user.team.length > 0) { %>
+    <div class="col-sm-3 col-md-3">
+        <h4>Team Members</h4>
+        <ul>
+            <% for (var j = 0; j < user.team.length; j++) { %>
+            <% if (user.team[j].pubid != user.pubid) { %>
+            <li>
+                <a href="/admin/user/<%= user.team[j].pubid %>">
+                    <%= user.team[j].name.last %>, <%= user.team[j].name.first %>
+                </a>
+            </li>
+            <% } %>
+            <% } %>
+        </ul>
+        <a type="button" class="btn btn-default" href="/admin/team/<%= user.internal.teamid %>">View Team
+            Page</a>
+
+    </div>
+    <% } %>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <br/>
+        <h4>Application</h4>
+        <%
+        //disable buttons if properties don't exist
+        var gh_disabled = user.app.github == "" ? "disabled" : "";
+        var lk_disabled = user.app.linkedin == "" ? "disabled" : "";
+        //normalize github
+        var gh_url = user.app.github.toLowerCase().indexOf("github.com") == -1 ? "https://github.com/" : "";
+        %>
+        <a type="button" class="btn btn-default" href="http://files.bigredhacks.com/resume/<%= user.app.resume %>"
+           target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
+        <a type="button" class="btn btn-default" href="<%= gh_url + user.app.github %>"
+           target="_blank"<%= gh_disabled %>><i class="fa fa-github"></i> Github</a>
+        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"<%= lk_disabled %>><i
+                    class="fa my-fa-linkedin-square"></i> Linkedin</a>
+        <br/><br/>
+
+        <div>
+            First hackathon?
+            <p><%= user.app.experience %></p>
+        </div>
+
+        <br/>
+
+        <div>
+            Tell us something interesting about yourself.
+            <p><%= user.app.questions.q1 %></p>
+        </div>
+
+        <br/>
+
+        <div>
+            What's a cool project that you've worked on?
+            <p><%= user.app.questions.q2 %></p>
+        </div>
+
+        <br/>
+
+        <div>
+            Is there anything else you'd like to tell us?
+            <p><%= user.logistics.anythingelse %></p>
+        </div>
+
+        <br/>
+
+        <div class="text-center">
+            Update user application decision:
+            <form class="decision-radio user np-enabled">
+                <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
+                    checked: user.internal.status, //set default value
+                    name: "individualstatus", //name attr of each input
+                    label: enums.virtual.status.long //label of the input different from actual input
+                }); %>
+            </form>
+        </div>
+    </div>
+</div>

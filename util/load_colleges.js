@@ -1,6 +1,6 @@
 "use strict";
 var async = require('async');
-var Converter = require("csvtojson").core.Converter; //converter class
+var Converter = require("csvtojson").Converter; //converter class
 var fs = require("fs");
 var College = require('../models/college.js');
 

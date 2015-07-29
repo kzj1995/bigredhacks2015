@@ -1,0 +1,86 @@
+@import "_global";
+@import "vendor/bootstrap-switch.less";
+
+/*#searchparameters {
+  padding: 15px;
+  margin: 20px;
+  padding-top: 0;
+  margin-top: 0;
+}*/
+
+.np-toggle label {
+  position: relative;
+  bottom: 9px;
+  color: @white;
+  padding-right: 10px;
+  font-weight: @weight-normal;
+}
+
+.render-option {
+  position: absolute;
+  right: 10%;
+  z-index: 1000;
+}
+
+div.applicant {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 15px;
+  &:hover {
+    background-color: darken(@bg-light, 5%);
+  }
+
+  .name {
+    font-family: "Blogger Sans Light", Arial, sans-serif;
+    font-size: 25px;
+    padding-bottom: 10px;
+  }
+
+  .decisionbuttons {
+    display: block;
+    text-align: center;
+  }
+}
+
+#categoryinput {
+  margin-top: 15px;
+}
+
+.set-decision {
+  display: inline;
+}
+
+div.btn-group {
+  margin: 0 auto;
+  text-align: center;
+  width: inherit;
+  display: inline-block;
+}
+
+.status {
+  float: right;
+  &.Accepted {
+    color: @success;
+  }
+  &.Waitlisted {
+    color: @neutral;
+  }
+  &.Rejected {
+    color: @error;
+  }
+}
+
+/*
+REVIEW APPS
+*/
+.review-body {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.review-footer {
+  a.btn {
+    float: right;
+  }
+}

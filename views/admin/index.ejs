@@ -1,0 +1,79 @@
+<% include ../_header %>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">admin overview</h1>
+            </div>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab"
+                                                          data-toggle="tab">Summary</a></li>
+                <li role="presentation"><a href="#top-schools" aria-controls="top-schools" role="tab" data-toggle="tab">Top
+                        Schools</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="summary">
+                    <h2>Applicants</h2>
+                    <h5>Welcome back! There are currently <%= applicants.total %> applicants from <%= schools.length %>
+                        different schools.
+                        Here's a
+                        rough breakdown of application status:</h5>
+                    <ul>
+                        <li><%= applicants.pending %> pending review</li>
+                        <li><%= applicants.accepted %> accepted <!--(450 max)--></li>
+                        <li><%= applicants.waitlisted %> waitlisted</li>
+                        <li><%= applicants.rejected %> rejected</li>
+                    </ul>
+                    <!--Our max capacity is 410 people. With an estimated 10% attrition rate, we should accept 450 people.-->
+
+                    <h2>Attendees</h2>
+                    Out of <%= applicants.accepted %> we accepted:
+                    <ul>
+                        <li>x accepted their invitations</li>
+                        <li>x declined their invitations</li>
+                    </ul>
+
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="top-schools">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Rank</th>
+                            <th>School Name</th>
+                            <th class="text-center">Applicants</th>
+                            <th class="text-center">Accepted</th>
+                            <th class="text-center">Waitlisted</th>
+                            <th class="text-center">Rejected</th>
+                            <th class="text-center">Pending</th>
+                        </tr>
+                        <% for (var i = 0; i < schools.length; i++) { %>
+                        <tr>
+                            <td><%= i + 1 %></td>
+                            <td><%= schools[i].name %></td>
+                            <td class="text-center"><%= schools[i].total %></td>
+                            <td class="text-center"><%= schools[i].accepted %></td>
+                            <td class="text-center"><%= schools[i].waitlisted %></td>
+                            <td class="text-center"><%= schools[i].rejected %></td>
+                            <td class="text-center"><%= schools[i].pending %></td>
+                        </tr>
+                        <% } %>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="messages">...</div>
+                <div role="tabpanel" class="tab-pane" id="settings">...</div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script src="/js/admin.js"></script>
+<% include ../_footer %>

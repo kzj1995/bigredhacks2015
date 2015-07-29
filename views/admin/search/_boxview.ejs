@@ -1,0 +1,42 @@
+<% for (var i = 0; i < applicants.length; i++) { %>
+<div class="applicant" data-pubid="<%= applicants[i].pubid %>">
+    <a class="page" href="/admin/user/<%= applicants[i].pubid %>">
+        <div class="name">
+            <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
+        </div>
+    </a>
+    <ul class="info">
+        <li><b>Email:</b> <%= applicants[i].email %></li>
+        <li><b>School:</b> <%= applicants[i].school.name %></li>
+        <li><b>Year:</b> <%= applicants[i].school.year %></li>
+        <% if (applicants[i].team.length > 0) { %>
+        <li>
+            <b>Team Members: </b>
+            <ul>
+                <% for (var j = 0; j < applicants[i].team.length; j++) { %>
+                <% if (applicants[i].team[j].pubid != applicants[i].pubid) { %>
+                <li>
+                    <a href="/admin/user/<%= applicants[i].team[j].pubid %>">
+                        <%= applicants[i].team[j].name.last %>, <%= applicants[i].team[j].name.first %>
+                    </a>
+                </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </li>
+        <% } %>
+        <li>
+            <a href="http://files.bigredhacks.com/resume/<%= applicants[i].app.resume %>">Resume</a>
+        </li>
+    </ul>
+    <div class="decisionbuttons">
+        <span class="status-text"><%= applicants[i].internal.status %></span> <br/>
+
+        <div class="btn-group np-enabled" role="group">
+            <button class="btn btn-success btn-accept" data-status="Accepted">Accept</button>
+            <button class="btn btn-primary btn-waitlist" data-status="Waitlisted">Waitlist</button>
+            <button class="btn btn-danger btn-reject" data-status="Rejected">Reject</button>
+        </div>
+    </div>
+</div>
+<% } %>

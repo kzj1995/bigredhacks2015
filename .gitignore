@@ -35,6 +35,7 @@ node_modules
 .lock-wscript
 .cache
 *.map.js
+/public/css/admin.css
 /public/css/_global.css
 /public/css/dashboard.css
 /public/css/index.css

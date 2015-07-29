@@ -47,12 +47,14 @@ var userSchema = new mongoose.Schema({
         teamwithcornell: {type: Boolean, default: false},
         busid: {type: String, default: null}, //@todo implement later
         rating: {type: Number, min: 0, max: 5, default: 0},
-        status: {type: String, enum: en.status},
+        status: {type: String, enum: en.user.status, default: "Pending"},
         going: {type: Boolean}
     },
     passwordtoken: String,
     created_at: {type: Date, default: Date.now},
-    modified_at: {type: Date, default: Date.now}
+    modified_at: {type: Date, default: Date.now},
+    role: {type: String, enum: en.user.role, default: "user"},
+    team: Array //virtual property used to populate team members
 });
 
 //full name of user
