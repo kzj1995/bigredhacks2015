@@ -294,7 +294,7 @@ function _runQuery(queryString, callback) {
             .match(query.match)
             .sort('lastname')
             .exec(function (err, applicants) {
-                if (err) endOfCall(err);
+                if (err) callback(err);
                 else {
                     callback(null, _.map(applicants, function (x) {
                         return x.document

@@ -166,7 +166,7 @@ $('document').ready(function () {
     });
 
     //handle decision radio buttons for search view
-    $('input[type=radio][name=status]').on('change', function () {
+    $('.decision-radio input[type=radio][name=status]').on('change', function () {
         var _this = this;
         var newStatus = $(_this).val();
         var radios = $(_this).parents(".decision-radio").find("input[type=radio]");
