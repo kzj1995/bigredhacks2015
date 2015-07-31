@@ -184,8 +184,11 @@ router.get('/search', function (req, res, next) {
     }
 
     _runQuery(req.query, function (err, applicants) {
+        if (err) {
+            console.log(err);
+        }
         if (req.query.render == "table") {
-            endOfCall(err, applicants);
+            endOfCall(null, applicants);
         }
         else {
             _fillTeamMembers(applicants, endOfCall);

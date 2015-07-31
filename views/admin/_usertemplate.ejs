@@ -58,16 +58,29 @@
         var gh_disabled = user.app.github == "" ? "disabled" : "";
         var lk_disabled = user.app.linkedin == "" ? "disabled" : "";
         //normalize github
-        var gh_url = user.app.github.toLowerCase().indexOf("github.com") == -1 ? "https://github.com/" : "";
+        gh_url = (user.app.github.toLowerCase().indexOf("github.com") == -1 ? "https://github.com/" : "") + user.app.github;
+        //normalize linkedin (append http to force non-relative url)
+        var linkedin = user.app.linkedin.toLowerCase();
+        var li_url;
+        if (linkedin.indexOf("http") != -1) {
+            li_url = linkedin;
+        } else {
+            li_url = "https://" + linkedin;
+        }
         %>
         <a type="button" class="btn btn-default" href="http://files.bigredhacks.com/resume/<%= user.app.resume %>"
            target="_blank"><i class="fa fa-file-pdf-o"></i> Resume</a>
-        <a type="button" class="btn btn-default" href="<%= gh_url + user.app.github %>"
+        <a type="button" class="btn btn-default" href="<%= gh_url %>"
            target="_blank"<%= gh_disabled %>><i class="fa fa-github"></i> Github</a>
-        <a type="button" class="btn btn-default" href="<%= user.app.linkedin %>" target="_blank"<%= lk_disabled %>><i
+        <a type="button" class="btn btn-default" href="<%= li_url %>" target="_blank"<%= lk_disabled %>><i
                     class="fa my-fa-linkedin-square"></i> Linkedin</a>
         <br/><br/>
 
+        <div >
+            <embed src="http://files.bigredhacks.com/resume/<%= user.app.resume %>" width="75%" height="400"
+                   type='application/pdf' class="center-block">
+        </div>
+        <br/><br/>
         <div>
             First hackathon?
             <p><%= user.app.experience %></p>
