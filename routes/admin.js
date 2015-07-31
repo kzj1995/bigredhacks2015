@@ -7,6 +7,7 @@ var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
 var Team = require('../models/team.js');
+var Bus = require('../models/bus.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -197,6 +198,7 @@ router.get('/search', function (req, res, next) {
     }
 });
 
+/* GET Review page to review a random applicant who hasn't been reviewed yet */
 router.get('/review', function (req, res, next) {
     //todo remove exists in 2016 deployment
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
@@ -303,5 +305,22 @@ function _runQuery(queryString, callback) {
     }
 
 }
+
+/* GET page to see bus information */
+router.get('/businfo', function (req, res, next) {
+    Bus.find().exec(function(err, buses){
+        res.render('admin/businfo', {
+            title: 'Admin Dashboard - Bus Information',
+            buses: buses
+        })
+    });
+});
+
+/* POST new bus to list of buses */
+router.post('/businfo', function (req, res, next) {
+    //TODO - KJ tomorrow
+
+    res.redirect('/admin/businfo');
+});
 
 module.exports = router;

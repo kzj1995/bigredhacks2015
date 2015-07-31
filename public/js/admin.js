@@ -216,7 +216,20 @@ $('document').ready(function () {
             //$("#user-roles").append('<tr>name coming soon</tr><tr>'+email+'</tr><tr>'+role+'</tr>');
             location.reload();
         })
-    })
+    });
+
+    //add college to list of bus stops
+    $('#addcollege').on('click', function () {
+        var newCollege = $("#college").val();
+        var currentBusStops = $("#busstops").val();
+        if(currentBusStops != "") {
+            $("#busstops").val(currentBusStops+","+newCollege);
+        }
+        else{
+            $("#busstops").val(newCollege);
+        }
+        $("#college").val("");
+    });
 });
 
 

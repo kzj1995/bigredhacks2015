@@ -46,5 +46,4 @@ $('.typeahead').typeahead({
     source: engine.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
     $("#collegeid").val(datum.id);
-
 });
