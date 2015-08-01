@@ -5,10 +5,10 @@ var User = require('./user');
 
 var busSchema = new mongoose.Schema({
     name: {type: String, required: true, index: true}, //bus route name
-    stops: {
-        collegeids: [{type: mongoose.Schema.Types.ObjectId, ref: "College"}],
-        collegenames: [{type: String}]
-    },
+    stops: [{
+        collegeid: {type: String, ref: "College", index: true},
+        collegename: String
+    }],
     capacity: {type: Number},
     members: [{
         name: String,

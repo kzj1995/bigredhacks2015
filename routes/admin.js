@@ -318,9 +318,25 @@ router.get('/businfo', function (req, res, next) {
 
 /* POST new bus to list of buses */
 router.post('/businfo', function (req, res, next) {
-    //TODO - KJ tomorrow
-
-    res.redirect('/admin/businfo');
+    var collegeidlist = req.body.collegeidlist.split(",");
+    var collegenamelist = req.body.busstops.split(",");
+    var stops = [];
+    for(var i = 0; i < collegeidlist.length; i++) {
+        stops.push({
+            collegeid: collegeidlist[i],
+            collegename: collegenamelist[i]
+        });
+    }
+    var newBus = new Bus({
+        name: req.body.busname, //bus route name
+        stops: stops,
+        capacity: parseInt(req.body.buscapacity),
+        members: []
+    });
+    newBus.save(function (err) {
+        if (err) console.log(err);
+        res.redirect('/admin/businfo');
+    });
 });
 
 module.exports = router;

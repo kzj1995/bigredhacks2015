@@ -47,3 +47,21 @@ $('.typeahead').typeahead({
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
     $("#collegeid").val(datum.id);
 });
+
+$('.typeaheadlist').typeahead({
+    hint: true,
+    highlight: true,
+    autoselect: false,
+    minLength: 3
+}, {
+    displayKey: 'name', // if not set, will default to 'value',
+    source: engine.ttAdapter()
+}).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
+    var currentidlist = $("#collegeidlist").val();
+    if (currentidlist != "") {
+        $("#collegeidlist").val(currentidlist+","+datum.id);
+    }
+    else{
+        $("#collegeidlist").val(datum.id);
+    }
+});

@@ -18,16 +18,18 @@
                         </div>
                         <ul class="businfo">
                           <li>
-                            Bus Stops:
+                            <b>Bus Stops:</b>
                             <ul>
-
+                              <% for (var j = 0; j < buses[i].stops.length; j = j + 1) { %>
+                                <li> <%= buses[i].stops[j].collegename %> </li>
+                              <% } %>
                             </ul>
                           </li>
                           <li>
-                            Current Number on Bus:
+                            <b>Current Number on Bus:</b> <%= buses[i].members.length %>
                           </li>
                           <li>
-                            Max Capacity:
+                            <b>Max Capacity:</b> <%= buses[i].capacity %>
                           </li>
                         </ul>
                     </div>
@@ -47,16 +49,16 @@
                             <input type="text" name="busstops" id="busstops" class="form-control" value=""
                             placeholder="List of Bus Stops">
                             <label id="collegesearch" for="collegesearch">Search by College</label>
-                            <input type="hidden" id="collegeid" name="collegeid" class="form-control"
+                            <input type="hidden" id="collegeidlist" name="collegeidlist" class="form-control"
                                 value="" required/>
-                            <input type="text" name="college" id="college" class="form-control typeahead"
+                            <input type="text" name="college" id="college" class="form-control typeaheadlist"
                                 placeholder="School Name"
                                 value="">
                             <input type="button" value="add college" name="addcollege" id="addcollege" class="btn btn-primary">
                         </div>
                         <div class="form-group">
-                            <label for="busname" class="businfolabel"><h4>Bus Capacity</h4></label>
-                            <input type="text" name="busname" id="busname" class="form-control" value=""
+                            <label for="buscapacity" class="buscapacitylabel"><h4>Bus Capacity</h4></label>
+                            <input type="text" name="buscapacity" id="buscapacity" class="form-control" value=""
                                 placeholder="Enter Capacity Number">
                         </div>
                         <div id="createbus">
