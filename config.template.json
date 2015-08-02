@@ -16,6 +16,6 @@
   },
   "admin": {
     "email": "",
-    "reg_open": "true"
+    "reg_open": true
   }
 }

@@ -30,7 +30,7 @@ var teamwithcornell = teamwithcornell || false;
             <div class="header-wrapper">
                 <h2 class="page-title">status</h2>
             </div>
-            <% if (config.admin.reg_open == 'true') { %>
+            <% if (middlehelp.isRegistrationOpen()) { %>
             <p>registration process is still open.</p>
             <% } else { %>
             <p>Registration is closed.</p>
@@ -41,7 +41,7 @@ var teamwithcornell = teamwithcornell || false;
                 <h2 class="page-title">my team</h2>
             </div>
             <div>
-                <% if (config.admin.reg_open == 'true') { %>
+                <% if (middlehelp.isRegistrationOpen()) { %>
                 <p>you may add up to 4 team members. cornell students do not have a team id, click the checkbox
                     instead.</p>
 
@@ -58,7 +58,7 @@ var teamwithcornell = teamwithcornell || false;
                 <ul class="team-list">
 
                     <% if(team.length == 0) { %>
-                        <%- config.admin.reg_open == 'true' ? "" : "<p>You are not in a team.</p>" %>
+                    <%- middlehelp.isRegistrationOpen() ? "" : "<p>You are not in a team.</p>" %>
                     <%
                     }
                     else {
@@ -68,7 +68,7 @@ var teamwithcornell = teamwithcornell || false;
 
                     <% } %>
                 </ul>
-                <% if (config.admin.reg_open == 'true') { %>
+                <% if (middlehelp.isRegistrationOpen()) { %>
                 <%- (team.length > 0) ? '<a class="btn btn-red" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
             </div>

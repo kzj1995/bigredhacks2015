@@ -37,7 +37,7 @@ middle.allRequests = function (req, res, next) {
 };
 
 middle.requireRegistrationOpen = function (req, res, next) {
-    if (config.admin.reg_open == "true") {
+    if (this.helper.isRegistrationOpen()) {
         return next();
     }
     else {
@@ -47,7 +47,7 @@ middle.requireRegistrationOpen = function (req, res, next) {
 
 middle.helper = {
     isRegistrationOpen: function() {
-        if (config.admin.reg_open == "true") {
+        if (config.admin.reg_open) {
             return true;
         }
         else return false;

@@ -52,7 +52,7 @@
         <span class="announcement">
             <!--<h3>General applications are closing! </h3>
             <h3>Last day to apply is August 01.</h3>-->
-            <h3>Registration has closed.</h3>
+            <h3>registration is closed! cornell students: check back soon.</h3>
         </span>
         <br/>
 
@@ -60,7 +60,7 @@
         <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
         <% }
         else { %>
-            <% if (config.admin.reg_open == 'true') { %>
+            <% if (middlehelp.isRegistrationOpen()) { %>
             <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
             &nbsp;&nbsp;&nbsp;
         <% } %>
