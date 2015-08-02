@@ -50,8 +50,9 @@
         <br/>
 
         <span class="announcement">
-            <h3>General applications are closing! </h3>
-            <h3>Last day to apply is August 01.</h3>
+            <!--<h3>General applications are closing! </h3>
+            <h3>Last day to apply is August 01.</h3>-->
+            <h3>Registration has closed.</h3>
         </span>
         <br/>
 
@@ -59,8 +60,10 @@
         <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
         <% }
         else { %>
-        <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
-        &nbsp;&nbsp;&nbsp;
+            <% if (config.admin.reg_open == 'true') { %>
+            <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
+            &nbsp;&nbsp;&nbsp;
+        <% } %>
         <a href="/login" class="btn btn-red fixed-width">login</a> <br/>
         <% } %>
     </div>

@@ -15,6 +15,7 @@
     "l_applicants": ""
   },
   "admin": {
-    "email": ""
+    "email": "",
+    "reg_open": "true"
   }
 }

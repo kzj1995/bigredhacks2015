@@ -10,6 +10,7 @@ var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
+var middle = require('./middleware');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
