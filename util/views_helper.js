@@ -81,7 +81,7 @@ _export.generateUrlList = function (listItems, active) {
     var array = [];
     active = active.split(/[?#]/)[0]; //remove query string, hash
     for (var i = 0; i < listItems.length; i++) {
-        if (listItems[i].hasOwnProperty("reg_open") && !listItems[i].regOpen && !middle.helper.isRegistrationOpen()) {
+        if (listItems[i].hasOwnProperty("reg_open") && listItems[i].reg_open && !middle.helper.isRegistrationOpen()) {
             continue;
         }
         var classes = "";

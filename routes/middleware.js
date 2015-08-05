@@ -1,5 +1,13 @@
+"use strict";
 var config = require('../config');
 var middle = {};
+
+function _isRegistrationOpen() {
+    if (config.admin.reg_open) {
+        return true;
+    }
+    else return false;
+}
 
 middle.requireNoAuthentication = function (req, res, next) {
     if (req.user) {
@@ -37,7 +45,7 @@ middle.allRequests = function (req, res, next) {
 };
 
 middle.requireRegistrationOpen = function (req, res, next) {
-    if (this.helper.isRegistrationOpen()) {
+    if (_isRegistrationOpen()) {
         return next();
     }
     else {
@@ -46,12 +54,7 @@ middle.requireRegistrationOpen = function (req, res, next) {
 };
 
 middle.helper = {
-    isRegistrationOpen: function() {
-        if (config.admin.reg_open) {
-            return true;
-        }
-        else return false;
-    }
+    isRegistrationOpen: _isRegistrationOpen
 };
 
 module.exports = middle;
