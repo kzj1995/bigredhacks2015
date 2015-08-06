@@ -230,6 +230,63 @@ $('document').ready(function () {
         }
         $("#college").val("");
     });
+
+    //edit bus from list of buses
+    $('.editbus').on('click', function () {
+        var _this = this;
+        //Edit bus route name
+        var currentBusName = $(_this).parents(".businfobox").find(".busname").text().trim();
+        $(_this).parents(".businfobox").find(".busname").replaceWith("<input type='text' name='busname' value='" +
+        currentBusName + "' />");
+        //Allow for removal of current colleges (bus stops)
+        $(_this).parents(".businfobox").find(".removecollege").show();
+        //Allow for addition of new colleges (bus stops) to the bus route
+        $(_this).parents(".businfobox").find(".editbusstops").show();
+        //Edit max capacity of bus
+        var currentBusCapacity = $(_this).parents(".businfobox").find(".maxcapacitynumber").text().trim();
+        $(_this).parents(".businfobox").find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:" +
+        "</b> <input type='text' name='maxcapacitynumber' value='" + currentBusCapacity + "' /></li>");
+        //Replace "edit" and "remove" buttons with "update" and "cancel"
+        $(_this).parent().find(".btn.btn-primary.removebus").replaceWith("<a href='/admin/businfo'><input " +
+        "type='button' value='cancel' name='cancel' class='btn btn-primary cancel'></a>");
+        $(_this).parent().find(".btn.btn-primary.editbus").replaceWith("<input type='submit' value='update' " +
+        "name='update' class='btn btn-primary update'>");
+    });
+
+    //remove bus from list of buses
+    $('.removebus').on('click', function () {
+        var _this = this;
+        $.ajax({
+            type: "POST",
+            url: "/admin/removeBus",
+            data: {
+                busname: $(_this).parents(".businfobox").data("name")
+            },
+            success: function (data) {
+                $(_this).parents(".businfobox").remove();
+                $(".header-wrapper-leaf").after("<h3 id='nobuses'> No Buses Currently </h3>");
+            },
+            error: function (e) {
+                console.log("Couldn't remove the bus!");
+            }
+        });
+    });
+
+    //remove college from list of colleges
+    $("li").on('click', '.removecollege', function () {
+        $(this).parent().remove();
+    });
+
+    //add new college to list of colleges
+    $('#addnewcollege').on('click', function () {
+        var newcollegeid = $(this).parents(".businfobox").find("#collegeid").val()
+        var newcollege = $(this).parents(".businfobox").find("#newcollege").val()
+        $(this).parents(".businfobox").find(".busstops").append("<li data-collegeid='"+ newcollegeid + "'>" +
+        newcollege + "&nbsp;&nbsp;&nbsp;<input type='button' class='removecollege' name='busname' " +
+        "value='Remove' /></li>");
+        $(this).parents(".businfobox").find(".removecollege").show();
+    });
+
 });
 
 

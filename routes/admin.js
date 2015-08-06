@@ -339,4 +339,12 @@ router.post('/businfo', function (req, res, next) {
     });
 });
 
+/* POST remove bus from list of buses */
+router.post('/removeBus', function (req, res, next) {
+    Bus.remove({name: req.body.busname}, function (err) {
+        if (err) return res.sendStatus(500);
+        else return res.sendStatus(200);
+    });
+});
+
 module.exports = router;
