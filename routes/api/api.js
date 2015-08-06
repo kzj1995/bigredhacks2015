@@ -5,7 +5,7 @@ var Colleges = require('../../models/college.js');
 var User = require('../../models/user.js');
 var middle = require('../middleware');
 
-router.get('/colleges', middle.requireRegistrationOpen, function (req, res, next) {
+router.get('/colleges', function (req, res, next) {
     Colleges.getAll(function (err, data) {
         if (err) console.log(err);
         else res.send(data);
