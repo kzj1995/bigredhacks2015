@@ -12,7 +12,7 @@
                 <h3 id="nobuses"> No Buses Currently </h3>
             <% } else { %>
                 <% for (var i = 0; i < buses.length; i = i + 1) { %>
-                    <div class="businfobox" data-name="<%= buses[i].name %>">
+                    <div class="businfobox" data-busid="<%= buses[i].id %>">
                         <form action="/admin/updateBus" method="POST">
                             <div class="busname">
                                 <%= buses[i].name %>
@@ -23,7 +23,7 @@
                                 <ul class="busstops">
                                   <% for (var j = 0; j < buses[i].stops.length; j = j + 1) { %>
                                     <li data-collegeid="<%= buses[i].stops[j].collegeid %>">
-                                        <%= buses[i].stops[j].collegename %>
+                                        <span class="collegename"><%= buses[i].stops[j].collegename %></span>
                                         &nbsp;&nbsp;&nbsp;
                                         <input type="button" class="removecollege" name="busname" value="Remove" />
                                     </li>

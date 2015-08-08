@@ -341,9 +341,31 @@ router.post('/businfo', function (req, res, next) {
 
 /* POST remove bus from list of buses */
 router.post('/removeBus', function (req, res, next) {
-    Bus.remove({name: req.body.busname}, function (err) {
+    Bus.remove({_id: req.body.busid}, function (err) {
         if (err) return res.sendStatus(500);
         else return res.sendStatus(200);
+    });
+});
+
+/* POST update bus in list of buses */
+router.post('/updateBus', function(req, res, next) {
+    Bus.findOne({_id: req.body.busid}, function (err, bus) {
+        var collegeidlist = req.body.collegeidlist.split(",");
+        var collegenamelist = req.body.busstops.split(",");
+        var stops = [];
+        for(var i = 0; i < collegeidlist.length; i++) {
+            stops.push({
+                collegeid: collegeidlist[i],
+                collegename: collegenamelist[i]
+            });
+        }
+        bus.name = req.body.busname; //bus route name
+        bus.stops = stops;
+        bus.capacity = parseInt(req.body.buscapacity);
+        bus.save(function (err) {
+            if (err) return res.sendStatus(500);
+            else return res.sendStatus(200);
+        });
     });
 });
 

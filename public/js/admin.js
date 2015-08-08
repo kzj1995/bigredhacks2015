@@ -233,23 +233,23 @@ $('document').ready(function () {
 
     //edit bus from list of buses
     $('.editbus').on('click', function () {
-        var _this = this;
+        var businfobox = $(this).parents(".businfobox");
         //Edit bus route name
-        var currentBusName = $(_this).parents(".businfobox").find(".busname").text().trim();
-        $(_this).parents(".businfobox").find(".busname").replaceWith("<input type='text' name='busname' value='" +
+        var currentBusName = businfobox.find(".busname").text().trim();
+        businfobox.find(".busname").replaceWith("<input type='text' id='newbusname' name='newbusname' value='" +
         currentBusName + "' />");
         //Allow for removal of current colleges (bus stops)
-        $(_this).parents(".businfobox").find(".removecollege").show();
+        businfobox.find(".removecollege").show();
         //Allow for addition of new colleges (bus stops) to the bus route
-        $(_this).parents(".businfobox").find(".editbusstops").show();
+        businfobox.find(".editbusstops").show();
         //Edit max capacity of bus
-        var currentBusCapacity = $(_this).parents(".businfobox").find(".maxcapacitynumber").text().trim();
-        $(_this).parents(".businfobox").find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:" +
-        "</b> <input type='text' name='maxcapacitynumber' value='" + currentBusCapacity + "' /></li>");
+        var currentBusCapacity = businfobox.find(".maxcapacitynumber").text().trim();
+        businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:</b> <input type='text'" +
+        "id = 'maxcapacitynumber' name='maxcapacitynumber' value='" + currentBusCapacity + "' /></li>");
         //Replace "edit" and "remove" buttons with "update" and "cancel"
-        $(_this).parent().find(".btn.btn-primary.removebus").replaceWith("<a href='/admin/businfo'><input " +
+        $(this).parent().find(".btn.btn-primary.removebus").replaceWith("<a href='/admin/businfo'><input " +
         "type='button' value='cancel' name='cancel' class='btn btn-primary cancel'></a>");
-        $(_this).parent().find(".btn.btn-primary.editbus").replaceWith("<input type='submit' value='update' " +
+        $(this).parent().find(".btn.btn-primary.editbus").replaceWith("<input type='button' value='update' " +
         "name='update' class='btn btn-primary update'>");
     });
 
@@ -260,7 +260,7 @@ $('document').ready(function () {
             type: "POST",
             url: "/admin/removeBus",
             data: {
-                busname: $(_this).parents(".businfobox").data("name")
+                busid: $(_this).parents(".businfobox").data("busid")
             },
             success: function (data) {
                 $(_this).parents(".businfobox").remove();
@@ -279,12 +279,52 @@ $('document').ready(function () {
 
     //add new college to list of colleges
     $('#addnewcollege').on('click', function () {
-        var newcollegeid = $(this).parents(".businfobox").find("#collegeid").val()
-        var newcollege = $(this).parents(".businfobox").find("#newcollege").val()
-        $(this).parents(".businfobox").find(".busstops").append("<li data-collegeid='"+ newcollegeid + "'>" +
-        newcollege + "&nbsp;&nbsp;&nbsp;<input type='button' class='removecollege' name='busname' " +
-        "value='Remove' /></li>");
-        $(this).parents(".businfobox").find(".removecollege").show();
+        var businfobox = $(this).parents(".businfobox");
+        var newcollegeid = businfobox.find("#collegeid").val()
+        var newcollege = businfobox.find("#newcollege").val()
+        businfobox.find(".busstops").append("<li data-collegeid='"+ newcollegeid + "'>" +
+        "<span class='collegename'>" + newcollege + "</span> &nbsp;&nbsp;&nbsp; <input type='button'" +
+        "class='removecollege' name='busname' value='Remove' /></li>");
+        businfobox.find(".removecollege").show();
+        businfobox.find("#newcollege").val("");
+    });
+
+    //update bus from list of buses
+    $(".modifybus").on('click', '.btn.btn-primary.update', function () {
+        var businfobox = $(this).parents(".businfobox")
+        var collegeidlist = "";
+        var busstops = "";
+        for(var i = 0; i < businfobox.find(".busstops li").length; i++){
+            collegeidlist = collegeidlist + businfobox.find(".busstops li").eq(i).data("collegeid") + ",";
+            busstops = busstops + businfobox.find(".collegename").eq(i).text() + ",";
+        }
+        $.ajax({
+            type: "POST",
+            url: "/admin/updateBus",
+            data: {
+                busid: businfobox.data("busid"),
+                busname: businfobox.find("#newbusname").val(),
+                collegeidlist: collegeidlist.substring(0,collegeidlist.length - 1),
+                busstops: busstops.substring(0, busstops.length - 1),
+                buscapacity: businfobox.find("#maxcapacitynumber").val()
+            },
+            success: function (data) {
+                businfobox.find("#newbusname").replaceWith("<div class='busname'>"+businfobox.find("#newbusname").val()+
+                "</div>");
+                businfobox.find(".removecollege").hide();
+                businfobox.find(".editbusstops").hide();
+                businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:</b>" +
+                "<span class='maxcapacitynumber'>" + businfobox.find("#maxcapacitynumber").val() + "</span> </li>");
+                businfobox.find(".btn.btn-primary.cancel").replaceWith("<input type='button' value='remove'" +
+                "name='removebus' class='btn btn-primary removebus'>");
+                businfobox.find(".btn.btn-primary.update").replaceWith("<input type='button' value='edit'" +
+                "name='editbus' class='btn btn-primary editbus'>");
+
+            },
+            error: function (e) {
+                console.log("Couldn't remove the bus!");
+            }
+        });
     });
 
 });
