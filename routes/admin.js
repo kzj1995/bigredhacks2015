@@ -12,6 +12,10 @@ var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
 
+var Lock = require('./lock.js');
+
+var lock = new Lock();
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.redirect('/admin/dashboard');
@@ -117,23 +121,33 @@ router.get('/dashboard', function (req, res, next) {
 /* GET Detail view of an applicant */
 router.get('/user/:pubid', function (req, res, next) {
     var pubid = req.params.pubid;
-    User.where({pubid: pubid}).findOne(function (err, user) {
+    if (lock.get(callback)) {
+        User.where({pubid: pubid}).findOne(function (err, user) {
+            if (err) {
+                console.log(err);
+                //todo return on error
+            }
+            else {
+                _fillTeamMembers(user, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.render('admin/user', {
+                        currentUser: user,
+                        title: 'Review User'
+                    })
+                });
+                lock.free(this);
+            }
+        });
+    } else {
         if (err) {
             console.log(err);
-            //todo return on error
         }
-        else {
-            _fillTeamMembers(user, function (err, user) {
-                if (err) {
-                    console.log(err);
-                }
-                res.render('admin/user', {
-                    currentUser: user,
-                    title: 'Review User'
-                })
-            });
-        }
-    });
+        res.redirect('admin/review');
+    }
+
+
 });
 
 router.get('/team/:teamid', function (req, res, next) {
