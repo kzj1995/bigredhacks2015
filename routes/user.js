@@ -6,10 +6,11 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
-
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
+var Bus = require('../models/bus.js');
+var College = require('../models/college.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
@@ -44,6 +45,30 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 return done(err, members);
             })
+        },
+        bus: function (done) {
+            var userbus = null;
+            Bus.find({}).exec(function(err, buses) {
+                buses.forEach(function(bus, busindex) {
+                    bus.stops.forEach(function(stop, stopindex) {
+                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                        function (err, colleges) {
+                            if (colleges.length == 1) {
+                                userbus = bus;
+                                userbus.message = "a bus stops at your school:";
+                            }
+                            else if (colleges[0].city == colleges[1].city && colleges[0].state == colleges[1].state &&
+                            colleges[0].zip == colleges[1].zip) {
+                                userbus = bus;
+                                userbus.message = "a bus stops at another school in your city:";
+                            }
+                            if (busindex == buses.length - 1 && stopindex == bus.stops.length - 1) {
+                                return done(null, userbus);
+                            }
+                        });
+                    });
+                });
+            });
         }
     }, function (err, results) {
         if (err) {
@@ -55,6 +80,7 @@ router.get('/dashboard', function (req, res, next) {
             team: results.members,
             userid: req.user.pubid,
             teamwithcornell: req.user.internal.teamwithcornell,
+            bus: results.bus,
             title: "Dashboard"
         });
     })
