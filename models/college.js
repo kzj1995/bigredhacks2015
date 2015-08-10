@@ -27,7 +27,8 @@ collegeSchema.index({loc: '2dsphere'});
 
 //display name of college
 collegeSchema.virtual('display').get(function () {
-    return this.name + " - " + this.state;
+    return this.name + " - " + this.state;bs
+
 });
 
 /**

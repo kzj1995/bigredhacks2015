@@ -48,6 +48,7 @@ router.get('/dashboard', function (req, res, next) {
         },
         bus: function (done) {
             var userbus = null;
+            var closestdistance = null;
             Bus.find({}).exec(function(err, buses) {
                 buses.forEach(function(bus, busindex) {
                     bus.stops.forEach(function(stop, stopindex) {
@@ -56,11 +57,21 @@ router.get('/dashboard', function (req, res, next) {
                             if (colleges.length == 1) {
                                 userbus = bus;
                                 userbus.message = "a bus stops at your school:";
+                                closestdistance = 0;
                             }
-                            else if (colleges[0].city == colleges[1].city && colleges[0].state == colleges[1].state &&
-                            colleges[0].zip == colleges[1].zip) {
-                                userbus = bus;
-                                userbus.message = "a bus stops at another school in your city:";
+                            else if (colleges.length == 2) {
+                                var distanceBetweenColleges = getDistanceBetweenCollegesInMiles(
+                                colleges[0].loc.coordinates[1], -colleges[0].loc.coordinates[0],
+                                colleges[1].loc.coordinates[1], -colleges[1].loc.coordinates[0]);
+                                if(distanceBetweenColleges <= 20) {
+                                    if(closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                        userbus = bus;
+                                        userbus.message = "a bus stops near your school at " + stop.collegename +
+                                        " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
+                                        " miles away):";
+                                        closestdistance = distanceBetweenColleges;
+                                    }
+                                }
                             }
                             if (busindex == buses.length - 1 && stopindex == bus.stops.length - 1) {
                                 return done(null, userbus);
@@ -85,6 +96,25 @@ router.get('/dashboard', function (req, res, next) {
         });
     })
 });
+
+/**
+ * Return distance in miles between two colleges given their latitudes and longitudes
+ * @param lat1 latitude of first college
+ * @parm lon1 longitutde of first college
+ * @param lat2 latitude of second college
+ * @param long2 longitude of second college
+ * @returns {number} represents distance in miles between the two colleges
+ */
+function getDistanceBetweenCollegesInMiles(lat1, lon1, lat2, lon2){
+    var radius = 3958.754641; // Radius of the earth in miles
+    var dLat = (Math.PI/180) * (lat2-lat1);
+    var dLon = (Math.PI/180) * (lon2-lon1);
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos((Math.PI/180) * (lat1)) * Math.cos((Math.PI/180) * (lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var distance = radius * c; // Distance in miles
+    return distance;
+}
 
 /* GET edit registration page of logged in user */
 router.get('/dashboard/edit', function (req, res, next) {
