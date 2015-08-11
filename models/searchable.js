@@ -44,6 +44,10 @@ searchable.user = [
     },
     {
         alias: "role"
+    },
+    {
+        alias: "teamwithcornell",
+        path: "internal.teamwithcornell"
     }
 ];
 

@@ -46,7 +46,6 @@ var userSchema = new mongoose.Schema({
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
         teamwithcornell: {type: Boolean, default: false},
         busid: {type: String, default: null}, //@todo implement later
-        rating: {type: Number, min: 0, max: 5, default: 0},
         status: {type: String, enum: en.user.status, default: "Pending"},
         going: {type: Boolean}
     },

@@ -47,6 +47,9 @@ var builder = function queryBuilder(query, schema) {
             }
             else valToMatch = v;
 
+            //convert string to boolean
+            valToMatch = normalize_bool(valToMatch);
+
             //generate projection
             if (path.length > 1) {
 
@@ -92,4 +95,18 @@ var _toTextMatch = function _toTextMatch(terms) {
     return new RegExp(regexString, 'ig');
 };
 
+/**
+ * convert a string to bool
+ * @param string
+ * @returns {*}
+ */
+function normalize_bool(string) {
+    if (string.toLowerCase() == "true") {
+        return true;
+    }
+    else if (string.toLowerCase() == "false") {
+        return false;
+    }
+    return string;
+}
 module.exports = builder;
