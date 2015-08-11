@@ -89,7 +89,7 @@ router.get('/', function (req, res, next) {
 router.get('/dashboard', function (req, res, next) {
 
     async.parallel({
-        applicants: aggregate.applicants.overall,
+        applicants: aggregate.applicants.byMatch(USER_FILTER),
         schools: function (done) {
             User.aggregate([
                 {$match: USER_FILTER},
@@ -247,10 +247,7 @@ router.get('/review', function (req, res, next) {
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
                     school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
-                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})), //explicit bus assignment
-                    bus_impl: function (done) {
-                        done(null, null)
-                    } //implicit bus assignment
+                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})) //explicit bus assignment
                 }, function (err, stats) {
                     if (err) {
                         console.error(err);
