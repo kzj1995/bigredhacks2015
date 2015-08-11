@@ -45,10 +45,10 @@ var builder = function queryBuilder(query, schema) {
                 //todo spaces at end of string break this
                 valToMatch = _toTextMatch(v.split(" "));
             }
-            else valToMatch = v;
-
-            //convert string to boolean
-            valToMatch = normalize_bool(valToMatch);
+            else {
+                //convert string to bool, only possible when not fuzzy
+                valToMatch = normalize_bool(v);
+            }
 
             //generate projection
             if (path.length > 1) {
