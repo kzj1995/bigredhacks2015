@@ -23,7 +23,7 @@ The application uses the following APIs:
 * Mandrill
 
 ### Deployment
-The app is configured to work with Heroku and Openshift hosting services. MongoDB is configured to work with MongoLab and Compose (`COMPOSE_URI`).
+The app is configured to work with Heroku and Openshift hosting services. MongoDB is configured to work with MongoLab (`MONGOLAB_URI`) and Compose (`COMPOSE_URI`).
  
 ### Contact
 The authors may be reached at [info@bigredhacks.com](info@bigredhacks.com).
