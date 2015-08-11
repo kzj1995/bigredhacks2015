@@ -56,7 +56,8 @@
                         </tr>
                         <% for (var i = 0; i < schools.length; i++) { %>
                         <tr>
-                            <td><%= i + 1 %></td>
+                            <% var done = (schools[i].total == schools[i].accepted + schools[i].waitlisted + schools[i].rejected); %>
+                            <td class="<%= done ? "success" : "" %>"><%= i + 1 %></td>
                             <td><%= schools[i].name %></td>
                             <td class="text-center"><%= schools[i].total %></td>
                             <td class="text-center"><%= schools[i].accepted %></td>
