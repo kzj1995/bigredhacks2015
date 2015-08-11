@@ -235,10 +235,11 @@ router.get('/search', function (req, res, next) {
 router.get('/review', function (req, res, next) {
     //todo remove exists in 2016 deployment
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
-    query = _.extend(query, USER_FILTER);
+    query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
+        console.log(count);
         if (err) {
-            console.log(err)
+            console.log(err);
         }
         else {
             var rand = Math.floor(Math.random() * count);
