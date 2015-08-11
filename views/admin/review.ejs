@@ -1,3 +1,4 @@
+<% var user = currentUser || {}; %>
 <% include ../_header %>
 <body>
 <div class="container-fluid">
@@ -48,6 +49,7 @@
             </div>
             <div class="row review-body">
                 <% include _usertemplate %>
+                <% include _userteamtemplate %>
             </div>
             <div class="row review-footer">
                 <a class="btn btn-primary" href="/admin/review">Next Applicant <i class="fa fa-long-arrow-right"></i></a>

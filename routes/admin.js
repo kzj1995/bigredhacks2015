@@ -254,7 +254,7 @@ router.get('/review', function (req, res, next) {
                     }
                     res.render('admin/review', {
                         title: 'Admin Dashboard - Review',
-                        user: user,
+                        currentUser: user,
                         stats: stats
                     })
                 })
