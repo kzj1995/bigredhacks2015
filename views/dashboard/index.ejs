@@ -125,12 +125,17 @@ var teamwithcornell = teamwithcornell || false;
                           <% } %>
                         </ul>
                       </li>
-                      <li class="currentnumber">
+                      <li class="currentnumber" data-currentnumber="<%= bus.members.length %>">
                           <b>Current Number on Bus:</b> <%= bus.members.length %>
                       </li>
                       <li class="maxcapacity">
                           <b>Max Capacity:</b> <span class="maxcapacitynumber"> <%= bus.capacity %> </span>
                       </li>
+                      <% if (userbusid == bus.id) { %>
+                      <li class="userbusdecision"><b>Your Current Bus Decision:</b> Signed Up</li>
+                      <% } else { %>
+                      <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
+                      <% } %>
                     </ul>
                     <div class="busselection">
                         <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">

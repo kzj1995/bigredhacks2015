@@ -92,6 +92,7 @@ router.get('/dashboard', function (req, res, next) {
             userid: req.user.pubid,
             teamwithcornell: req.user.internal.teamwithcornell,
             bus: results.bus,
+            userbusid: req.user.internal.busid,
             title: "Dashboard"
         });
     })
@@ -100,7 +101,7 @@ router.get('/dashboard', function (req, res, next) {
 /**
  * Return distance in miles between two colleges given their latitudes and longitudes
  * @param lat1 latitude of first college
- * @parm lon1 longitutde of first college
+ * @param lon1 longitutde of first college
  * @param lat2 latitude of second college
  * @param long2 longitude of second college
  * @returns {number} represents distance in miles between the two colleges
@@ -271,6 +272,85 @@ router.post('/updateresume', function (req, res, next) {
     })
 });
 
+/* POST user bus decision */
+router.post('/busdecision', function(req, res){
+    var user = req.user;
+    if (req.body.decision == "signup") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if(bus.members.length < bus.capacity && user.internal.busid != req.body.busid) {
+                user.internal.busid = req.body.busid;
+                bus.members.push({
+                    name: user.name.last + ", " + user.name.first,
+                    college: user.school.name,
+                    id: user.id
+                });
+                bus.save(function(err) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        user.save(function (err) {
+                            if (err) {
+                                return res.sendStatus(500);
+                            }
+                            else {
+                                return res.sendStatus(200);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                return res.sendStatus(500);
+            }
+        });
+    }
+    else if (req.body.decision == "optout") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (user.internal.busid == req.body.busid) {
+                user.internal.busid = null;
+                var newmembers = [];
+                async.each(bus.members, function(member, callback) {
+                    if(member.id != user.id) {
+                        newmembers.push(member);
+                    }
+                    callback()
+                }, function (err) {
+                    bus.members = newmembers;
+                    bus.save(function (err) {
+                        if (err) {
+                            return res.sendStatus(500);
+                        }
+                        else {
+                            user.save(function (err) {
+                                if (err) {
+                                    return res.sendStatus(500);
+                                }
+                                else {
+                                    return res.sendStatus(200);
+                                }
+                            });
+                        }
+                    })
+                });
+            }
+            else {
+                user.internal.busid = null;
+                user.save(function (err) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        return res.sendStatus(200);
+                    }
+                });
+            }
+        });
+    }
+    else {
+        return res.sendStatus(500);
+    }
+});
 
 /* GET logout the current user */
 router.get('/logout', function (req, res) {
