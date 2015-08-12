@@ -20,6 +20,7 @@ var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth');
+var middle = require('./routes/middleware');
 
 var app = express();
 
@@ -78,41 +79,8 @@ else {
 
 app.use(subdomain({base: config.setup.url}));
 
-var _requireNoAuthentication = function (req, res, next) {
-    if (req.user) {
-        return res.redirect('/user/dashboard')
-    }
-    else {
-        return next();
-    }
-};
-
-var _requireAuthentication = function (req, res, next) {
-    if (req.user) {
-        return next();
-    }
-    else {
-        req.flash('error', 'Please login first.');
-        return res.redirect('/login');
-    }
-};
-
-var _requireAdmin = function (req, res, next) {
-    if (req.user && (req.user.role === "admin" || req.user.email == config.admin.email)) {
-        return next();
-    }
-    else {
-        req.flash('error', 'Please login first.');
-        return res.redirect('/login');
-    }
-};
-
 //generic middleware function
-app.use(function (req, res, next) {
-    res.locals.isUser = !!req.user;
-    res.locals.currentUrl = req.url;
-    next();
-});
+app.use(middle.allRequests);
 
 //setup routes
 app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
@@ -121,11 +89,11 @@ app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
  });*/
 //requireAuthentication must come before requireNoAuthentication to prevent redirect loops
 app.use('/', routes);
-app.use('/api/admin', _requireAdmin, apiAdminRoute);
+app.use('/api/admin', middle.requireAdmin, apiAdminRoute);
 app.use('/api', apiRoute);
-app.use('/admin', _requireAdmin, admin);
-app.use('/user', _requireAuthentication, user);
-app.use('/', _requireNoAuthentication, authRoute);
+app.use('/admin', middle.requireAdmin, admin);
+app.use('/user', middle.requireAuthentication, user);
+app.use('/', authRoute); //todo mount on separate route to allow use of noAuth without disabling 404 pages
 
 
 // catch 404 and forward to error handler
@@ -160,6 +128,7 @@ app.use(function (err, req, res, next) {
 //app.locals definitions
 app.locals.viewHelper = require("./util/views_helper.js");
 app.locals.enums = require("./models/enum.js");
+app.locals.middlehelp = require("./routes/middleware").helper;
 
 //@todo move to setup
 //@todo force synchronous

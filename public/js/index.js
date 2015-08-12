@@ -69,6 +69,7 @@ function pad(num, size) {
         'background-size': 'cover'
     });
     $('.nav.navbar-nav').addClass(image.navbar);
+    $('#intro .announcement').addClass(image.navbar);
     $('#cover-photo-attribution').html("Cover photo by " + image.by + "/" + image.with + "<br/>");
 
     //registration modal stuff

@@ -18,8 +18,18 @@ if (fs.existsSync('./config.json')) {
         for (var key in configTemplate[category]) { //retrieve items in each category
             if (!configTemplate[category].hasOwnProperty(key) || key == "_comment") continue;
             if (!process.env.hasOwnProperty(key)) throw new Error('Missing environment variable ' + key);
-            configTemplate[category][key] = process.env[key];
+            configTemplate[category][key] = normalize_bool(process.env[key]);
         }
     }
     module.exports = configTemplate;
+}
+
+function normalize_bool(string) {
+    if (string.toLowerCase() == "true") {
+        return true;
+    }
+    else if (string.toLowerCase() == "false") {
+        return false;
+    }
+    return string;
 }

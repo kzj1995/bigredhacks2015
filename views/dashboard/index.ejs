@@ -30,15 +30,20 @@ var teamwithcornell = teamwithcornell || false;
             <div class="header-wrapper">
                 <h2 class="page-title">status</h2>
             </div>
+            <% if (middlehelp.isRegistrationOpen()) { %>
             <p>registration process is still open.</p>
-
+            <% } else { %>
+            <p>Registration is closed.</p>
+            <% } %>
             <br/>
 
             <div class="header-wrapper">
                 <h2 class="page-title">my team</h2>
             </div>
             <div>
-                <p>you may add up to 4 team members. cornell students do not have a team id, click the checkbox instead.</p>
+                <% if (middlehelp.isRegistrationOpen()) { %>
+                <p>you may add up to 4 team members. cornell students do not have a team id, click the checkbox
+                    instead.</p>
 
                 <form action="/user/team/add" class="form-inline" method="POST">
                     <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
@@ -49,10 +54,11 @@ var teamwithcornell = teamwithcornell || false;
                     </div>
                     <button type="submit" id="addteamid-submit" class="btn btn-red" disabled>add a teammate</button>
                 </form>
+                <% } %>
                 <ul class="team-list">
 
                     <% if(team.length == 0) { %>
-
+                    <%- middlehelp.isRegistrationOpen() ? "" : "<p>You are not in a team.</p>" %>
                     <%
                     }
                     else {
@@ -62,6 +68,7 @@ var teamwithcornell = teamwithcornell || false;
 
                     <% } %>
                 </ul>
+                <% if (middlehelp.isRegistrationOpen()) { %>
                 <%- (team.length > 0) ? '<a class="btn btn-red" href="/user/team/leave">remove yourself from this team</a>' : ''; %>
 
             </div>
@@ -74,6 +81,7 @@ var teamwithcornell = teamwithcornell || false;
                     </label>
                 </div>
             </div>
+            <% } %>
 
             <br/>
 

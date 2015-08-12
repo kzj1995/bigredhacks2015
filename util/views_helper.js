@@ -1,5 +1,6 @@
 "use strict";
 var _export = {};
+var middle = require("../routes/middleware");
 
 /**
  * String format
@@ -80,6 +81,9 @@ _export.generateUrlList = function (listItems, active) {
     var array = [];
     active = active.split(/[?#]/)[0]; //remove query string, hash
     for (var i = 0; i < listItems.length; i++) {
+        if (listItems[i].hasOwnProperty("reg_open") && listItems[i].reg_open && !middle.helper.isRegistrationOpen()) {
+            continue;
+        }
         var classes = "";
         if (active == listItems[i].url) {
             classes += "active";

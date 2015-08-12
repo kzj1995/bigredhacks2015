@@ -11,6 +11,7 @@ var config = require('../config.js');
 var validator = require('../library/validations.js');
 var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
+var middle = require('./middleware');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 

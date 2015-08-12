@@ -49,15 +49,25 @@
         <h3>Sept 18-20, 2015</h3>
         <br/>
 
+        <span class="announcement">
+            <!--<h3>General applications are closing! </h3>
+            <h3>Last day to apply is August 01.</h3>-->
+            <h3>registration is closed! cornell students: check back soon.</h3>
+        </span>
+        <br/>
+
         <% if (isUser) { %>
         <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
         <% }
         else { %>
-        <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
-        &nbsp;&nbsp;&nbsp;
+            <% if (middlehelp.isRegistrationOpen()) { %>
+            <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
+            &nbsp;&nbsp;&nbsp;
+        <% } %>
         <a href="/login" class="btn btn-red fixed-width">login</a> <br/>
         <% } %>
     </div>
+
 
 </section>
 <!-- /Section: intro -->
@@ -169,15 +179,15 @@
             <dd>Our goal is to reimburse student travel as needed (up to $150 currently, subject to change). There
                 will be a reimbursement table: please bring your travel ticket, receipt, and government-issued photo ID.
                 We
-                ask that you pick a reasonably priced method of travel. There will be limited on-campus parking.  We'll
+                ask that you pick a reasonably priced method of travel. There will be limited on-campus parking. We'll
                 also be chartering buses for popular locations.<br><br>Are you the director of a hackathon club at your
-                school?  Get in touch with us to organize a trip!
+                school? Get in touch with us to organize a trip!
             </dd>
 
             <dt>Are hardware hacks allowed?</dt>
             <dd>While we won't be providing a dedicated hardware lab, you are absolutely allowed to develop a hardware
                 hack. Some of our sponsors are bringing hardware to loan, but we suggest you bring your own equipment if
-                you know that you'll absolutely need it
+                you know that you'll absolutely need it.
             </dd>
 
             <dt>What are the rules?</dt>
@@ -193,11 +203,11 @@
                 registrants to be committed to building something awesome. Even if you've never been to a hackathon
                 before, please apply!
             </dd>
-            
+
             <dt>Why can't Cornell students apply yet?</dt>
-            <dd>We're doing applications a little differently this year.  General applications are immediately available
-                for all students not at Cornell.  In early September, we will open applications to Cornell students, and
-                these will be on a first-come first-serve basis.  Add yourself to the mailing list so that you'll know
+            <dd>We're doing applications a little differently this year. General applications are immediately available
+                for all students not at Cornell. In early September, we will open applications to Cornell students, and
+                these will be on a first-come first-serve basis. Add yourself to the mailing list so that you'll know
                 when applications open.
             </dd>
 
@@ -221,7 +231,8 @@
     </div>
     <div class="container">
 
-        <p>Interested in sponsoring? Contact us at <a href="mailto:sponsors@bigredhacks.com">sponsors@bigredhacks.com</a>.</p>
+        <p>Interested in sponsoring? Contact us at <a
+                    href="mailto:sponsors@bigredhacks.com">sponsors@bigredhacks.com</a>.</p>
 
     </div>
 </section>
@@ -294,6 +305,5 @@
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
 <script src="/js/jquery.validate.options.js"></script>
 <script src="/js/index.js"></script>
-
 
 <% include _footer %>

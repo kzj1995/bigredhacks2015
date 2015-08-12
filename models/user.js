@@ -50,6 +50,8 @@ var userSchema = new mongoose.Schema({
         going: {type: Boolean, default: null}
     },
     passwordtoken: String,
+    created_at: {type: Date, default: Date.now},
+    modified_at: {type: Date, default: Date.now},
     role: {type: String, enum: en.user.role, default: "user"},
     team: Array //virtual property used to populate team members
 });
@@ -67,6 +69,11 @@ userSchema.pre('save', function (next) {
     //TODO consider moving to create
     if (typeof _this.pubid === "undefined") {
         _this.pubid = uid(10);
+    }
+
+    //check if user was modified
+    if (_this.isModified()) {
+        _this.modified_at = Date.now();
     }
 
     //verify password is present
