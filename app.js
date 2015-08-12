@@ -16,10 +16,9 @@ var config = require('./config.js');
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
 var user = require('./routes/user');
-//fixme on merge with admin branch
-//var admin = require('./routes/admin');
+var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
-//var apiAdminRoute = require('./routes/api/admin');
+var apiAdminRoute = require('./routes/api/admin');
 var authRoute = require('./routes/auth');
 
 var app = express();
@@ -81,30 +80,35 @@ app.use(subdomain({base: config.setup.url}));
 
 var _requireNoAuthentication = function (req, res, next) {
     if (req.user) {
-        res.redirect('/user/dashboard')
+        return res.redirect('/user/dashboard')
     }
     else {
-        next();
+        return next();
     }
 };
 
 var _requireAuthentication = function (req, res, next) {
     if (req.user) {
-        next();
+        return next();
     }
     else {
         req.flash('error', 'Please login first.');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
 };
 
 var _requireAdmin = function (req, res, next) {
-    //todo add admin check
-  next();
+    if (req.user && (req.user.role === "admin" || req.user.email == config.admin.email)) {
+        return next();
+    }
+    else {
+        req.flash('error', 'Please login first.');
+        return res.redirect('/login');
+    }
 };
 
 //generic middleware function
-app.use(function(req,res,next) {
+app.use(function (req, res, next) {
     res.locals.isUser = !!req.user;
     res.locals.currentUrl = req.url;
     next();
@@ -113,15 +117,17 @@ app.use(function(req,res,next) {
 //setup routes
 app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 /*app.use('/subdomain/fa15/', function(req,res,next) {
-   // res.redirect('/*');
-});*/
+ // res.redirect('/*');
+ });*/
 //requireAuthentication must come before requireNoAuthentication to prevent redirect loops
 app.use('/', routes);
+app.use('/api/admin', _requireAdmin, apiAdminRoute);
+app.use('/api', apiRoute);
+app.use('/admin', _requireAdmin, admin);
 app.use('/user', _requireAuthentication, user);
 app.use('/', authRoute); //todo mount on separate route to allow use of noAuth without disabling 404 pages
-//app.use('/admin', _requireAdmin, admin);
-//app.use('/api/admin', apiAdminRoute);
 app.use('/api', apiRoute);
+app.use('/', _requireNoAuthentication, authRoute);
 
 
 // catch 404 and forward to error handler
@@ -149,14 +155,13 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('404', {
-    });
+    res.render('404', {});
 });
 
 
 //app.locals definitions
 app.locals.viewHelper = require("./util/views_helper.js");
-
+app.locals.enums = require("./models/enum.js");
 
 //@todo move to setup
 //@todo force synchronous

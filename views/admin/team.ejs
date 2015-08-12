@@ -1,0 +1,75 @@
+<% include ../_header %>
+<link rel="stylesheet" href="/css/admin.css">
+
+<%
+var teamdecision = teamMembers[0].internal.status; //variable that determines the current decision for the team
+%>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">review team</h1>
+            </div>
+            <h3>Team Information:</h3>
+            <ul>
+                <li>Team ID: <span id="teamid" ><%= teamMembers[0].internal.teamid %></span></li>
+                <li>No. Members: <%= teamMembers.length %></li>
+            </ul>
+            <br/>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <% for (var i = 0; i < teamMembers.length; i++) { %>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="user-heading-<%= i + 1 %>">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#user-collapse-<%= i + 1 %>"
+                               aria-expanded="true"
+                               aria-controls="user-collapse-<%= i + 1 %>">
+                                 Team Member <%= i + 1 %>
+                            </a>
+                            <span class="status <%= teamMembers[i].internal.status %>">
+                                <%=teamMembers[i].internal.status %>
+                            </span>
+                        </h4>
+                    </div>
+                    <div id="user-collapse-<%= i + 1 %>" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="user-heading-<%= i + 1 %>">
+                        <div class="panel-body">
+                            <ul>
+                            <li><b>Name:</b>
+                            <a href ="/admin/user/<%= teamMembers[i].pubid %>">
+                                <%= teamMembers[i].name.first %> <%= teamMembers[i].name.last %>
+                            </a>
+                            <li><b>Email:</b> <%= teamMembers[i].email %></li>
+                            <li><b>School:</b> <%= teamMembers[i].school.name %></li>
+                            <li><b>Year:</b> <%= teamMembers[i].school.year %></li>
+                            <li>
+                                <a href="http://files.bigredhacks.com/resume/<%= teamMembers[i].app.resume %>">Resume</a>
+                            </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <% if (teamMembers[i].internal.status != teamMembers[0].internal.status) { %>
+                    <% teamdecision = "Pending"; %>
+                <% } %>
+                <% } %>
+            </div>
+            <div>
+                <h3 class = "set-decision"> Set Decision For Team: </h3>
+                <form class="decision-radio set-decision">
+                    <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
+                        checked: teamdecision, //set default value
+                        name: "teamstatus", //name attr of each input
+                        label: enums.virtual.status.long //label of the input different from actual input
+                    }); %>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<% include ../_footer %>

@@ -6,10 +6,11 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
-
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
+var Bus = require('../models/bus.js');
+var College = require('../models/college.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
@@ -44,6 +45,41 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 return done(err, members);
             })
+        },
+        bus: function (done) {
+            var userbus = null;
+            var closestdistance = null;
+            Bus.find({}).exec(function(err, buses) {
+                buses.forEach(function(bus, busindex) {
+                    bus.stops.forEach(function(stop, stopindex) {
+                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                        function (err, colleges) {
+                            if (colleges.length == 1) {
+                                userbus = bus;
+                                userbus.message = "a bus stops at your school:";
+                                closestdistance = 0;
+                            }
+                            else if (colleges.length == 2) {
+                                var distanceBetweenColleges = getDistanceBetweenCollegesInMiles(
+                                colleges[0].loc.coordinates[1], -colleges[0].loc.coordinates[0],
+                                colleges[1].loc.coordinates[1], -colleges[1].loc.coordinates[0]);
+                                if(distanceBetweenColleges <= 20) {
+                                    if(closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                        userbus = bus;
+                                        userbus.message = "a bus stops near your school at " + stop.collegename +
+                                        " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
+                                        " miles away):";
+                                        closestdistance = distanceBetweenColleges;
+                                    }
+                                }
+                            }
+                            if (busindex == buses.length - 1 && stopindex == bus.stops.length - 1) {
+                                return done(null, userbus);
+                            }
+                        });
+                    });
+                });
+            });
         }
     }, function (err, results) {
         if (err) {
@@ -55,10 +91,31 @@ router.get('/dashboard', function (req, res, next) {
             team: results.members,
             userid: req.user.pubid,
             teamwithcornell: req.user.internal.teamwithcornell,
+            bus: results.bus,
+            userbusid: req.user.internal.busid,
             title: "Dashboard"
         });
     })
 });
+
+/**
+ * Return distance in miles between two colleges given their latitudes and longitudes
+ * @param lat1 latitude of first college
+ * @param lon1 longitutde of first college
+ * @param lat2 latitude of second college
+ * @param long2 longitude of second college
+ * @returns {number} represents distance in miles between the two colleges
+ */
+function getDistanceBetweenCollegesInMiles(lat1, lon1, lat2, lon2){
+    var radius = 3958.754641; // Radius of the earth in miles
+    var dLat = (Math.PI/180) * (lat2-lat1);
+    var dLon = (Math.PI/180) * (lon2-lon1);
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos((Math.PI/180) * (lat1)) * Math.cos((Math.PI/180) * (lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var distance = radius * c; // Distance in miles
+    return distance;
+}
 
 /* GET edit registration page of logged in user */
 router.get('/dashboard/edit', function (req, res, next) {
@@ -215,6 +272,85 @@ router.post('/updateresume', function (req, res, next) {
     })
 });
 
+/* POST user bus decision */
+router.post('/busdecision', function(req, res){
+    var user = req.user;
+    if (req.body.decision == "signup") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if(bus.members.length < bus.capacity && user.internal.busid != req.body.busid) {
+                user.internal.busid = req.body.busid;
+                bus.members.push({
+                    name: user.name.last + ", " + user.name.first,
+                    college: user.school.name,
+                    id: user.id
+                });
+                bus.save(function(err) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        user.save(function (err) {
+                            if (err) {
+                                return res.sendStatus(500);
+                            }
+                            else {
+                                return res.sendStatus(200);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                return res.sendStatus(500);
+            }
+        });
+    }
+    else if (req.body.decision == "optout") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (user.internal.busid == req.body.busid) {
+                user.internal.busid = null;
+                var newmembers = [];
+                async.each(bus.members, function(member, callback) {
+                    if(member.id != user.id) {
+                        newmembers.push(member);
+                    }
+                    callback()
+                }, function (err) {
+                    bus.members = newmembers;
+                    bus.save(function (err) {
+                        if (err) {
+                            return res.sendStatus(500);
+                        }
+                        else {
+                            user.save(function (err) {
+                                if (err) {
+                                    return res.sendStatus(500);
+                                }
+                                else {
+                                    return res.sendStatus(200);
+                                }
+                            });
+                        }
+                    })
+                });
+            }
+            else {
+                user.internal.busid = null;
+                user.save(function (err) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        return res.sendStatus(200);
+                    }
+                });
+            }
+        });
+    }
+    else {
+        return res.sendStatus(500);
+    }
+});
 
 /* GET logout the current user */
 router.get('/logout', function (req, res) {

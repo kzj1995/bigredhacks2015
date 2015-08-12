@@ -11,12 +11,13 @@ router.get('/colleges', function (req, res, next) {
     });
 });
 
+
 router.get('/validEmail', function (req, res, next) {
     User.findOne({email: req.query.email}, function (err, user) {
+        console.log(user);
         if (err) console.err(err);
         else res.send(!user);
     });
 });
-
 
 module.exports = router;

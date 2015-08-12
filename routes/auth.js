@@ -81,6 +81,7 @@ router.post('/register', function (req, res) {
             'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'experienceDropdown', 'yearDropdown'
         ]);
 
+
         var errors = req.validationErrors();
         //console.log(errors);
         if (errors) {
@@ -139,8 +140,16 @@ router.post('/register', function (req, res) {
                             q2: req.body.q2
                         },
                         experience: req.body.experienceDropdown
-                    }
+                    },
+                    role: "user"
                 });
+
+                //set user as admin if designated in config for easy setup
+                if (newUser.email === config.admin.email) {
+                    newUser.role = "admin";
+                }
+
+
                 newUser.save(function (err, doc) {
                     if (err) {
                         // If it failed, return error
@@ -233,10 +242,13 @@ router.get('/login', function (req, res, next) {
 /* POST login a user */
 router.post('/login',
     passport.authenticate('local', {
-        successRedirect: '/user',
         failureRedirect: '/login',
         failureFlash: true
-    })
+    }), function(req, res) {
+        // successful auth, user is set at req.user.  redirect as necessary.
+        if (req.user.role === "admin" || req.user.email === config.admin.email) { return res.redirect('/admin'); }
+        else {return res.redirect('/user')}
+    }
 );
 
 /* GET reset password */

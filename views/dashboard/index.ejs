@@ -83,6 +83,10 @@ var teamwithcornell = teamwithcornell || false;
             <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
             <button class="btn btn-red" id="resume-update">update my resume</button>
 
+            <br/>
+            <br/>
+            <br/>
+
             <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
                   enctype="multipart/form-data">
                 <label>upload a new resume (.pdf)</label><br/>
@@ -95,6 +99,50 @@ var teamwithcornell = teamwithcornell || false;
                     <button type="submit" class="btn btn-red" id="resume-save" disabled>Save</button>
                 </div>
             </form>
+
+
+            <div class="header-wrapper">
+                <h2 class="page-title">transportation</h2>
+            </div>
+
+            <% if (bus == null) { %>
+                <p>no bus stop planned at or near your school at the moment. please check back soon or contact us
+                for bus information.</p>
+            <% } else { %>
+                <p> <%= bus.message %> </p>
+                <div class="businfobox" data-busid="<%= bus.id %>">
+                    <div class="busname">
+                        <%= bus.name %>
+                    </div>
+                    <ul class="businfo">
+                      <li class="busstopslist">
+                        <b>Bus Stops:</b>
+                        <ul class="busstops">
+                          <% for (var i = 0; i < bus.stops.length; i = i + 1) { %>
+                            <li data-collegeid="<%= bus.stops[i].collegeid %>">
+                                <span class="collegename"><%= bus.stops[i].collegename %></span>
+                            </li>
+                          <% } %>
+                        </ul>
+                      </li>
+                      <li class="currentnumber" data-currentnumber="<%= bus.members.length %>">
+                          <b>Current Number on Bus:</b> <%= bus.members.length %>
+                      </li>
+                      <li class="maxcapacity">
+                          <b>Max Capacity:</b> <span class="maxcapacitynumber"> <%= bus.capacity %> </span>
+                      </li>
+                      <% if (userbusid == bus.id) { %>
+                      <li class="userbusdecision"><b>Your Current Bus Decision:</b> Signed Up</li>
+                      <% } else { %>
+                      <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
+                      <% } %>
+                    </ul>
+                    <div class="busselection">
+                        <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">
+                        <input type="button" value="opt out" name="optout" id="optout" class="btn btn-primary">
+                    </div>
+                </div>
+            <% } %>
         </div>
     </div>
 </div>
