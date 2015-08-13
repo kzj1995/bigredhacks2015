@@ -63,14 +63,17 @@ router.get('/dashboard', function (req, res, next) {
                                     closestdistance = 0;
                                 }
                                 else if (colleges.length == 2) {
-                                    var distanceBetweenColleges = _distanceBetweenCollegesInMiles(
+                                    //find the distance between two colleges
+                                    var distanceBetweenColleges = _distanceBetweenPointsInMiles(
                                         colleges[0].loc.coordinates, colleges[1].loc.coordinates);
                                     if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
                                         if (closestdistance == null || distanceBetweenColleges < closestdistance) {
                                             userbus = bus;
+                                            //properly round to two decimal points
+                                            var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
+                                                    100) / 100;
                                             userbus.message = "a bus stops near your school at " + stop.collegename +
-                                                " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
-                                                " miles away):";
+                                                " (roughly " + roundedDistance + " miles away):";
                                             closestdistance = distanceBetweenColleges;
                                         }
                                     }
@@ -103,12 +106,12 @@ router.get('/dashboard', function (req, res, next) {
 });
 
 /**
- * Return distance in miles between two colleges given their latitudes and longitudes
- * @param coordinate1 [lon,lat] coordinate pair of first college
- * @param coordinate2 [lon,lat] coordinate pair of second college
+ * Return distance in miles between two coordinates/points
+ * @param coordinate1 [lon,lat] coordinate pair of first point
+ * @param coordinate2 [lon,lat] coordinate pair of second point
  * @returns {number} represents distance in miles between the two colleges
  */
-function _distanceBetweenCollegesInMiles(coordinate1, coordinate2) {
+function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
     var radius = 3958.754641; // Radius of the earth in miles
     var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
     var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
