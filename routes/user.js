@@ -13,7 +13,7 @@ var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
-
+var MAX_BUS_PROXIMITY = 20; //miles
 
 /* GET dashboard index page */
 router.get('/', function (req, res, next) {
@@ -50,8 +50,11 @@ router.get('/dashboard', function (req, res, next) {
             var userbus = null;
             var closestdistance = null;
             Bus.find({}).exec(function(err, buses) {
-                buses.forEach(function(bus, busindex) {
-                    bus.stops.forEach(function(stop, stopindex) {
+                if (err) {
+                    console.log(err);
+                }
+                async.each(buses, function(bus, callback) {
+                    async.each(bus.stops, function(stop, callback2) {
                         College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
                         function (err, colleges) {
                             if (colleges.length == 1) {
@@ -60,24 +63,25 @@ router.get('/dashboard', function (req, res, next) {
                                 closestdistance = 0;
                             }
                             else if (colleges.length == 2) {
-                                var distanceBetweenColleges = getDistanceBetweenCollegesInMiles(
-                                colleges[0].loc.coordinates[1], -colleges[0].loc.coordinates[0],
-                                colleges[1].loc.coordinates[1], -colleges[1].loc.coordinates[0]);
-                                if(distanceBetweenColleges <= 20) {
-                                    if(closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                var distanceBetweenColleges = _distanceBetweenCollegesInMiles(
+                                colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                    if (closestdistance == null || distanceBetweenColleges < closestdistance) {
                                         userbus = bus;
                                         userbus.message = "a bus stops near your school at " + stop.collegename +
-                                        " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
-                                        " miles away):";
+                                            " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
+                                            " miles away):";
                                         closestdistance = distanceBetweenColleges;
                                     }
                                 }
                             }
-                            if (busindex == buses.length - 1 && stopindex == bus.stops.length - 1) {
-                                return done(null, userbus);
-                            }
+                            callback2();
                         });
+                    }, function(err) {
+                        callback();
                     });
+                }, function (err) {
+                    return done(null, userbus);
                 });
             });
         }
@@ -100,19 +104,17 @@ router.get('/dashboard', function (req, res, next) {
 
 /**
  * Return distance in miles between two colleges given their latitudes and longitudes
- * @param lat1 latitude of first college
- * @param lon1 longitutde of first college
- * @param lat2 latitude of second college
- * @param long2 longitude of second college
+ * @param coordinate1 [lon,lat] coordinate pair of first college
+ * @param coordinate2 [lon,lat] coordinate pair of second college
  * @returns {number} represents distance in miles between the two colleges
  */
-function getDistanceBetweenCollegesInMiles(lat1, lon1, lat2, lon2){
+function _distanceBetweenCollegesInMiles(coordinate1, coordinate2){
     var radius = 3958.754641; // Radius of the earth in miles
-    var dLat = (Math.PI/180) * (lat2-lat1);
-    var dLon = (Math.PI/180) * (lon2-lon1);
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos((Math.PI/180) * (lat1)) * Math.cos((Math.PI/180) * (lat2)) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
+    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
+    Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var distance = radius * c; // Distance in miles
     return distance;
 }
