@@ -57,11 +57,15 @@ router.get('/dashboard', function (req, res, next) {
                     async.each(bus.stops, function (stop, callback2) {
                         College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
                             function (err, colleges) {
+                                //The case when the query returns only one college because the college of the bus's stop
+                                //is the same as the user's college
                                 if (colleges.length == 1) {
                                     userbus = bus;
                                     userbus.message = "a bus stops at your school:";
                                     closestdistance = 0;
                                 }
+                                //The other case when the query returns two colleges because the college of the bus's
+                                //stop is not the same as the user's college
                                 else if (colleges.length == 2) {
                                     //find the distance between two colleges
                                     var distanceBetweenColleges = _distanceBetweenPointsInMiles(
