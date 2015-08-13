@@ -49,35 +49,35 @@ router.get('/dashboard', function (req, res, next) {
         bus: function (done) {
             var userbus = null;
             var closestdistance = null;
-            Bus.find({}).exec(function(err, buses) {
+            Bus.find({}).exec(function (err, buses) {
                 if (err) {
                     console.log(err);
                 }
-                async.each(buses, function(bus, callback) {
-                    async.each(bus.stops, function(stop, callback2) {
+                async.each(buses, function (bus, callback) {
+                    async.each(bus.stops, function (stop, callback2) {
                         College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
-                        function (err, colleges) {
-                            if (colleges.length == 1) {
-                                userbus = bus;
-                                userbus.message = "a bus stops at your school:";
-                                closestdistance = 0;
-                            }
-                            else if (colleges.length == 2) {
-                                var distanceBetweenColleges = _distanceBetweenCollegesInMiles(
-                                colleges[0].loc.coordinates, colleges[1].loc.coordinates);
-                                if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
-                                    if (closestdistance == null || distanceBetweenColleges < closestdistance) {
-                                        userbus = bus;
-                                        userbus.message = "a bus stops near your school at " + stop.collegename +
-                                            " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
-                                            " miles away):";
-                                        closestdistance = distanceBetweenColleges;
+                            function (err, colleges) {
+                                if (colleges.length == 1) {
+                                    userbus = bus;
+                                    userbus.message = "a bus stops at your school:";
+                                    closestdistance = 0;
+                                }
+                                else if (colleges.length == 2) {
+                                    var distanceBetweenColleges = _distanceBetweenCollegesInMiles(
+                                        colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                    if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                        if (closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                            userbus = bus;
+                                            userbus.message = "a bus stops near your school at " + stop.collegename +
+                                                " (roughly " + Math.round((distanceBetweenColleges + 0.00001) * 100) / 100 +
+                                                " miles away):";
+                                            closestdistance = distanceBetweenColleges;
+                                        }
                                     }
                                 }
-                            }
-                            callback2();
-                        });
-                    }, function(err) {
+                                callback2();
+                            });
+                    }, function (err) {
                         callback();
                     });
                 }, function (err) {
@@ -108,12 +108,12 @@ router.get('/dashboard', function (req, res, next) {
  * @param coordinate2 [lon,lat] coordinate pair of second college
  * @returns {number} represents distance in miles between the two colleges
  */
-function _distanceBetweenCollegesInMiles(coordinate1, coordinate2){
+function _distanceBetweenCollegesInMiles(coordinate1, coordinate2) {
     var radius = 3958.754641; // Radius of the earth in miles
     var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
     var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
-    Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var distance = radius * c; // Distance in miles
     return distance;
@@ -135,8 +135,8 @@ router.post('/dashboard/edit', function (req, res, next) {
 
     var user = req.user;
 
-    req = validator.validate(req,[
-        'passwordOptional','phonenumber','dietary','tshirt','yearDropdown','major','linkedin','q1','q2','anythingelse', 'experienceDropdown'
+    req = validator.validate(req, [
+        'passwordOptional', 'phonenumber', 'dietary', 'tshirt', 'yearDropdown', 'major', 'linkedin', 'q1', 'q2', 'anythingelse', 'experienceDropdown'
     ]);
     //console.log(req.validationErrors());
     var errors = req.validationErrors();
@@ -230,7 +230,7 @@ router.post('/team/cornell', function (req, res, next) {
     var checked = (req.body.checked === "true");
     var user = req.user;
     user.internal.teamwithcornell = checked;
-    user.save(function(err) {
+    user.save(function (err) {
         if (err) {
             res.send(500);
         }
@@ -275,18 +275,18 @@ router.post('/updateresume', function (req, res, next) {
 });
 
 /* POST user bus decision */
-router.post('/busdecision', function(req, res){
+router.post('/busdecision', function (req, res) {
     var user = req.user;
     if (req.body.decision == "signup") {
         Bus.findOne({_id: req.body.busid}, function (err, bus) {
-            if(bus.members.length < bus.capacity && user.internal.busid != req.body.busid) {
+            if (bus.members.length < bus.capacity && user.internal.busid != req.body.busid) {
                 user.internal.busid = req.body.busid;
                 bus.members.push({
                     name: user.name.last + ", " + user.name.first,
                     college: user.school.name,
                     id: user.id
                 });
-                bus.save(function(err) {
+                bus.save(function (err) {
                     if (err) {
                         return res.sendStatus(500);
                     }
@@ -312,8 +312,8 @@ router.post('/busdecision', function(req, res){
             if (user.internal.busid == req.body.busid) {
                 user.internal.busid = null;
                 var newmembers = [];
-                async.each(bus.members, function(member, callback) {
-                    if(member.id != user.id) {
+                async.each(bus.members, function (member, callback) {
+                    if (member.id != user.id) {
                         newmembers.push(member);
                     }
                     callback()
