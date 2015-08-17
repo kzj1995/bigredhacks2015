@@ -45,6 +45,19 @@
                               <li class="maxcapacity">
                                   <b>Max Capacity:</b> <span class="maxcapacitynumber"> <%= buses[i].capacity %> </span>
                               </li>
+                              <li class="buscaptain">
+                                  <b>Bus Captain:</b>
+                                  <% if (buses[i].buscaptain == null) { %>
+                                  <span>
+                                      No bus captain assigned at the moment.
+                                  </span>
+                                  <% } else { %>
+                                  <span>
+                                      <%= buses[i].buscaptain.name.last %>, <%= buses[i].buscaptain.name.first %>
+                                      (<%= buses[i].buscaptain.email %>)
+                                  </span>
+                                  <% } %>
+                              </li>
                             </ul>
                             <div class="modifybus">
                                 <input type="button" value="edit" name="editbus" class="btn btn-primary editbus">

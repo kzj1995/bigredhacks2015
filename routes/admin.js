@@ -208,7 +208,7 @@ router.get('/review', function (req, res, next) {
         }
         else {
             var rand = Math.floor(Math.random() * count);
-            User.findOne(query).skip(rand).exec( function (err, user) {
+            User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
                 res.render('admin/review', {
                     title: 'Admin Dashboard - Review',
@@ -308,11 +308,32 @@ function _runQuery(queryString, callback) {
 
 /* GET page to see bus information */
 router.get('/businfo', function (req, res, next) {
-    Bus.find().exec(function(err, buses){
-        res.render('admin/businfo', {
-            title: 'Admin Dashboard - Bus Information',
-            buses: buses
-        })
+    Bus.find().exec(function (err, buses) {
+        if (err) {
+            console.log(err);
+        }
+        var _buses = [];
+        async.each(buses, function (bus, callback) {
+            async.each(bus.members, function (member, callback2) {
+                User.findOne({_id: member.id}, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else if (user.role == "bus captain") {
+                        bus.buscaptain = user;
+                    }
+                    callback2();
+                });
+            }, function (err) {
+                _buses.push(bus);
+                callback();
+            });
+        }, function (err) {
+            res.render('admin/businfo', {
+                title: 'Admin Dashboard - Bus Information',
+                buses: _buses
+            });
+        });
     });
 });
 
@@ -321,7 +342,7 @@ router.post('/businfo', function (req, res, next) {
     var collegeidlist = req.body.collegeidlist.split(",");
     var collegenamelist = req.body.busstops.split(",");
     var stops = [];
-    for(var i = 0; i < collegeidlist.length; i++) {
+    for (var i = 0; i < collegeidlist.length; i++) {
         stops.push({
             collegeid: collegeidlist[i],
             collegename: collegenamelist[i]
@@ -348,12 +369,12 @@ router.post('/removeBus', function (req, res, next) {
 });
 
 /* POST update bus in list of buses */
-router.post('/updateBus', function(req, res, next) {
+router.post('/updateBus', function (req, res, next) {
     Bus.findOne({_id: req.body.busid}, function (err, bus) {
         var collegeidlist = req.body.collegeidlist.split(",");
         var collegenamelist = req.body.busstops.split(",");
         var stops = [];
-        for(var i = 0; i < collegeidlist.length; i++) {
+        for (var i = 0; i < collegeidlist.length; i++) {
             stops.push({
                 collegeid: collegeidlist[i],
                 collegename: collegenamelist[i]

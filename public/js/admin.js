@@ -313,7 +313,7 @@ $('document').ready(function () {
                 "</div>");
                 businfobox.find(".removecollege").hide();
                 businfobox.find(".editbusstops").hide();
-                businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:</b>" +
+                businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity: </b>" +
                 "<span class='maxcapacitynumber'>" + businfobox.find("#maxcapacitynumber").val() + "</span> </li>");
                 businfobox.find(".btn.btn-primary.cancel").replaceWith("<input type='button' value='remove'" +
                 "name='removebus' class='btn btn-primary removebus'>");
