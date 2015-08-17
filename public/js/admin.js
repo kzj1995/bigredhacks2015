@@ -193,10 +193,6 @@ $('document').ready(function () {
             name: "email",
             placeholder: "Email"
         },
-        name: {
-            name: "name",
-            placeholder: "Name"
-        }
     };
     $("#categoryselection").change(function () {
         var catString = $(this).val();

@@ -36,12 +36,18 @@ var render = render || "box"; //default to box view
                     </div>
 
                     <div class="form-group">
+                        <label for="name">Search by Name</label>
+                        <input type="text" name="name" id="name" class="form-control"
+                               placeholder="Name"
+                               value="">
+                    </div>
+
+                    <div class="form-group">
                         <label for="categoryselection">Search by Category</label>
                         <select class="form-control" id="categoryselection">
-                            <option value="">Select Category</option>
-                            <option value="pubid">Public User Id</option>
+                            <option value="email">Search by Catergory</option>
                             <option value="email">Email</option>
-                            <option value="name">Name</option>
+                            <option value="pubid">Public User Id</option>
                         </select>
                     </div>
                     <div class="form-group category-input"></div>
