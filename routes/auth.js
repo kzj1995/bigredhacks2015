@@ -7,6 +7,7 @@ var multiparty = require('multiparty');
 
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
+var College = require('../models/college.js');
 var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
 var middle = require('./middleware');
@@ -59,10 +60,10 @@ router.get('/register', middle.requireRegistrationOpen, function (req, res) {
         {title: "Register", enums: enums, error: req.flash('error')});
 });
 
+
 /* POST register a new user */
 router.post('/register', middle.requireRegistrationOpen, function (req, res) {
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
-
     form.parse(req, function (err, fields, files) {
         if (err) {
             console.log(err);
@@ -181,7 +182,7 @@ router.post('/register', middle.requireRegistrationOpen, function (req, res) {
                                     "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
                                     "that we have received your application." + "</p><p>" +
                                     "You can log in to our website any time until the application deadline " +
-                                    "to update your information or add team members." + "</p><p>" + 
+                                    "to update your information or add team members." + "</p><p>" +
                                     "If you haven't already, make sure to like us on Facebook and " +
                                     "follow us on Twitter!" + "</p><p>" +
                                     "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
@@ -231,6 +232,22 @@ router.post('/register', middle.requireRegistrationOpen, function (req, res) {
     });
 });
 
+/* GET registration page for Cornell Tech Students */
+router.get('/cornelltechregister', function (req, res) {
+    College.findOne({name: "Cornell Tech"}, function (err, college) {
+        res.render("cornelltechregister",
+            {
+                title: "Cornell Tech Register",
+                enums: enums,
+                error: req.flash('error'),
+                cornelltechname: "Cornell Tech - NY",
+                cornelltechid: college._id
+            }
+        );
+    });
+});
+
+
 /* GET render the login page */
 router.get('/login', function (req, res, next) {
     res.render('login', {
@@ -245,7 +262,7 @@ router.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/login',
         failureFlash: true
-    }), function(req, res) {
+    }), function (req, res) {
         // successful auth, user is set at req.user.  redirect as necessary.
         if (req.user.role === "admin" || req.user.email === config.admin.email) {
             req.session.np = true; //enable no participation mode
@@ -351,7 +368,7 @@ router.post('/forgotpassword', function (req, res) {
                         "content": "<p>Hello " + user.name.first + " " + user.name.last + ",</p><p>" +
                         "You can reset your password by visiting the following link: </p><p>" +
                         "<a style='color: #B31B1B' href=\"" + passwordreseturl + "\">" + passwordreseturl + "</a></p>" +
-                        "<p>If you did not request to change your password, please ignore and delete this email.</p>"+
+                        "<p>If you did not request to change your password, please ignore and delete this email.</p>" +
                         "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
                     }];
                     var message = {

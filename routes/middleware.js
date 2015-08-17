@@ -2,8 +2,8 @@
 var config = require('../config');
 var middle = {};
 
-function _isRegistrationOpen() {
-    if (config.admin.reg_open) {
+function _isRegistrationOpen(querystring) {
+    if (config.admin.reg_open || (querystring != null && querystring.college == "cornelltech")) {
         return true;
     }
     else return false;
@@ -45,7 +45,8 @@ middle.allRequests = function (req, res, next) {
 };
 
 middle.requireRegistrationOpen = function (req, res, next) {
-    if (_isRegistrationOpen()) {
+    var querystring = req.query;
+    if (_isRegistrationOpen(querystring)) {
         return next();
     }
     else {

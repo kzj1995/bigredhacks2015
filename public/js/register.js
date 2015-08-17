@@ -22,7 +22,7 @@ $('document').ready(function () {
         return /^(www\.)?linkedin\.com\/\S+$/ig.test(val) || val === "";
     });
 
-    notCornellText = 'We aren\'t accepting applications from Cornell students right now.';
+    notCornellText = 'We aren\'t accepting applications from Cornell University students right now.';
 
     //fails for cornell email
     $.validator.addMethod("emailNotCornell", function (val, elem, params) {
@@ -31,7 +31,7 @@ $('document').ready(function () {
 
     //fails for cornell school
     $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
-        var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
+        var restrict = ["Cornell University - NY"];
         return (restrict.indexOf(val) == -1);
     }, notCornellText);
 
