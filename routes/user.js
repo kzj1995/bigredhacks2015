@@ -1,14 +1,17 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-var enums = require('../models/enum.js');
 var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
+
+var enums = require('../models/enum.js');
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
+var middle = require('../routes/middleware.js');
+
 var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
 
@@ -53,8 +56,9 @@ router.get('/dashboard', function (req, res, next) {
                 if (err) {
                     console.log(err);
                 }
+                //todo optimize this (see if it's possible to perform this operation in a single aggregation
                 async.each(buses, function (bus, callback) {
-                    async.each(bus.stops, function (stop, callback2) {
+                    async.each(bus.stops, function (stop, inner_callback) {
                         College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
                             function (err, colleges) {
                                 //The case when the query returns only one college because the college of the bus's stop
@@ -82,7 +86,7 @@ router.get('/dashboard', function (req, res, next) {
                                         }
                                     }
                                 }
-                                callback2();
+                                inner_callback();
                             });
                     }, function (err) {
                         callback();
@@ -96,35 +100,25 @@ router.get('/dashboard', function (req, res, next) {
         if (err) {
             console.log(err);
         }
-        res.render('dashboard/index', {
-            name: req.user.name,
+
+        var render_data = {
+            user: req.user,
             resumeLink: results.resumeLink,
             team: results.members,
-            userid: req.user.pubid,
-            teamwithcornell: req.user.internal.teamwithcornell,
             bus: results.bus,
-            userbusid: req.user.internal.busid,
             title: "Dashboard"
-        });
+        };
+
+
+        if (middle.helper.isResultsReleased()) {
+            return res.render('dashboard/results_released/index', render_data);
+        }
+        else {
+            res.render('dashboard/index', render_data);
+        }
+
     })
 });
-
-/**
- * Return distance in miles between two coordinates/points
- * @param coordinate1 [lon,lat] coordinate pair of first point
- * @param coordinate2 [lon,lat] coordinate pair of second point
- * @returns {number} represents distance in miles between the two colleges
- */
-function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
-    var radius = 3958.754641; // Radius of the earth in miles
-    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
-    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
-        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var distance = radius * c; // Distance in miles
-    return distance;
-}
 
 /* GET edit registration page of logged in user */
 router.get('/dashboard/edit', function (req, res, next) {
@@ -366,5 +360,23 @@ router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });
+
+/**
+ * Return distance in miles between two coordinates/points
+ * @param coordinate1 [lon,lat] coordinate pair of first point
+ * @param coordinate2 [lon,lat] coordinate pair of second point
+ * @returns {number} represents distance in miles between the two colleges
+ */
+function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
+    var radius = 3958.754641; // Radius of the earth in miles
+    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
+    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
+        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = radius * c; // Distance in miles
+    return distance;
+}
+
 
 module.exports = router;

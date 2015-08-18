@@ -1,4 +1,4 @@
-<% include ../_header %>
+<% include ../../_header %>
 <% var en = enums.user;
 var errors = errors || [];
 var message = message || "";
@@ -14,7 +14,7 @@ else errors = [];
 <body>
 <div class="container-fluid">
     <div class="row">
-        <% include _dashboardside.ejs %>
+        <% include ../_dashboardside.ejs %>
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
             <div class="header-wrapper-leaf">
                 <h1 class="leaf">edit application</h1>
@@ -164,4 +164,4 @@ else errors = [];
 <script src="/js/vendor/typeahead.bundle.min.js"></script>
 <script src="/js/register.js"></script>
 
-<% include ../_footer %>
+<% include ../../_footer %>

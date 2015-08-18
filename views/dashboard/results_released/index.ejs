@@ -1,5 +1,5 @@
-<% include ../_header %>
-
+<% include ../../_header %>
+<% var status = user.internal.status.toLowerCase(); %>
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -18,7 +18,7 @@
             <%- '<div class="alert alert-success" role="alert">' + messages.success[0].toLowerCase() + '</div>' %>
             <% } %>
 
-            <p> welcome back, <%= name.first %> <%= name.last %>. </p>
+            <p> welcome back, <%= user.name.first %> <%= user.name.last %>. </p>
 
 
             <br/>
@@ -26,7 +26,7 @@
             <div class="header-wrapper">
                 <h2 class="page-title">status</h2>
             </div>
-            <% if (user.internal.status === "rejected") { %>
+            <% if (status === "rejected") { %>
             <p>thank you so much for applying to bigred//hacks! the application pool this year was more competitive than
                 it's ever been and unfortunately, due to logistical constraints, we are unable to offer you a spot at
                 bigred//hacks.</p>
@@ -39,7 +39,7 @@
 
             <p>--the bigred//hacks team</p>
 
-            <% } else if (user.internal.status === "waitlisted") { %>
+            <% } else if (status === "waitlisted") { %>
             <p>thank you so much for applying to bigred//hacks! unfortunately, due to logistical constraints, we are
                 unable to guarantee a spot for you at this time. however, we have placed you on the waitlist, so there’s
                 still a chance you'll get in!</p>
@@ -49,7 +49,7 @@
 
             <p>--the bigred//hacks team</p>
 
-            <% } else if (user.internal.status === "accepted") { %>
+            <% } else if (status === "accepted") { %>
             <p>congratulations!</p>
 
             <p>the organizers of bigred//hacks have reviewed your application and you're officially invited to
@@ -105,6 +105,48 @@
 
             <br/>
 
+            <div class="header-wrapper">
+                <h2 class="page-title">transportation</h2>
+            </div>
+
+            <% if (bus == null) { %>
+            <p>no bus stop planned at or near your school at the moment. please check back soon or contact us
+                for bus information.</p>
+            <% } else { %>
+            <p> <%= bus.message %> </p>
+            <div class="businfobox" data-busid="<%= bus.id %>">
+                <div class="busname">
+                    <%= bus.name %>
+                </div>
+                <ul class="businfo">
+                    <li class="busstopslist">
+                        <b>Bus Stops:</b>
+                        <ul class="busstops">
+                            <% for (var i = 0; i < bus.stops.length; i++) { %>
+                            <li data-collegeid="<%= bus.stops[i].collegeid %>">
+                                <span class="collegename"><%= bus.stops[i].collegename %></span>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                    <li class="currentnumber" data-currentnumber="<%= bus.members.length %>">
+                        <b>Current Number on Bus:</b> <%= bus.members.length %>
+                    </li>
+                    <li class="maxcapacity">
+                        <b>Max Capacity:</b> <span class="maxcapacitynumber"> <%= bus.capacity %> </span>
+                    </li>
+                    <% if (user.internal.busid == bus.id) { %>
+                    <li class="userbusdecision"><b>Your Current Bus Decision:</b> Signed Up</li>
+                    <% } else { %>
+                    <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
+                    <% } %>
+                </ul>
+                <div class="busselection">
+                    <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">
+                    <input type="button" value="opt out" name="optout" id="optout" class="btn btn-primary">
+                </div>
+            </div>
+            <% } %>
 
             <div class="header-wrapper">
                 <h2 class="page-title">resume</h2>
@@ -130,4 +172,4 @@
 </div>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/dashboard.js"></script>
-<% include ../_footer %>
+<% include ../../_footer %>
