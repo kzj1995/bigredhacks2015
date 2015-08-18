@@ -1,0 +1,167 @@
+<% include ../_header %>
+<% var en = enums.user;
+var errors = errors || [];
+var message = message || "";
+var helper = viewHelper;
+%>
+<% if (errors.length > 0) {
+    for (var i = 0; i < errors.length; i++) {
+        errors[i] = '<div class="alert alert-danger" role="alert">' + errors[i].msg.toLowerCase() + '</div>'
+    }
+}
+else errors = [];
+%>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include _dashboardside.ejs %>
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">edit application</h1>
+            </div>
+            <%- errors.join(""); %>
+            <form id="registrationForm" action="/user/dashboard/edit" method="POST" autocomplete="on">
+                <fieldset>
+                    <div class="header-wrapper">
+                        <legend class="page-title">account information</legend>
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label for="email">email address *</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder=
+                        "bigredhacks@example.com" value="<%= user.email %>" title="please enter a valid email"
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">change password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="password"
+                               value="">
+                    </div>
+                </fieldset>
+                </fieldset>
+                <br/>
+                <fieldset>
+                    <div class="header-wrapper">
+                        <legend class="page-title">basic information</legend>
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label for="firstname">first name *</label>
+                        <input type="text" id="firstname" name="firstname" class="form-control" placeholder="first name"
+                               value="<%= user.name.first %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">last name *</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="last name"
+                               value="<%= user.name.last %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="phonenumber">phone number *</label>
+                        <input type="text" id="phonenumber" name="phonenumber" class="form-control"
+                               placeholder="XXX-XXX-XXXX"
+                               value="<%= user.phone %>" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="genderDropdown">gender *</label>
+                        <select class="form-control" id="genderDropdown" name="genderDropdown" readonly>
+                            <option value="">select</option>
+                            <%- helper.generateOptions(en.gender, {selected: user.gender}); %>
+                        </select>
+                    </div>
+                </fieldset>
+                <br/>
+                <fieldset>
+                    <div class="header-wrapper">
+                        <legend class="page-title">school</legend>
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label for="college">full school name *</label><br/>
+                        <input type="text" id="college" name="college" class="form-control typeahead"
+                               placeholder="school name"
+                               value="<%= user.school.name %>" readonly/>
+                    </div>
+                    <div class="form-group">
+                        <label for="yearDropdown">academic year *</label>
+                        <select class="form-control" id="yearDropdown" name="yearDropdown" readonly>
+                            <option value=""></option>
+                            <%- helper.generateOptions(en.year, {selected: user.school.year}); %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="major">major *</label>
+                        <input type="text" id="major" name="major" class="form-control" placeholder="major"
+                               value="<%= user.school.major %>" required/>
+                    </div>
+                </fieldset>
+                <br/>
+                <fieldset>
+                    <div class="header-wrapper">
+                        <legend class="page-title">background</legend>
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label for="github">github profile </label>
+
+                        <div class="input-group">
+                            <div class="input-group-addon">@</div>
+                            <input type="text" class="form-control" id="github" name="github"
+                                   value="<%= user.app.github %>" placeholder="johndoe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin">linkedIn profile</label>
+
+                        <div class="input-group">
+                            <div class="input-group-addon">http://</div>
+                            <input type="text" class="form-control" id="linkedin" name="linkedin"
+                                   value="<%= user.app.linkedin %>" placeholder="www.linkedin.com/">
+                        </div>
+                    </div>
+
+                </fieldset>
+                <br/>
+                <fieldset>
+                    <div class="header-wrapper">
+                        <legend class="page-title">logistics</legend>
+                    </div>
+                    <br/>
+
+                    <div class="form-group">
+                        <label for="dietary">dietary restrictions *</label>
+                        <select class="form-control" id="dietary" name="dietary" required>
+                            <option value="">select</option>
+                            <%- helper.generateOptions(en.dietary, {selected: user.logistics.dietary}); %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tshirt">t-shirt size *</label>
+                        <select class="form-control" id="tshirt" name="tshirt" required>
+                            <option value="">select</option>
+                            <%- helper.generateOptions(en.tshirt, {selected: user.logistics.tshirt}); %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>is there anything else you'd like to tell us?</label>
+                        <textarea id="anythingelse" name="anythingelse" class="form-control"
+                                  rows="2"><%= user.logistics.anythingelse %></textarea>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <button type="submit" id="submit" class="btn btn-primary">save</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
+<script src="/js/jquery.validate.options.js"></script>
+<script src="/js/vendor/typeahead.bundle.min.js"></script>
+<script src="/js/register.js"></script>
+
+<% include ../_footer %>

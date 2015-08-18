@@ -9,6 +9,10 @@ function _isRegistrationOpen() {
     else return false;
 }
 
+function _isResultsReleased() {
+    return config.admin.results_released;
+}
+
 middle.requireNoAuthentication = function (req, res, next) {
     if (req.user) {
         return res.redirect('/user/dashboard')
@@ -53,8 +57,18 @@ middle.requireRegistrationOpen = function (req, res, next) {
     }
 };
 
+middle.requireResultsReleased = function (req, res, next) {
+    if (_isResultsReleased()) {
+        return next();
+    }
+    else {
+        return res.redirect('/')
+    }
+};
+
 middle.helper = {
-    isRegistrationOpen: _isRegistrationOpen
+    isRegistrationOpen: _isRegistrationOpen,
+    isResultsReleased: _isResultsReleased
 };
 
 module.exports = middle;
