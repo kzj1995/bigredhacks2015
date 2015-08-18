@@ -5,6 +5,10 @@
 @body-line-height: 1.6em;
 @body-size: 16px;
 
+@nav-purple: lighten(fade(@purple, 70%), 20%);
+@nav-blue: rgba(178, 223, 244, 0.7);
+@nav-orange: fade(@orange, 70%);
+
 html {
   width: 100%;
   height: 100%;
@@ -88,13 +92,13 @@ a {
 
 .nav.navbar-nav {
   &.orange {
-    background-color: fade(@orange, 70%);
+    background-color: @nav-orange;
   }
   &.blue {
-    background-color: rgba(178, 223, 244, 0.7);
+    background-color: @nav-blue;
   }
   &.purple {
-    background-color: lighten(fade(@purple, 70%), 20%);
+    background-color: @nav-purple;
   }
 }
 
@@ -202,6 +206,7 @@ img.leaf {
 .intro {
   width: 100%;
   padding: 20% 0 40px 0;
+  padding-top: 15%; //with announcement
   position: relative;
   background: url(../img/bgd/cornell_000.jpg) no-repeat center center scroll;
   -webkit-background-size: cover;
@@ -212,14 +217,17 @@ img.leaf {
   .slogan {
     text-align: center;
     position: relative;
+    color: @white;
+
     img {
       position: relative;
       top: -25px;
       padding-right: 10px;
     }
     h2, h4, h3 {
-      color: @white;
+
     }
+
     h2 {
       font-size: @main-header-size; //60px;
       line-height: @main-header-size;
@@ -233,10 +241,24 @@ img.leaf {
       margin: 0 0 15px;
       text-shadow: -2.5px 2.5px 8px #000;
     }
+
+    .announcement {
+      &.orange {
+        color: @nav-orange !important;
+      }
+      &.blue {
+        color: @nav-blue !important;
+      }
+      &.purple {
+        color: spin(saturate(lighten(@nav-purple, 40%),70%),10) !important;
+      }
+    }
+
   }
   .page-scroll {
     text-align: center;
   }
+
 }
 
 .transparent {
@@ -372,7 +394,6 @@ footer p {
 .top-nav-collapse {
   background: @red;
 }
-
 
 .landing-icon {
   font-size: 100px;

@@ -9,6 +9,7 @@ var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
+var middle = require('./middleware');
 
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
@@ -53,13 +54,13 @@ passport.deserializeUser(function (id, done) {
 });
 
 /* GET registration page */
-router.get('/register', function (req, res) {
+router.get('/register', middle.requireRegistrationOpen, function (req, res) {
     res.render("register",
         {title: "Register", enums: enums, error: req.flash('error')});
 });
 
 /* POST register a new user */
-router.post('/register', function (req, res) {
+router.post('/register', middle.requireRegistrationOpen, function (req, res) {
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
     form.parse(req, function (err, fields, files) {
@@ -246,8 +247,13 @@ router.post('/login',
         failureFlash: true
     }), function(req, res) {
         // successful auth, user is set at req.user.  redirect as necessary.
-        if (req.user.role === "admin" || req.user.email === config.admin.email) { return res.redirect('/admin'); }
-        else {return res.redirect('/user')}
+        if (req.user.role === "admin" || req.user.email === config.admin.email) {
+            req.session.np = true; //enable no participation mode
+            return res.redirect('/admin');
+        }
+        else {
+            return res.redirect('/user')
+        }
     }
 );
 

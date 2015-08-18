@@ -17,6 +17,7 @@ var teamdecision = teamMembers[0].internal.status; //variable that determines th
             <ul>
                 <li>Team ID: <span id="teamid" ><%= teamMembers[0].internal.teamid %></span></li>
                 <li>No. Members: <%= teamMembers.length %></li>
+                <li>Team with Cornell: <%= teamMembers[0].internal.teamwithcornell ? "Yes" : "No" %></li>
             </ul>
             <br/>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -59,7 +60,7 @@ var teamdecision = teamMembers[0].internal.status; //variable that determines th
             </div>
             <div>
                 <h3 class = "set-decision"> Set Decision For Team: </h3>
-                <form class="decision-radio set-decision">
+                <form class="decision-radio set-decision np-enabled">
                     <%- viewHelper.generateInlineRadio(enums.virtual.status.long, {
                         checked: teamdecision, //set default value
                         name: "teamstatus", //name attr of each input

@@ -88,7 +88,7 @@ collegeSchema.statics.getAll = function (callback) {
     else callback(null, cache);
 };
 
-collegeSchema.statics.exists = function (callback) {
+collegeSchema.statics.exists = function (unitid, callback) {
     this.findOne({_id: unitid}, function (err, res) {
         if (err) callback(err);
         if (res === null) {

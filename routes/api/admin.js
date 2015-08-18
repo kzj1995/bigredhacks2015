@@ -105,4 +105,29 @@ router.patch('/user/:email/setRole', function (req, res, next) {
     });
 });
 
+/**
+ * @api GET /np Checks whether a user is in no-participation mode
+ * @apiname checknp
+ *
+ * @apiSuccess (200) true
+ * @apiError (200) false
+ */
+router.get('/np', function (req, res, next) {
+    res.send(req.session.np);
+});
+
+/**
+ * @api POST /np/set Enable/disable no participation mode
+ * @apiname setnp
+ *
+ * @apiParam {boolean} state New np state to set
+ *
+ * @apiSuccess (200)
+ * @apiError (500)
+ */
+router.post('/np/set', function (req, res, next) {
+    req.session.np = req.body.state;
+    res.sendStatus(200);
+});
+
 module.exports = router;

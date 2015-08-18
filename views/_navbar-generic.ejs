@@ -18,7 +18,9 @@
                 <li><a href="/user/logout">Logout</a></li>
                 <% }
                 else { %>
+                <% if (middlehelp.isRegistrationOpen()) {%>
                 <li><a href="/register">Register</a></li>
+                <% } %>
                 <li><a href="/login">Login</a></li>
                 <% } %>
 

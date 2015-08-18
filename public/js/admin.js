@@ -1,5 +1,8 @@
 $('document').ready(function () {
 
+    var npCheckbox = $("[name='np-toggle-checkbox']");
+    npCheckbox.bootstrapSwitch();
+
     /**
      * generic ajax to update status
      * @param type team,user
@@ -14,24 +17,6 @@ $('document').ready(function () {
         $.ajax({
             type: "PATCH",
             url: "/api/admin/" + type + "/" + id + "/setStatus",
-            data: {
-                status: newStatus
-            },
-            success: function (data) {
-                callback(data);
-            },
-            error: function (e) {
-                //todo more descriptive errors
-                console.log("Update failed!");
-            }
-        });
-    };
-
-    //generic ajax to update team status
-    var updateTeamStatus = function updateTeamStatus(teamid, newStatus, callback) {
-        $.ajax({
-            type: "PATCH",
-            url: "/api/admin/team/" + teamid + "/setStatus",
             data: {
                 status: newStatus
             },
@@ -63,26 +48,105 @@ $('document').ready(function () {
         });
     };
 
-    var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
-        var newAdditionalURL = "";
-        var tempArray = url.split("?");
-        var baseURL = tempArray[0];
-        var additionalURL = tempArray[1];
-        var temp = "";
-        if (additionalURL) {
-            tempArray = additionalURL.split("&");
-            for (var i = 0; i < tempArray.length; i++) {
-                if (tempArray[i].split('=')[0] != param) {
-                    newAdditionalURL += temp + tempArray[i];
-                    temp = "&";
+
+    /****************************
+     * No participation switch***
+     ***************************/
+
+    /**
+     * Check whether use is in non-participation mode
+     * @type {*|jQuery}
+     */
+    var getNp = function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/admin/np",
+            success: function (data) {
+                if (data == "true" || data == "1") {
+                    toggleNp(true);
+                    //third parameter skips on change event
+                    npCheckbox.bootstrapSwitch("state",true, true); //set starting state
                 }
+                else {
+                    npCheckbox.bootstrapSwitch("state",false, true);
+                    return toggleNp(false);
+
+                }
+            },
+            error: function (e) {
+                console.log("Unable to determine participation mode.");
+                npCheckbox.bootstrapSwitch("state",false, true);
+                return toggleNp(false);
             }
-        }
-        var rows_txt = temp + "" + param + "=" + paramVal;
-        return baseURL + "?" + newAdditionalURL + rows_txt;
+        })
     };
 
-    //handle decision buttons
+    var setNp = function (state) {
+        $.ajax({
+            type: "POST",
+            url: "/api/admin/np/set",
+            data: {
+                state: state
+            },
+            success: function (data) {
+                toggleNp(state);
+                if (state == false) {
+                    alert("WARNING: No participation mode is turned off for the duration of this session. All changes made to applicants during this time are permanent.");
+                }
+            },
+            error: function (e) {
+                console.log("Unable to set participation mode");
+            }
+        })
+    };
+
+    //disable non-participation enabled items
+    var toggleNp = function(state) {
+        $(".np-enabled").children().prop("disabled", state);
+        $(".np-enabled input[type=radio]").prop("disabled", state);
+    };
+
+    npCheckbox.on('switchChange.bootstrapSwitch', function(event, state) {
+        setNp(state);
+    });
+
+
+    /******************
+     * Initialization**
+     ******************/
+    getNp();
+
+
+    /******************
+     * Detail Views****
+     *****************/
+
+        //handle decision radio buttons for individual(detail) view
+    $('input[type=radio][name=individualstatus]').on('change', function () {
+        var _this = this;
+        var newStatus = $(_this).val();
+        var pubid = $("#pubid").text();
+        updateStatus("user", pubid, newStatus, function (data) {
+        });
+    });
+
+    //handle decision radio buttons for team view
+    $('input[type=radio][name=teamstatus]').on('change', function () {
+        var _this = this;
+        var newStatus = $(_this).val();
+        var teamid = $("#teamid").text();
+        updateStatus("team", teamid, newStatus, function (data) {
+            $('.status').text(newStatus);
+            $('.status').attr("class", "status " + newStatus);
+        });
+    });
+
+
+    /******************
+     * SEARCH PAGE ****
+     ******************/
+
+        //handle decision buttons
     $(".decisionbuttons button").click(function () {
         var _this = this;
         var buttongroup = $(this).parent();
@@ -102,7 +166,7 @@ $('document').ready(function () {
     });
 
     //handle decision radio buttons for search view
-    $('input[type=radio][name=status]').on('change', function () {
+    $('.decision-radio input[type=radio][name=status]').on('change', function () {
         var _this = this;
         var newStatus = $(_this).val();
         var radios = $(_this).parents(".decision-radio").find("input[type=radio]");
@@ -113,26 +177,6 @@ $('document').ready(function () {
         updateStatus("user", pubid, newStatus, function (data) {
             $(radios).prop("disabled", false);
         })
-    });
-
-    //handle decision radio buttons for individual(detail) view
-    $('input[type=radio][name=individualstatus]').on('change', function () {
-        var _this = this;
-        var newStatus = $(_this).val();
-        var pubid = $("#pubid").text();
-        updateStatus("user", pubid, newStatus, function (data) {
-        });
-    });
-
-    //handle decision radio buttons for team view
-    $('input[type=radio][name=teamstatus]').on('change', function () {
-        var _this = this;
-        var newStatus = $(_this).val();
-        var teamid = $("#teamid").text();
-        updateStatus("team", teamid, newStatus, function (data) {
-            $('.status').text(newStatus);
-            $('.status').attr("class","status "+newStatus);
-        });
     });
 
     //switch render location
@@ -168,9 +212,9 @@ $('document').ready(function () {
     });
 
 
-    /*
-     *Role settings
-     */
+    /*********************
+     *** Role settings****
+     *********************/
 
     //edit button
     $(".btn-edit").on('click', function () {
@@ -212,10 +256,15 @@ $('document').ready(function () {
         var email = $(this).closest("form").find("#new-email").val();
         var role = $(this).closest("form").find("#new-role").val();
         updateRole(email, role, function (data) {
-            //todo dynamic update
-            //$("#user-roles").append('<tr>name coming soon</tr><tr>'+email+'</tr><tr>'+role+'</tr>');
-            location.reload();
-        })
+            var c = confirm("Are you sure you want to add " + email + "?");
+            if (c) {
+                updateRole(email, role, function (data) {
+                    //todo dynamic update
+                    //$("#user-roles").append('<tr>name coming soon</tr><tr>'+email+'</tr><tr>'+role+'</tr>');
+                    location.reload();
+                });
+            }
+        });
     });
 
     //add college to list of bus stops
@@ -327,6 +376,24 @@ $('document').ready(function () {
         });
     });
 
+    var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+        if (additionalURL) {
+            tempArray = additionalURL.split("&");
+            for (var i = 0; i < tempArray.length; i++) {
+                if (tempArray[i].split('=')[0] != param) {
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }
+        }
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
+    };
 });
 
 

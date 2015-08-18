@@ -1,7 +1,7 @@
-$(document).ready( function() {
+$(document).ready(function () {
 
     //Update resume
-    $("#resume-update").on('click', function(e) {
+    $("#resume-update").on('click', function (e) {
         e.preventDefault();
         $("#resume-form").toggle();
         $('body').animate({
@@ -14,24 +14,24 @@ $(document).ready( function() {
         $("input[type='file']").filepicker({style: 'default'});
     });
 
-    setInterval(function() {
+    setInterval(function () {
         checkUserId();
         checkResume();
-    }, 200);
+    }, 1000);
 
     //working with cornell students checkbox event
-    $("#cornellteamcheck").on("change",function() {
+    $("#cornellteamcheck").on("change", function () {
         var _this = this;
         $(".checkbox").addClass("disabled");
-        $(_this).prop("disabled",true);
+        $(_this).prop("disabled", true);
         var checked = this.checked;
         $.ajax({
             url: "/user/team/cornell",
             type: "POST",
             data: {checked: checked},
-            success: function(d) {
+            success: function (d) {
                 $(".checkbox").removeClass("disabled");
-                $(_this).prop("disabled",false);
+                $(_this).prop("disabled", false);
             }
         })
     });
@@ -90,11 +90,14 @@ $(document).ready( function() {
 
 //check length of user id input
 function checkUserId() {
-    if ($('#addteamid').val().length > 0){
-        $('#addteamid-submit').prop('disabled', false);
-    }
-    else {
-        $('#addteamid-submit').prop('disabled', true);
+    //field doens't exist if registration disabled
+    if ($('#addteamid').length > 0) {
+        if ($('#addteamid').val().length > 0) {
+            $('#addteamid-submit').prop('disabled', false);
+        }
+        else {
+            $('#addteamid-submit').prop('disabled', true);
+        }
     }
 }
 

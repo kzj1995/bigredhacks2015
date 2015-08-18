@@ -1,3 +1,4 @@
+<% var user = currentUser || {}; %>
 <% include ../_header %>
 <body>
 <div class="container-fluid">
@@ -11,24 +12,44 @@
                 <div class="col-md-3">
                     <h4>Overall: </h4>
                     <ul>
-                        <li>Accepted</li>
-                        <li>Waitlisted:</li>
-                        <li>Rejected:</li>
-                        <li>Pending:</li>
+                        <li>Accepted: <%= stats.overall.accepted %></li>
+                        <li>Waitlisted: <%= stats.overall.waitlisted %></li>
+                        <li>Rejected: <%= stats.overall.rejected %></li>
+                        <li>Pending: <%= stats.overall.pending %></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h4>From School: </h4>
                     <ul>
-                        <li>Accepted</li>
-                        <li>Waitlisted:</li>
-                        <li>Rejected:</li>
-                        <li>Pending:</li>
+                        <li>Accepted: <%= stats.school.accepted %></li>
+                        <li>Waitlisted: <%= stats.school.waitlisted %></li>
+                        <li>Rejected: <%= stats.school.rejected %></li>
+                        <li>Pending: <%= stats.school.pending %></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Assigned to bus: </h4>
+                    <ul>
+                        <li>Accepted: <%= stats.bus_expl.accepted %></li>
+                        <li>Waitlisted: <%= stats.bus_expl.waitlisted %></li>
+                        <li>Rejected: <%= stats.bus_expl.rejected %></li>
+                        <li>Pending: <%= stats.bus_expl.pending %></li>
+                        <%- user.internal.busid === null ? "<span>*no bus</span>" : ""%>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Proximity to bus: </h4>
+                    <ul>
+                        <li>Accepted: -</li>
+                        <li>Waitlisted: -</li>
+                        <li>Rejected: -</li>
+                        <li>Pending: -</li>
                     </ul>
                 </div>
             </div>
             <div class="row review-body">
                 <% include _usertemplate %>
+                <% include _userteamtemplate %>
             </div>
             <div class="row review-footer">
                 <a class="btn btn-primary" href="/admin/review">Next Applicant <i class="fa fa-long-arrow-right"></i></a>
@@ -36,5 +57,5 @@
         </div>
     </div>
 </div>
-
+<script src="/js/admin.js"></script>
 <% include ../_footer %>

@@ -12,6 +12,74 @@ var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
 
+//filter out admin users in aggregate queries.
+//todo change to {role: "user"} in 2016 deployment
+var USER_FILTER = {$or: [{role: {$ne: "admin"}}, {role: {$exists: false}}]};
+
+//some commonly used aggregation queries:
+//todo refactor and clean this up
+var aggregate = {
+    applicants: {
+        //runs simple aggregation for applicants over a match criteria
+        byMatch: function (match) {
+            return function (done) {
+                User.aggregate([
+                    {$match: match},
+                    {$group: {_id: "$internal.status", total: {$sum: 1}}}
+                ], function (err, result) {
+                    if (err) {
+                        done(err);
+                    }
+                    else {
+                        //console.log(result);
+                        //make all values lowercase
+                        result = _.map(result, function (x) {
+                            return _.mapObject(x, function (val, key) {
+                                return (typeof val == 'string') ? val.toLowerCase() : val;
+                            });
+                        });
+                        //console.log(result);
+
+                        //remap values to key,value pairs and fill defaults
+                        result = _.defaults(_.object(_.map(result, _.values)), {
+                            null: 0,
+                            accepted: 0,
+                            rejected: 0,
+                            waitlisted: 0,
+                            pending: 0
+                        }); //{pending: 5, accepted: 10}
+                        result.total = _.reduce(result, function (a, b) {
+                            return a + b;
+                        });
+
+                        //fold null prop into pending
+                        //legacy support when internal.status in user model did not have default: 'Pending'
+                        //todo consider removing in 2016+ deployments
+                        result.pending += result["null"];
+                        result = _.omit(result, "null");
+                        done(null, result);
+                    }
+                })
+            }
+        },
+        school: function (current_user) {
+            return function (done) {
+                User.aggregate([
+                    {$match: _.extend(USER_FILTER, {"school.id": current_user.school.id})},
+                    {$group: {_id: "$internal.status", total: {$sum: 1}}}
+                ], function (err, result) {
+                    if (err) {
+                        done(err);
+                    }
+                    else {
+
+                    }
+                })
+            }
+        }
+    }
+};
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.redirect('/admin/dashboard');
@@ -22,46 +90,10 @@ router.get('/', function (req, res, next) {
 router.get('/dashboard', function (req, res, next) {
 
     async.parallel({
-        applicants: function (done) {
-            User.aggregate([
-                {$group: {_id: "$internal.status", total: {$sum: 1}}}
-            ], function (err, result) {
-                if (err) {
-                    done(err);
-                }
-                else {
-                    //console.log(result);
-                    //make all values lowercase
-                    result = _.map(result, function (x) {
-                        return _.mapObject(x, function (val, key) {
-                            return (typeof val == 'string') ? val.toLowerCase() : val;
-                        });
-                    });
-                    //console.log(result);
-
-                    //remap values to key,value pairs and fill defaults
-                    result = _.defaults(_.object(_.map(result, _.values)), {
-                        null: 0,
-                        accepted: 0,
-                        rejected: 0,
-                        waitlisted: 0,
-                        pending: 0
-                    }); //{pending: 5, accepted: 10}
-                    result.total = _.reduce(result, function (a, b) {
-                        return a + b;
-                    });
-
-                    //fold null prop into pending
-                    //legacy support when internal.status in user model did not have default: 'Pending'
-                    //todo consider removing in 2016+ deployments
-                    result.pending += result["null"];
-                    result = _.omit(result, "null");
-                    done(null, result);
-                }
-            })
-        },
+        applicants: aggregate.applicants.byMatch(USER_FILTER),
         schools: function (done) {
             User.aggregate([
+                {$match: USER_FILTER},
                 {$group: {_id: {name: "$school.name", status: "$internal.status"}, total: {$sum: 1}}},
                 {
                     $project: {
@@ -179,8 +211,11 @@ router.get('/search', function (req, res, next) {
     }
 
     _runQuery(req.query, function (err, applicants) {
+        if (err) {
+            console.log(err);
+        }
         if (req.query.render == "table") {
-            endOfCall(err, applicants);
+            endOfCall(null, applicants);
         }
         else {
             _fillTeamMembers(applicants, endOfCall);
@@ -202,18 +237,31 @@ router.get('/search', function (req, res, next) {
 router.get('/review', function (req, res, next) {
     //todo remove exists in 2016 deployment
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
+    query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
+        console.log(count);
         if (err) {
-            console.log(err)
+            console.log(err);
         }
         else {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
-                res.render('admin/review', {
-                    title: 'Admin Dashboard - Review',
-                    user: user
+                async.parallel({
+                    overall: aggregate.applicants.byMatch(USER_FILTER),
+                    school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
+                    bus_expl: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"internal.busid": user.internal.busid})) //explicit bus assignment
+                }, function (err, stats) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    res.render('admin/review', {
+                        title: 'Admin Dashboard - Review',
+                        currentUser: user,
+                        stats: stats
+                    })
                 })
+
             });
         }
     });
@@ -289,7 +337,7 @@ function _runQuery(queryString, callback) {
             .match(query.match)
             .sort('lastname')
             .exec(function (err, applicants) {
-                if (err) endOfCall(err);
+                if (err) callback(err);
                 else {
                     callback(null, _.map(applicants, function (x) {
                         return x.document

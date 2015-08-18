@@ -5,7 +5,7 @@ var _ = require("underscore");
 /**
  * Builds an aggregate or simple query
  * @param query Object Raw req.query input
- * @param searchSchema Searchable fields as defined in searchable.js
+ * @param schema Searchable fields as defined in searchable.js
  *          a string corresponding to the search must be passed in.
  * @return Object out
  *              out.match: object to match
@@ -45,7 +45,10 @@ var builder = function queryBuilder(query, schema) {
                 //todo spaces at end of string break this
                 valToMatch = _toTextMatch(v.split(" "));
             }
-            else valToMatch = v;
+            else {
+                //convert string to bool, only possible when not fuzzy
+                valToMatch = normalize_bool(v);
+            }
 
             //generate projection
             if (path.length > 1) {
@@ -92,4 +95,18 @@ var _toTextMatch = function _toTextMatch(terms) {
     return new RegExp(regexString, 'ig');
 };
 
+/**
+ * convert a string to bool
+ * @param string
+ * @returns {*}
+ */
+function normalize_bool(string) {
+    if (string.toLowerCase() == "true") {
+        return true;
+    }
+    else if (string.toLowerCase() == "false") {
+        return false;
+    }
+    return string;
+}
 module.exports = builder;

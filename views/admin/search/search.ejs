@@ -1,5 +1,4 @@
 <% include ../../_header %>
-
 <%
 var input = params || {}; //persist fields
 var render = render || "box"; //default to box view
@@ -17,7 +16,7 @@ var render = render || "box"; //default to box view
                 <div class="form-group hidden-xs">
                     <label for="render">Render: </label>
                     <select name="render" id="render" class="form-control">
-                        <%- viewHelper.generateOptions("box table".split(" "),{selected: render}); %>
+                        <%- viewHelper.generateOptions("box table".split(" "), {selected: render}); %>
                     </select>
                 </div>
             </form>
@@ -60,6 +59,18 @@ var render = render || "box"; //default to box view
                         <label class="radio-inline">
                             <input type="radio" name="status" value="Rejected">Rejected
                         </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="Pending">Pending
+                        </label>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="teamwithcornell" name="teamwithcornell" value="true"
+                                       class="checkbox"> Team with Cornell students
+                            </label>
+                        </div>
                     </div>
                     <fieldset>
                         <button type="submit" id="submit" class="btn btn-primary">search</button>
@@ -78,7 +89,6 @@ var render = render || "box"; //default to box view
 
                 <% if (applicants.length == 0) {
                 %>
-                <p>Print search query here!</p>
 
                 <p>No results found.</p>
                 <% } %>
