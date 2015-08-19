@@ -12,7 +12,10 @@ var en = {
         tshirt: "XS S M L XL".split(" "),
         status: "Pending Accepted Waitlisted Rejected".split(" "), //take care when changing
         experience: "Yes No".split(" "), //store boolean state as string for simplicity
-        role: "user/admin/bus captain".split("/")
+        role: "user/admin/bus captain/test".split("/")
+    },
+    admin: {
+      travel_mode: "Charter Bus/Public Bus/Plane/Carpool".split("/")
     },
     virtual: { //virtual params are used in front end display only - these should always correspond to above
         status: {
@@ -20,7 +23,7 @@ var en = {
             short: "A W R".split(" ") //shorthand array
         },
         role: {
-            long: "bus captain/admin".split("/")//remove "user item"
+            long: "test/bus captain/admin".split("/")//remove "user item"
         }
     }
 };

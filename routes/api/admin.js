@@ -130,4 +130,42 @@ router.post('/np/set', function (req, res, next) {
     res.sendStatus(200);
 });
 
+//todo documentation
+/* POST remove bus from list of buses */
+router.delete('/removeBus', function (req, res, next) {
+    Bus.remove({_id: req.body.busid}, function (err) {
+        if (err)  {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+        else return res.sendStatus(200);
+    });
+});
+
+//todo documentation
+/* POST update bus in list of buses */
+router.put('/updateBus', function (req, res, next) {
+    Bus.findOne({_id: req.body.busid}, function (err, bus) {
+        var collegeidlist = req.body.collegeidlist.split(",");
+        var collegenamelist = req.body.busstops.split(",");
+        var stops = [];
+        for (var i = 0; i < collegeidlist.length; i++) {
+            stops.push({
+                collegeid: collegeidlist[i],
+                collegename: collegenamelist[i]
+            });
+        }
+        bus.name = req.body.busname; //bus route name
+        bus.stops = stops;
+        bus.capacity = parseInt(req.body.buscapacity);
+        bus.save(function (err) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            else return res.sendStatus(200);
+        });
+    });
+});
+
 module.exports = router;

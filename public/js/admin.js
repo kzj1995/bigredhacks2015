@@ -267,6 +267,11 @@ $('document').ready(function () {
         });
     });
 
+
+    /**********************
+     *** Bus Management****
+     **********************/
+
     //add college to list of bus stops
     $('#addcollege').on('click', function () {
         var newCollege = $("#college").val();
@@ -296,9 +301,9 @@ $('document').ready(function () {
         businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:</b> <input type='text'" +
         "id = 'maxcapacitynumber' name='maxcapacitynumber' value='" + currentBusCapacity + "' /></li>");
         //Replace "edit" and "remove" buttons with "update" and "cancel"
-        $(this).parent().find(".btn.btn-primary.removebus").replaceWith("<a href='/admin/businfo'><input " +
+        $(this).parent().find(".btn.removebus").replaceWith("<a href='/admin/businfo'><input " +
         "type='button' value='cancel' name='cancel' class='btn btn-primary cancel'></a>");
-        $(this).parent().find(".btn.btn-primary.editbus").replaceWith("<input type='button' value='update' " +
+        $(this).parent().find(".btn.editbus").replaceWith("<input type='button' value='update' " +
         "name='update' class='btn btn-primary update'>");
     });
 
@@ -306,8 +311,8 @@ $('document').ready(function () {
     $('.removebus').on('click', function () {
         var _this = this;
         $.ajax({
-            type: "POST",
-            url: "/admin/removeBus",
+            type: "DELETE",
+            url: "/api/admin/removeBus",
             data: {
                 busid: $(_this).parents(".businfobox").data("busid")
             },
@@ -348,8 +353,8 @@ $('document').ready(function () {
             busstops = busstops + businfobox.find(".collegename").eq(i).text() + ",";
         }
         $.ajax({
-            type: "POST",
-            url: "/admin/updateBus",
+            type: "PUT",
+            url: "/api/admin/updateBus",
             data: {
                 busid: businfobox.data("busid"),
                 busname: businfobox.find("#newbusname").val(),
@@ -375,6 +380,13 @@ $('document').ready(function () {
             }
         });
     });
+
+
+    /********************************
+     *** Reimbursement Management****
+     ********************************/
+
+        //todo implement
 
     var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
         var newAdditionalURL = "";

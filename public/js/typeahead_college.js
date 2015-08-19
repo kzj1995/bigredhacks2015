@@ -36,6 +36,7 @@ var engine = new Bloodhound({
 
 engine.initialize();
 
+//general typeahead
 $('.typeahead').typeahead({
     hint: true,
     highlight: true,
@@ -48,6 +49,7 @@ $('.typeahead').typeahead({
     $("#collegeid").val(datum.id);
 });
 
+//used in admin bus management
 $('.typeaheadlist').typeahead({
     hint: true,
     highlight: true,

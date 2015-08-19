@@ -3,11 +3,13 @@ var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
 var async = require('async');
+
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
 var User = require('../models/user.js');
 var Team = require('../models/team.js');
 var Bus = require('../models/bus.js');
+var Reimbursements = require('../models/reimbursements.js');
 var enums = require('../models/enum.js');
 var config = require('../config.js');
 var queryBuilder = require('../util/search_query_builder.js');
@@ -267,6 +269,75 @@ router.get('/review', function (req, res, next) {
     });
 });
 
+
+/* GET page to see bus information */
+router.get('/businfo', function (req, res, next) {
+    Bus.find().exec(function (err, buses) {
+        if (err) {
+            console.log(err);
+        }
+        var _buses = [];
+        async.each(buses, function (bus, callback) {
+            async.each(bus.members, function (member, callback2) {
+                User.findOne({_id: member.id}, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else if (user.role == "bus captain") {
+                        bus.buscaptain = user;
+                    }
+                    callback2();
+                });
+            }, function (err) {
+                _buses.push(bus);
+                callback();
+            });
+        }, function (err) {
+            res.render('admin/businfo', {
+                title: 'Admin Dashboard - Bus Information',
+                buses: _buses
+            });
+        });
+    });
+});
+
+/* POST new bus to list of buses */
+router.post('/businfo', function (req, res, next) {
+    var collegeidlist = req.body.collegeidlist.split(",");
+    var collegenamelist = req.body.busstops.split(",");
+    var stops = [];
+    for (var i = 0; i < collegeidlist.length; i++) {
+        stops.push({
+            collegeid: collegeidlist[i],
+            collegename: collegenamelist[i]
+        });
+    }
+    var newBus = new Bus({
+        name: req.body.busname, //bus route name
+        stops: stops,
+        capacity: parseInt(req.body.buscapacity),
+        members: []
+    });
+    newBus.save(function (err) {
+        if (err) console.log(err);
+        res.redirect('/admin/businfo');
+    });
+});
+
+
+
+/* GET reimbursement page */
+router.get('/reimbursements', function(req, res, next) {
+   Reimbursements.find({}, function(err, reimbursements) {
+        if (err) {
+            console.error(err);
+        }
+        res.render('admin/reimbursements', {
+            reimbursements: reimbursements
+        });
+   })
+});
+
 /**
  * Helper function to fill team members in teammember prop
  * @param applicants Array|Object of applicants to obtain team members of
@@ -353,89 +424,4 @@ function _runQuery(queryString, callback) {
     }
 
 }
-
-/* GET page to see bus information */
-router.get('/businfo', function (req, res, next) {
-    Bus.find().exec(function (err, buses) {
-        if (err) {
-            console.log(err);
-        }
-        var _buses = [];
-        async.each(buses, function (bus, callback) {
-            async.each(bus.members, function (member, callback2) {
-                User.findOne({_id: member.id}, function (err, user) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else if (user.role == "bus captain") {
-                        bus.buscaptain = user;
-                    }
-                    callback2();
-                });
-            }, function (err) {
-                _buses.push(bus);
-                callback();
-            });
-        }, function (err) {
-            res.render('admin/businfo', {
-                title: 'Admin Dashboard - Bus Information',
-                buses: _buses
-            });
-        });
-    });
-});
-
-/* POST new bus to list of buses */
-router.post('/businfo', function (req, res, next) {
-    var collegeidlist = req.body.collegeidlist.split(",");
-    var collegenamelist = req.body.busstops.split(",");
-    var stops = [];
-    for (var i = 0; i < collegeidlist.length; i++) {
-        stops.push({
-            collegeid: collegeidlist[i],
-            collegename: collegenamelist[i]
-        });
-    }
-    var newBus = new Bus({
-        name: req.body.busname, //bus route name
-        stops: stops,
-        capacity: parseInt(req.body.buscapacity),
-        members: []
-    });
-    newBus.save(function (err) {
-        if (err) console.log(err);
-        res.redirect('/admin/businfo');
-    });
-});
-
-/* POST remove bus from list of buses */
-router.post('/removeBus', function (req, res, next) {
-    Bus.remove({_id: req.body.busid}, function (err) {
-        if (err) return res.sendStatus(500);
-        else return res.sendStatus(200);
-    });
-});
-
-/* POST update bus in list of buses */
-router.post('/updateBus', function (req, res, next) {
-    Bus.findOne({_id: req.body.busid}, function (err, bus) {
-        var collegeidlist = req.body.collegeidlist.split(",");
-        var collegenamelist = req.body.busstops.split(",");
-        var stops = [];
-        for (var i = 0; i < collegeidlist.length; i++) {
-            stops.push({
-                collegeid: collegeidlist[i],
-                collegename: collegenamelist[i]
-            });
-        }
-        bus.name = req.body.busname; //bus route name
-        bus.stops = stops;
-        bus.capacity = parseInt(req.body.buscapacity);
-        bus.save(function (err) {
-            if (err) return res.sendStatus(500);
-            else return res.sendStatus(200);
-        });
-    });
-});
-
 module.exports = router;
