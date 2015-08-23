@@ -28,10 +28,10 @@ if (messages.error) {
 <div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
-    <h1>General Registration</h1>
+    <h1>Cornell Registration</h1>
 
-    <p>This registration form is only for <emph>Cornell Tech</emph> students.</p>
-    <form id="registrationForm" action="/register?college=cornelltech" name='registrationForm' method="POST" autocomplete="on"
+    <p>This registration form is only for <emph><%= cornellname %></emph> students.</p>
+    <form id="registrationForm" action="/cornellregister" name='registrationForm' method="POST" autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
             <div class="header-wrapper">
@@ -91,12 +91,12 @@ if (messages.error) {
             </div>
 
             <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                   value="<%= cornelltechid %>" required readonly/>
+                   value="<%= cornellid %>" required readonly/>
 
             <div class="form-group">
                 <label for="college">full school name *</label><br/>
                 <input type="text" id="college" name="college" class="form-control" placeholder="School Name"
-                       value="<%= cornelltechname %>" required readonly/>
+                       value="<%= cornellname %> - NY" required readonly/>
             </div>
             <div class="form-group">
                 <label for="yearDropdown">academic year *</label>

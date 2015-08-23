@@ -2,11 +2,22 @@
 var config = require('../config');
 var middle = {};
 
-function _isRegistrationOpen(querystring) {
-    if (config.admin.reg_open || (querystring != null && querystring.college == "cornelltech")) {
+function _isRegistrationOpen() {
+    if (config.admin.reg_open) {
         return true;
     }
-    else return false;
+    else {
+        return false;
+    }
+}
+
+function _isCornellRegistrationOpen() {
+    if (config.admin.cornell_reg_open) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 middle.requireNoAuthentication = function (req, res, next) {
@@ -45,14 +56,22 @@ middle.allRequests = function (req, res, next) {
 };
 
 middle.requireRegistrationOpen = function (req, res, next) {
-    var querystring = req.query;
-    if (_isRegistrationOpen(querystring)) {
+    if (_isRegistrationOpen()) {
         return next();
     }
     else {
         return res.redirect('/');
     }
 };
+
+middle.requireCornellRegistrationOpen = function (req, res, next) {
+    if (_isCornellRegistrationOpen()) {
+        return next();
+    }
+    else {
+        return res.redirect('/');
+    }
+}
 
 middle.helper = {
     isRegistrationOpen: _isRegistrationOpen

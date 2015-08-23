@@ -16,6 +16,7 @@
   },
   "admin": {
     "email": "",
-    "reg_open": true
+    "reg_open": true,
+    "cornell_reg_open": true
   }
 }
