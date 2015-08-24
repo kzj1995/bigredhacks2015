@@ -232,21 +232,201 @@ router.post('/register', middle.requireRegistrationOpen, function (req, res) {
     });
 });
 
-/* GET registration page for Cornell Tech Students */
-router.get('/cornelltechregister', function (req, res) {
-    College.findOne({name: "Cornell Tech"}, function (err, college) {
-        res.render("cornelltechregister",
+/* GET registration page for Cornell (University and Tech) Students */
+router.get('/cornellregister/:name', middle.requireCornellRegistrationOpen, function (req, res) {
+    var collegeName = "";
+    if (req.params.name == "cornelltech") {
+        collegeName = "Cornell Tech";
+    }
+    else if (req.params.name == "cornelluniversity") {
+        collegeName = "Cornell University";
+    }
+    else {
+        return res.redirect('/');
+    }
+    College.findOne({name: collegeName}, function (err, college) {
+        res.render("cornellregister",
             {
-                title: "Cornell Tech Register",
+                title: collegeName + " Register",
                 enums: enums,
                 error: req.flash('error'),
-                cornelltechname: "Cornell Tech - NY",
-                cornelltechid: college._id
+                cornellname: collegeName,
+                cornellid: college._id
             }
         );
     });
 });
 
+/* POST register a new user */
+router.post('/cornellregister', middle.requireCornellRegistrationOpen, function (req, res) {
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error', "Error parsing form.");
+            return res.redirect('/register');
+        }
+
+        req.body = helper.reformatFields(fields);
+
+        req.files = files;
+        var resume = files.resume[0];
+        //console.log(resume);
+        //console.log(resume.headers);
+
+        //todo reorder validations to be consistent with form
+        req = validator.validate(req, [
+            'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'q1', 'q2', 'anythingelse', 'experienceDropdown', 'yearDropdown'
+        ]);
+
+
+        var errors = req.validationErrors();
+        //console.log(errors);
+        if (errors) {
+            var errorParams = errors.map(function (x) {
+                return x.param;
+            });
+            req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
+            res.render('register', {
+                title: 'Register',
+                message: 'The following errors occurred',
+                errors: errors,
+                input: req.body,
+                enums: enums
+            });
+        }
+        else {
+
+            helper.uploadResume(resume, null, function (err, file) {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', "File upload failed. :(");
+                    return res.redirect('/register');
+                }
+                if (typeof file === "string") {
+                    req.flash('error', file);
+                    return res.redirect('/register');
+                }
+
+                //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
+                var newUser = new User({
+                    name: {
+                        first: req.body.firstname,
+                        last: req.body.lastname
+                    },
+                    email: req.body.email,
+                    password: req.body.password,
+                    gender: req.body.genderDropdown,
+                    phone: req.body.phonenumber,
+                    logistics: {
+                        dietary: req.body.dietary,
+                        tshirt: req.body.tshirt,
+                        anythingelse: req.body.anythingelse
+                    },
+                    school: {
+                        id: req.body.collegeid,
+                        name: req.body.college,
+                        year: req.body.yearDropdown,
+                        major: req.body.major
+                    },
+                    app: {
+                        github: req.body.github,
+                        linkedin: req.body.linkedin,
+                        resume: file.filename,
+                        questions: {
+                            q1: req.body.q1,
+                            q2: req.body.q2
+                        },
+                        experience: req.body.experienceDropdown
+                    },
+                    role: "user"
+                });
+
+                //set user as admin if designated in config for easy setup
+                if (newUser.email === config.admin.email) {
+                    newUser.role = "admin";
+                }
+
+
+                newUser.save(function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        console.log(err);
+                        req.flash("error", "An error occurred.");
+                        res.render('register', {
+                            title: 'Register', error: req.flash('error'), input: req.body, enums: enums
+                        });
+                    }
+                    else {
+                        helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log(result);
+                            }
+
+                            //send email and redirect to home page
+                            req.login(newUser, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                var template_name = "bigredhackstemplate";
+                                var template_content = [{
+                                    "name": "emailcontent",
+                                    "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                    "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                    "that we have received your application." + "</p><p>" +
+                                    "You can log in to our website any time until the application deadline " +
+                                    "to update your information or add team members." + "</p><p>" +
+                                    "If you haven't already, make sure to like us on Facebook and " +
+                                    "follow us on Twitter!" + "</p><p>" +
+                                    "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                                }];
+
+                                var message = {
+                                    "subject": "BigRed//Hacks Registration Confirmation",
+                                    "from_email": "info@bigredhacks.com",
+                                    "from_name": "BigRed//Hacks",
+                                    "to": [{
+                                        "email": newUser.email,
+                                        "name": newUser.name.first + " " + newUser.name.last,
+                                        "type": "to"
+                                    }],
+                                    "important": false,
+                                    "track_opens": null,
+                                    "track_clicks": null,
+                                    "auto_text": null,
+                                    "auto_html": null,
+                                    "inline_css": null,
+                                    "url_strip_qs": null,
+                                    "preserve_recipients": null,
+                                    "view_content_link": null,
+                                    "tracking_domain": null,
+                                    "signing_domain": null,
+                                    "return_path_domain": null,
+                                    "merge": true,
+                                    "merge_language": "mailchimp"
+                                };
+                                var async = false;
+                                mandrill_client.messages.sendTemplate({
+                                    "template_name": template_name,
+                                    "template_content": template_content,
+                                    "message": message, "async": async
+                                }, function (result) {
+                                    console.log(result);
+                                }, function (e) {
+                                    console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                                });
+                                res.redirect('/user/dashboard');
+                            })
+                        })
+                    }
+                });
+            });
+        }
+    });
+});
 
 /* GET render the login page */
 router.get('/login', function (req, res, next) {

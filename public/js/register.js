@@ -31,7 +31,7 @@ $('document').ready(function () {
 
     //fails for cornell school
     $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
-        var restrict = ["Cornell University - NY"];
+        var restrict = [];
         return (restrict.indexOf(val) == -1);
     }, notCornellText);
 
