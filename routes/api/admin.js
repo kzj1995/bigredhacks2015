@@ -4,6 +4,7 @@ var router = express.Router();
 var Colleges = require('../../models/college.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
+var Reimbursements = require('../../models/reimbursements.js');
 var async = require('async');
 var mongoose = require('mongoose');
 
@@ -134,7 +135,7 @@ router.post('/np/set', function (req, res, next) {
 /* POST remove bus from list of buses */
 router.delete('/removeBus', function (req, res, next) {
     Bus.remove({_id: req.body.busid}, function (err) {
-        if (err)  {
+        if (err) {
             console.error(err);
             return res.sendStatus(500);
         }
@@ -167,5 +168,75 @@ router.put('/updateBus', function (req, res, next) {
         });
     });
 });
+
+//todo documentation
+router.post('/reimbursements/school', function (req, res) {
+    Reimbursements.findOne({'college.id': req.body.collegeid}, function (err, rem) {
+        console.log(req.body);
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+
+        if (rem) {
+            console.log("Entry already exists.");
+            return res.sendStatus(500);
+        }
+        else {
+            var newRem = new Reimbursements({
+                college: {
+                    id: req.body.collegeid,
+                    name: req.body.college
+                },
+                mode: req.body.travel,
+                amount: req.body.amount
+            });
+            newRem.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(500);
+                }
+                else return res.sendStatus(200);
+            })
+        }
+    })
+});
+
+//todo documentation
+router.patch('/reimbursements/school', function(req, res) {
+    Reimbursements.findOne({"college.id": req.body.collegeid}, function(err, rem) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+        if (res ==  null) {
+            return res.sendStatus(404);
+        }
+        rem.mode = req.body.travel;
+        rem.amount = req.body.amount;
+        rem.save(function(err, rem) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            else {
+                return res.sendStatus(200);
+            }
+        });
+
+    })
+});
+
+//todo documentation
+router.delete('/reimbursements/school', function(req, res) {
+    Reimbursements.remove({'college.id': req.body.collegeid}, function(err, rem){
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
+        return res.sendStatus(200);
+    })
+});
+
 
 module.exports = router;

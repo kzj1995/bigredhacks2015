@@ -14,8 +14,9 @@ var middle = require('../routes/middleware.js');
 
 var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
+var Reimbursement = require('../models/reimbursements.js');
 
-var MAX_FILE_SIZE = 1024 * 1024 * 5;
+var MAX_FILE_SIZE = 1024 * 1024 * 10;
 var MAX_BUS_PROXIMITY = 20; //miles
 
 /* GET dashboard index page */
@@ -48,6 +49,9 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 return done(err, members);
             })
+        },
+        reimbursement: function(done) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, done)
         },
         bus: function (done) {
             var userbus = null;
@@ -106,6 +110,7 @@ router.get('/dashboard', function (req, res, next) {
             resumeLink: results.resumeLink,
             team: results.members,
             bus: results.bus,
+            reimbursement: results.reimbursement,
             title: "Dashboard"
         };
 
@@ -132,7 +137,7 @@ router.get('/dashboard/edit', function (req, res, next) {
 
 
 /* POST submit edited user data */
-router.post('/dashboard/edit', function (req, res, next) {
+router.post('/dashboard/edit', middle.requireRegistrationOpen, function (req, res, next) {
 
     var user = req.user;
 
@@ -184,7 +189,7 @@ router.post('/dashboard/edit', function (req, res, next) {
 });
 
 /* POST add a user to team */
-router.post('/team/add', function (req, res, next) {
+router.post('/team/add', middle.requireRegistrationOpen, function (req, res, next) {
     var pubid = req.body.userid;
     var user = req.user;
 
@@ -207,7 +212,7 @@ router.post('/team/add', function (req, res, next) {
 });
 
 /* GET leave current team */
-router.get('/team/leave', function (req, res, next) {
+router.get('/team/leave', middle.requireRegistrationOpen , function(req, res, next) {
     req.user.leaveTeam(function (err, resMsg) {
         if (err) {
             console.log(err);
@@ -241,7 +246,7 @@ router.post('/team/cornell', function (req, res, next) {
 
 
 /* POST upload a new resume*/
-router.post('/updateresume', function (req, res, next) {
+router.post('/updateresume', middle.requireRegistrationOpen, function (req, res, next) {
 
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
@@ -276,7 +281,7 @@ router.post('/updateresume', function (req, res, next) {
 });
 
 /* POST user bus decision */
-router.post('/busdecision', function (req, res) {
+router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
     var user = req.user;
     if (req.body.decision == "signup") {
         Bus.findOne({_id: req.body.busid}, function (err, bus) {
@@ -289,11 +294,13 @@ router.post('/busdecision', function (req, res) {
                 });
                 bus.save(function (err) {
                     if (err) {
+                        console.error(err);
                         return res.sendStatus(500);
                     }
                     else {
                         user.save(function (err) {
                             if (err) {
+                                console.error(err);
                                 return res.sendStatus(500);
                             }
                             else {
@@ -322,11 +329,13 @@ router.post('/busdecision', function (req, res) {
                     bus.members = newmembers;
                     bus.save(function (err) {
                         if (err) {
+                            console.error(err);
                             return res.sendStatus(500);
                         }
                         else {
                             user.save(function (err) {
                                 if (err) {
+                                    console.error(err);
                                     return res.sendStatus(500);
                                 }
                                 else {
@@ -353,6 +362,76 @@ router.post('/busdecision', function (req, res) {
     else {
         return res.sendStatus(500);
     }
+});
+
+/* POST register a new user */
+router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
+
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error', "Error parsing form.");
+            return res.redirect('/user/dashboard');
+        }
+
+        req.body = helper.reformatFields(fields);
+
+        req.files = files;
+        var resume = files.travel[0];
+        //console.log(resume);
+        //console.log(resume.headers);
+
+        //todo reorder validations to be consistent with form
+        req = validator.validate(req, [
+            'email'
+        ]);
+
+
+        var errors = req.validationErrors();
+        //console.log(errors);
+        if (errors) {
+            var errorParams = errors.map(function (x) {
+                return x.param;
+            });
+            req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
+            res.render('register', {
+                title: 'Register',
+                message: 'The following errors occurred',
+                errors: errors,
+                input: req.body,
+                enums: enums
+            });
+        }
+        else {
+
+            helper.uploadResume(resume, null, function (err, file) {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', "File upload failed. :(");
+                    return res.redirect('/register');
+                }
+                if (typeof file === "string") {
+                    req.flash('error', file);
+                    return res.redirect('/register');
+                }
+
+
+                newUser.save(function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        console.log(err);
+                        req.flash("error", "An error occurred.");
+                        res.render('register', {
+                            title: 'Register', error: req.flash('error'), input: req.body, enums: enums
+                        });
+                    }
+                    else {
+                    }
+                });
+            });
+        }
+    });
 });
 
 /* GET logout the current user */

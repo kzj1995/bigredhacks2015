@@ -6,10 +6,10 @@ var College = require('./college');
 
 var reimbursementSchema = new mongoose.Schema({
     college: {
-        id: {type: String, ref: "College", index: true, required: true},
+        id: {type: String, ref: "College", index: {unique: true}, required: true},
         name: {type: String, required: true}
     },
-    mode: {type: String, enum: en.user.year, required: true},
+    mode: {type: String, enum: en.admin.travel_mode, required: true},
     amount: {type: Number, required: true}
 });
 

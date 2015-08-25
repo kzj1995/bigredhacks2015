@@ -14,7 +14,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#roles" aria-controls="roles" role="tab"
-                                                          data-toggle="tab">Manage Roles</a></li>
+                                                          data-toggle="tab">Reimbursement Schools</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -36,13 +36,13 @@
                             </tr>
                             <%
                             for (var i = 0; i < reimbursements.length; i++) { %>
-                            <tr class="user" data-pubid="<%= reimbursements[i].college.id %>">
+                            <tr class="school" data-collegeid="<%= reimbursements[i].college.id %>">
                                 <td><%= reimbursements[i].college.name %></td>
                                 <td>
                                     <form class="form-inline">
                                         <div class="form-group">
                                             <select class="form-control modeDropdown" name="modeDropdown"
-                                                    data-revert="<%= users[i].role %>" disabled>
+                                                    data-revert="<%= reimbursements[i].mode %>" disabled>
                                                 <%- viewHelper.generateOptions(enums.admin.travel_mode, {
                                                     selected: reimbursements[i].mode //set default value
                                                 }); %>
@@ -50,45 +50,54 @@
                                         </div>
                                     </form>
                                 </td>
-                                <td class="amount"><input type="number" name="amount"
-                                                          value="<%= reimbursements[i].amount %>"></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <!--<div class="input-group-addon">$</div>-->
+                                            <input type="number" name="amount" class="amount"
+                                                   value="<%= reimbursements[i].amount %>" disabled>
+                                        </div>
+                                    </div>
+                                </td>
 
                                 <td>
-                                    <button class="btn btn-primary btn-edit">edit</button>
-                                    <button class="btn btn-success btn-save" disabled>save</button>
-                                    <button class="btn btn-danger btn-remove">remove</button>
+                                    <button class="btn btn-primary btn-edit reimbursements">edit</button>
+                                    <button class="btn btn-success btn-save reimbursements" disabled>save</button>
+                                    <button class="btn btn-danger btn-remove reimbursements">remove</button>
                                 </td>
                             </tr>
                             <% } %>
                         </table>
                         <br/>
 
-                        <form class="form-inline">
+                        <form class="form-inline" id="new-reimbursement">
                             <div class="form-group">
                                 <label>Add a School: </label>
                             </div>
-                            <input type="hidden" id="collegeid" name="collegeid" class="form-control"
+                            <input type="hidden" id="new-collegeid" name="collegeid" class="form-control"
                                    value="" required/>
 
                             <div class="form-group">
-                                <input type="text" id="college" name="college" class="form-control typeahead"
+                                <input type="text" id="new-college" name="college"
+                                       class="form-control college typeahead"
                                        placeholder="School Name"
                                        value="" required/>
                             </div>
                             <div class="form-group">
-                                <select class="form-control" id="new-role" name="new-role" required>
+                                <select class="form-control" id="new-travel" name="travel" required>
+                                    <option value="">Select</option>
                                     <%- viewHelper.generateOptions(enums.admin.travel_mode); %>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
-                                    <input type="number" class="form-control" id="amount" name="amount"
+                                    <input type="number" class="form-control" id="new-amount" name="amount"
                                            placeholder="amount">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="button" class="btn btn-success" id="btn-add-user">Create</button>
+                                <button type="button" class="btn btn-success" id="btn-add-school" disabled>Create</button>
                             </div>
                         </form>
                     </div>
