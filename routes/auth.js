@@ -408,7 +408,14 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                                 });
                             }
                             else {
-                                helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
+
+                                if (newUser.internal.status == "Accepted") {
+                                    var mailing_list = config.mailchimp.cornell_accepted;
+                                } else {
+                                    var mailing_list = config.mailchimp.cornell_waitlisted;
+                                }
+
+                                helper.addSubscriber(mailing_list, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
                                     if (err) {
                                         console.log(err);
                                     }
@@ -422,20 +429,38 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                                             console.log(err);
                                         }
                                         var template_name = "bigredhackstemplate";
-                                        var template_content = [{
-                                            "name": "emailcontent",
-                                            "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                            "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                            "that we have received your application." + "</p><p>" +
-                                            "You can log in to our website any time until the application deadline " +
-                                            "to update your information or add team members." + "</p><p>" +
-                                            "If you haven't already, make sure to like us on Facebook and " +
-                                            "follow us on Twitter!" + "</p><p>" +
-                                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                                        }];
+
+                                        if (newUser.internal.status == "Accepted") {
+                                            var email_subject = "BigRed//Hacks Registration Confirmation";
+                                            var template_content = [{
+                                                "name": "emailcontent",
+                                                "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that you're registered for BigRed//Hacks 2015! " +
+                                                "We'll be sending a lot more logistical information soon." + "</p><p>" +
+                                                "You can log in to our website any time to update your resume " +
+                                                "and view logistic information as we post it." + "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                                            }];
+                                        } else {
+                                            var email_subject = "BigRed//Hacks Wait List Confirmation";
+                                            var template_content = [{
+                                                "name": "emailcontent",
+                                                "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                                "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                                "that we have received your application and that it has been added to our wait list." + "</p><p>" +
+                                                "You can log in to our website any time to view your status or update " +
+                                                "your resume.  We'll be sending out wait list status updates soon." + "</p><p>" +
+                                                "If you haven't already, make sure to like us on Facebook and " +
+                                                "follow us on Twitter!" + "</p><p>" +
+                                                "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                                            }]
+                                        }
 
                                         var message = {
-                                            "subject": "BigRed//Hacks Registration Confirmation",
+                                            "subject": email_subject,
                                             "from_email": "info@bigredhacks.com",
                                             "from_name": "BigRed//Hacks",
                                             "to": [{
