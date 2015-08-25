@@ -30,8 +30,12 @@ if (messages.error) {
     <%- errors.join(""); %>
     <h1>Cornell Registration</h1>
 
-    <p>This registration form is only for <emph><%= cornellname %></emph> students.</p>
-    <form id="registrationForm" action="/cornellregister" name='registrationForm' method="POST" autocomplete="on"
+    <p>This registration form is only for
+        <emph><%= college.name %></emph>
+        students.
+    </p>
+    <form id="registrationForm" action="/register/<%= urlparam %>" name='registrationForm' method="POST"
+          autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
             <div class="header-wrapper">
@@ -91,12 +95,12 @@ if (messages.error) {
             </div>
 
             <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                   value="<%= cornellid %>" required readonly/>
+                   value="<%= college._id %>" required readonly/>
 
             <div class="form-group">
                 <label for="college">full school name *</label><br/>
                 <input type="text" id="college" name="college" class="form-control" placeholder="School Name"
-                       value="<%= cornellname %> - NY" required readonly/>
+                       value="<%= college.display %>" required readonly/>
             </div>
             <div class="form-group">
                 <label for="yearDropdown">academic year *</label>
@@ -123,14 +127,6 @@ if (messages.error) {
                     <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resume"
                            name="resume" accept=".pdf" required>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>tell us something interesting about yourself. *</label>
-                <textarea id="q1" name="q1" class="form-control" rows="4" required><%= input.q1 || "" %></textarea>
-            </div>
-            <div class="form-group">
-                <label>what's a cool project that you've worked on? *</label>
-                <textarea id="q2" name="q2" class="form-control" rows="4" required><%= input.q2 || "" %></textarea>
             </div>
             <div class="form-group">
                 <label for="github">github profile </label>
