@@ -31,10 +31,10 @@ $('document').ready(function () {
 
     //fails for cornell school
     $.validator.addMethod("schoolNotCornell", function (val, elem, params) {
-        var restrict = [];
+        var restrict = ["Cornell Tech - NY", "Cornell University - NY"];
         return (restrict.indexOf(val) == -1);
     }, notCornellText);
-
+    
     $('#registrationForm').validate({
         onfocusout: function (e, event) {
             this.element(e); //validate field immediately
@@ -44,7 +44,7 @@ $('document').ready(function () {
             email: {
                 required: true,
                 email: true,
-                emailNotCornell: true,
+                emailNotCornell: $("#email").hasClass("not-cornell"),
                 remote: "/api/validEmail"
             },
             password: {

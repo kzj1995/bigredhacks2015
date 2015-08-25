@@ -233,7 +233,7 @@ router.post('/register', middle.requireRegistrationOpen, function (req, res) {
 });
 
 /* GET registration page for Cornell (University and Tech) Students */
-router.get('/cornellregister/:name', middle.requireCornellRegistrationOpen, function (req, res) {
+router.get('/register/:name', middle.requireCornellRegistrationOpen, function (req, res) {
     var collegeName = "";
     if (req.params.name == "cornelltech") {
         collegeName = "Cornell Tech";
