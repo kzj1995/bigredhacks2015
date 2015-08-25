@@ -12,7 +12,9 @@
   "mailchimp": {
     "_comment": "Mailchimp list ids",
     "l_interested": "",
-    "l_applicants": ""
+    "l_applicants": "",
+    "l_cornell_accepted": "",
+    "l_cornell_waitlisted": ""
   },
   "admin": {
     "email": "",

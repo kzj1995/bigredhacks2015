@@ -38,9 +38,9 @@ if (messages.error) {
 
     <p>Don't miss this amazing event, sign up now!</p>
 
-    <form id="registrationCornell" action="/register/<%= urlparam %>" name='registrationCornell' method="POST"
+    <form id="registrationForm" action="/register/<%= urlparam %>" name='registrationForm' method="POST"
           autocomplete="on"
-          enctype="multipart/form-data" novalidate>
+          enctype="multipart/form-data">
         <fieldset>
             <div class="header-wrapper">
                 <legend class="page-title">account information</legend>
@@ -126,7 +126,7 @@ if (messages.error) {
 
                 <div class="wrapper">
                     <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resume"
-                           name="resume" accept=".pdf" required />
+                           name="resume" accept=".pdf" required/>
                 </div>
             </div>
             <div class="form-group">
@@ -135,7 +135,7 @@ if (messages.error) {
                 <div class="input-group">
                     <div class="input-group-addon">@</div>
                     <input type="text" class="form-control" id="github" name="github" placeholder="johndoe"
-                           value="<%= input.github || "" %>" />
+                           value="<%= input.github || "" %>"/>
                 </div>
             </div>
             <div class="form-group">
@@ -144,7 +144,7 @@ if (messages.error) {
                 <div class="input-group">
                     <div class="input-group-addon">http://</div>
                     <input type="text" class="form-control" id="linkedin" name="linkedin"
-                           placeholder="www.linkedin.com/" value="<%= input.linkedin || "" %>" />
+                           placeholder="www.linkedin.com/" value="<%= input.linkedin || "" %>"/>
                 </div>
             </div>
             <div class="form-group">

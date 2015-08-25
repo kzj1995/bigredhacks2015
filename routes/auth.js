@@ -309,7 +309,7 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
             //todo reorder validations to be consistent with form
             //application questions are removed
             req = validator.validate(req, [
-                'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'collegeid', 'anythingelse', 'experienceDropdown', 'yearDropdown'
+                'email', 'password', 'firstname', 'lastname', 'phonenumber', 'major', 'genderDropdown', 'dietary', 'tshirt', 'linkedin', 'anythingelse', 'experienceDropdown', 'yearDropdown'
             ]);
 
 
@@ -327,7 +327,8 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                     message: 'The following errors occurred',
                     errors: errors,
                     input: req.body,
-                    enums: enums
+                    enums: enums,
+                    college: college
                 });
             }
             else {
@@ -404,15 +405,16 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                                     error: req.flash('error'),
                                     input: req.body,
                                     enums: enums,
-                                    limit: config.admin.cornell_auto_accept
+                                    limit: config.admin.cornell_auto_accept,
+                                    college: college
                                 });
                             }
                             else {
 
                                 if (newUser.internal.status == "Accepted") {
-                                    var mailing_list = config.mailchimp.cornell_accepted;
+                                    var mailing_list = config.mailchimp.l_cornell_accepted;
                                 } else {
-                                    var mailing_list = config.mailchimp.cornell_waitlisted;
+                                    var mailing_list = config.mailchimp.l_cornell_waitlisted;
                                 }
 
                                 helper.addSubscriber(mailing_list, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
