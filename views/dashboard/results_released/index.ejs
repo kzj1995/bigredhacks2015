@@ -32,27 +32,29 @@ var helper = viewHelper;
                 <h2 class="page-title">status</h2>
             </div>
             <% if (status === "rejected") { %>
-            <p>thank you so much for applying to bigred//hacks! the application pool this year was more competitive than
-                it's ever been and unfortunately, due to logistical constraints, we are unable to offer you a spot at
-                bigred//hacks.</p>
 
-            <p>don't be disheartened! there are a ton of great hackathons out there if you still want to make awesome
-                things, meet amazing people, and improve your chances of going to bigred//hacks next year. you can see a
-                schedule of other hackathons coming up this fall <a href="http://mlh.io/seasons/f2015/events">here</a>.
+<p class="long-text">Thank you for applying for BigRed//Hacks!  With so many hackathons happening this year, we're honored that we were on your list.</p>
 
-            <p>we are eagerly anticipating your next application.</p>
+<p class="long-text">Unfortunately, we aren't able to offer you a spot at BigRed//Hacks 2015.  We had a record number of applications, and a very limited amount of space.  But know that we still think you're awesome, and would love for you to apply again for BigRed//Hacks 2015!</p>
 
-            <p>--the bigred//hacks team</p>
+<p class="long-text">All the best for the future, and keep on hacking!</p>
+
+<p>BigRed//Hacks Team</p>
 
             <% } else if (status === "waitlisted") { %>
-            <p>thank you so much for applying to bigred//hacks! unfortunately, due to logistical constraints, we are
-                unable to guarantee a spot for you at this time. however, we have placed you on the waitlist, so there’s
-                still a chance you'll get in!</p>
 
-            <p>we will email you whether we can offer you a spot soon, so make sure that our emails are not going to
-                spam. stay tuned!</p>
 
-            <p>--the bigred//hacks team</p>
+<p class="long-text" class="long-text">Thank you for applying for BigRed//Hacks!  With so many hackathons happening this year, we're honored that we were on your list.</p>
+
+<p class="long-text">We had a record number of applications, and a very limited amount of space.  While we aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon as one becomes available.  Last year, we were able to accept a lot of hackers from our waitlist, so check your email often!</p>
+
+<p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check the box below.  We'll be sad, but it'll be super helpful.</p>
+
+<p class="long-text">All the best for the future, and keep on hacking!</p>
+
+<p>BigRed//Hacks Team</p>
+
+
 
             <% } else if (status === "accepted") { %>
             <p>congratulations!</p>
