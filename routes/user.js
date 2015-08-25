@@ -14,6 +14,7 @@ var middle = require('../routes/middleware.js');
 
 var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
+var Reimbursement = require('../models/reimbursements.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 var MAX_BUS_PROXIMITY = 20; //miles
@@ -48,6 +49,9 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 return done(err, members);
             })
+        },
+        reimbursement: function(done) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, done)
         },
         bus: function (done) {
             var userbus = null;
@@ -106,6 +110,7 @@ router.get('/dashboard', function (req, res, next) {
             resumeLink: results.resumeLink,
             team: results.members,
             bus: results.bus,
+            reimbursement: results.reimbursement,
             title: "Dashboard"
         };
 
