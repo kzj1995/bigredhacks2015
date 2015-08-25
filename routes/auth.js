@@ -247,6 +247,7 @@ router.get('/register/:name', middle.requireCornellRegistrationOpen, function (r
                 title: college.name + " Registration",
                 enums: enums,
                 error: req.flash('error'),
+                limit: config.admin.cornell_auto_accept,
                 college: college
             });
         }
@@ -282,7 +283,6 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
     //get full college object
     _findCollegeFromFilteredParam(req.params.name, function (err, college) {
 
-        console.log(college);
         if (err || college == null) {
             //college does not exist, or not allowed
             console.error(err);
@@ -320,7 +320,8 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                 });
                 req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
                 res.render('register_cornell', {
-                    urlparam: req.param.name,
+                    urlparam: req.params.name,
+                    limit: config.admin.cornell_auto_accept,
                     title: 'Register',
                     message: 'The following errors occurred',
                     errors: errors,
@@ -334,11 +335,11 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                     if (err) {
                         console.log(err);
                         req.flash('error', "File upload failed. :(");
-                        return res.redirect('/register');
+                        return res.redirect('/register/' + req.params.name);
                     }
                     if (typeof file === "string") {
                         req.flash('error', file);
-                        return res.redirect('/register');
+                        return res.redirect('/register' + req.params.name);
                     }
 
                     //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
@@ -381,7 +382,12 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                             console.log(err);
                             req.flash("error", "An error occurred.");
                             res.render('register_cornell', {
-                                title: 'Register', error: req.flash('error'), input: req.body, enums: enums
+                                urlparam: req.params.name,
+                                title: 'Register',
+                                error: req.flash('error'),
+                                input: req.body,
+                                enums: enums,
+                                limit: config.admin.cornell_auto_accept
                             });
                         }
                         else {
