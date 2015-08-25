@@ -12,7 +12,7 @@ var engine = new Bloodhound({
     sorter: function (a, b) {
 
         //case insensitive matching
-        var input = $('#college').val().toLowerCase();
+        var input = $('#college, .college.typeahead').val().toLowerCase();
         a = a.name.toLowerCase();
         b = b.name.toLowerCase();
 
@@ -46,7 +46,7 @@ $('.typeahead').typeahead({
     displayKey: 'name', // if not set, will default to 'value',
     source: engine.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-    $("#collegeid").val(datum.id);
+    $("#collegeid,#new-collegeid").val(datum.id);
 });
 
 //used in admin bus management
