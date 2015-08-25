@@ -30,7 +30,10 @@ if (messages.error) {
     <%- errors.join(""); %>
     <h1>Cornell Registration</h1>
 
-    <p>This registration form is only for <emph><%= cornellname %></emph> students.</p>
+    <p>Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the first $NUMBER spots are guaranteed.</p>
+<p>Any additional registrants will be put on an ordered waitlist.  Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon.</p>
+
+<p>Don't miss this amazing event, sign up now!</p>
     <form id="registrationForm" action="/cornellregister" name='registrationForm' method="POST" autocomplete="on"
           enctype="multipart/form-data">
         <fieldset>
