@@ -38,9 +38,9 @@ if (messages.error) {
 
     <p>Don't miss this amazing event, sign up now!</p>
 
-    <form id="registrationForm" action="/register/<%= urlparam %>" name='registrationForm' method="POST"
+    <form id="registrationCornell" action="/register/<%= urlparam %>" name='registrationCornell' method="POST"
           autocomplete="on"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" novalidate>
         <fieldset>
             <div class="header-wrapper">
                 <legend class="page-title">account information</legend>
@@ -100,7 +100,8 @@ if (messages.error) {
 
             <div class="form-group">
                 <label for="college">full school name *</label><br/>
-                <input type="text" class="form-control" value="<%= college.display %>" required readonly/>
+                <!--<input type="text" class="form-control" value="<%= college.display %>" required readonly/>-->
+
             </div>
             <div class="form-group">
                 <label for="yearDropdown">academic year *</label>
@@ -125,7 +126,7 @@ if (messages.error) {
 
                 <div class="wrapper">
                     <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resume"
-                           name="resume" accept=".pdf" required>
+                           name="resume" accept=".pdf" required />
                 </div>
             </div>
             <div class="form-group">
@@ -134,7 +135,7 @@ if (messages.error) {
                 <div class="input-group">
                     <div class="input-group-addon">@</div>
                     <input type="text" class="form-control" id="github" name="github" placeholder="johndoe"
-                           value="<%= input.github || "" %>">
+                           value="<%= input.github || "" %>" />
                 </div>
             </div>
             <div class="form-group">
@@ -143,7 +144,7 @@ if (messages.error) {
                 <div class="input-group">
                     <div class="input-group-addon">http://</div>
                     <input type="text" class="form-control" id="linkedin" name="linkedin"
-                           placeholder="www.linkedin.com/" value="<%= input.linkedin || "" %>">
+                           placeholder="www.linkedin.com/" value="<%= input.linkedin || "" %>" />
                 </div>
             </div>
             <div class="form-group">
@@ -180,7 +181,7 @@ if (messages.error) {
             </div>
         </fieldset>
         <fieldset>
-            <button type="submit" id="submit" class="btn btn-primary">submit</button>
+            <button type="submit" id="submit" value="submit" class="btn btn-primary">submit</button>
         </fieldset>
     </form>
 </div>
@@ -188,8 +189,6 @@ if (messages.error) {
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
 <script src="/js/jquery.validate.options.js"></script>
-<script src="/js/vendor/typeahead.bundle.min.js"></script>
-<script src="/js/typeahead_college.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/register.js"></script>
 <% include _footer %>
