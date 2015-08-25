@@ -279,6 +279,7 @@ function _findCollegeFromFilteredParam(name, callback) {
 }
 
 /* POST register a new user from a specific school*/
+//todo cleanup with async waterfall
 router.post('/register/:name', middle.requireCornellRegistrationOpen, function (req, res) {
     //get full college object
     _findCollegeFromFilteredParam(req.params.name, function (err, college) {
@@ -330,7 +331,6 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                 });
             }
             else {
-
                 helper.uploadResume(resume, null, function (err, file) {
                     if (err) {
                         console.log(err);
@@ -339,10 +339,11 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                     }
                     if (typeof file === "string") {
                         req.flash('error', file);
-                        return res.redirect('/register' + req.params.name);
+                        return res.redirect('/register/' + req.params.name);
                     }
 
                     //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
+
                     var newUser = new User({
                         name: {
                             first: req.body.firstname,
@@ -376,72 +377,89 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                     });
 
 
-                    newUser.save(function (err, doc) {
+                    //determine auto-acceptance or waitlist
+                    User.count({'internal.cornell_applicant': true}, function (err, count) {
                         if (err) {
-                            // If it failed, return error
-                            console.log(err);
-                            req.flash("error", "An error occurred.");
-                            res.render('register_cornell', {
-                                urlparam: req.params.name,
-                                title: 'Register',
-                                error: req.flash('error'),
-                                input: req.body,
-                                enums: enums,
-                                limit: config.admin.cornell_auto_accept
-                            });
+                            console.error(err);
+                            req.flash('Unexpected error.', file);
+                            return res.redirect('/register/' + req.params.name);
                         }
-                        else {
-                            helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                else {
-                                    console.log(result);
-                                }
 
-                                //send email and redirect to home page
-                                req.login(newUser, function (err) {
+                        //auto accept applicants below a certain threshold
+                        if (count < config.admin.cornell_auto_accept) {
+                            newUser.internal.status = "Accepted";
+                        } else {
+                            newUser.internal.status = "Waitlisted";
+                        }
+
+
+                        newUser.save(function (err, doc) {
+                            if (err) {
+                                // If it failed, return error
+                                console.log(err);
+                                req.flash("error", "An error occurred.");
+                                res.render('register_cornell', {
+                                    urlparam: req.params.name,
+                                    title: 'Register',
+                                    error: req.flash('error'),
+                                    input: req.body,
+                                    enums: enums,
+                                    limit: config.admin.cornell_auto_accept
+                                });
+                            }
+                            else {
+                                helper.addSubscriber(config.mailchimp.l_applicants, req.body.email, req.body.firstname, req.body.lastname, function (err, result) {
                                     if (err) {
                                         console.log(err);
                                     }
-                                    var template_name = "bigredhackstemplate";
-                                    var template_content = [{
-                                        "name": "emailcontent",
-                                        "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
-                                        "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                        "that we have received your application." + "</p><p>" +
-                                        "You can log in to our website any time until the application deadline " +
-                                        "to update your information or add team members." + "</p><p>" +
-                                        "If you haven't already, make sure to like us on Facebook and " +
-                                        "follow us on Twitter!" + "</p><p>" +
-                                        "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
-                                    }];
-
-                                    var message = {
-                                        "subject": "BigRed//Hacks Registration Confirmation",
-                                        "from_email": "info@bigredhacks.com",
-                                        "from_name": "BigRed//Hacks",
-                                        "to": [{
-                                            "email": newUser.email,
-                                            "name": newUser.name.first + " " + newUser.name.last,
-                                            "type": "to"
-                                        }]
-                                    };
-                                    var async = false;
-                                    mandrill_client.messages.sendTemplate({
-                                        "template_name": template_name,
-                                        "template_content": template_content,
-                                        "message": message, "async": async
-                                    }, function (result) {
+                                    else {
                                         console.log(result);
-                                    }, function (e) {
-                                        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-                                    });
-                                    res.redirect('/user/dashboard');
+                                    }
+
+                                    //send email and redirect to home page
+                                    req.login(newUser, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                        var template_name = "bigredhackstemplate";
+                                        var template_content = [{
+                                            "name": "emailcontent",
+                                            "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
+                                            "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
+                                            "that we have received your application." + "</p><p>" +
+                                            "You can log in to our website any time until the application deadline " +
+                                            "to update your information or add team members." + "</p><p>" +
+                                            "If you haven't already, make sure to like us on Facebook and " +
+                                            "follow us on Twitter!" + "</p><p>" +
+                                            "<p>Cheers,</p>" + "<p>BigRed//Hacks Team </p>"
+                                        }];
+
+                                        var message = {
+                                            "subject": "BigRed//Hacks Registration Confirmation",
+                                            "from_email": "info@bigredhacks.com",
+                                            "from_name": "BigRed//Hacks",
+                                            "to": [{
+                                                "email": newUser.email,
+                                                "name": newUser.name.first + " " + newUser.name.last,
+                                                "type": "to"
+                                            }]
+                                        };
+                                        var async = false;
+                                        mandrill_client.messages.sendTemplate({
+                                            "template_name": template_name,
+                                            "template_content": template_content,
+                                            "message": message, "async": async
+                                        }, function (result) {
+                                            console.log(result);
+                                        }, function (e) {
+                                            console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                                        });
+                                        res.redirect('/user/dashboard');
+                                    })
                                 })
-                            })
-                        }
-                    });
+                            }
+                        });
+                    })
                 });
             }
         });

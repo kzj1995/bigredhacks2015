@@ -98,13 +98,9 @@ if (messages.error) {
                 <legend class="page-title">school</legend>
             </div>
 
-            <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                   value="<%= college._id %>" required readonly/>
-
             <div class="form-group">
                 <label for="college">full school name *</label><br/>
-                <input type="text" id="college" name="college" class="form-control" placeholder="School Name"
-                       value="<%= college.display %>" required readonly/>
+                <input type="text" class="form-control" value="<%= college.display %>" required readonly/>
             </div>
             <div class="form-group">
                 <label for="yearDropdown">academic year *</label>
