@@ -122,11 +122,19 @@ router.get('/dashboard', function (req, res, next) {
         };
 
 
+        if (req.user.internal.cornell_applicant) {
+            return res.render('dashboard/results_released/index_cornell.ejs', {
+                user: req.user,
+                resumeLink: results.resumeLink,
+                title: "Dashboard"
+            })
+        }
+
         if (middle.helper.isResultsReleased()) {
             return res.render('dashboard/results_released/index', render_data);
         }
         else {
-            res.render('dashboard/index', render_data);
+            return res.render('dashboard/index', render_data);
         }
 
     })
