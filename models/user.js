@@ -47,13 +47,9 @@ var userSchema = new mongoose.Schema({
         teamwithcornell: {type: Boolean, default: false},
         busid: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
-<<<<<<< HEAD
-        going: {type: Boolean},
-        cornell_applicant: {type: Boolean, default: false}
-=======
         going: {type: Boolean, default: null},
-        not_interested: {type: Boolean, default: null} //waitlisted - if true, they forfeit their spot
->>>>>>> new-dashboard
+        not_interested: {type: Boolean, default: null}, //waitlisted - if true, they forfeit their spot
+        cornell_applicant: {type: Boolean, default: false}
     },
     passwordtoken: String,
     created_at: {type: Date, default: Date.now},

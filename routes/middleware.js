@@ -78,7 +78,7 @@ middle.requireResultsReleased = function (req, res, next) {
 
 middle.helper = {
     isRegistrationOpen: _isRegistrationOpen,
-    isCornellRegistrationOpen: _isCornellRegistrationOpen
+    isCornellRegistrationOpen: _isCornellRegistrationOpen,
     isResultsReleased: _isResultsReleased
 };
 
