@@ -452,7 +452,7 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                                                 "name": "emailcontent",
                                                 "content": "<p>Hi " + newUser.name.first + " " + newUser.name.last + ",</p><p>" +
                                                 "Thank you for your interest in BigRed//Hacks!  This email is a confirmation " +
-                                                "that we have received your application and that it has been added to our wait list." + "</p><p>" +
+                                                "that we have received your application and that you have been added to our wait list." + "</p><p>" +
                                                 "You can log in to our website any time to view your status or update " +
                                                 "your resume.  We'll be sending out wait list status updates soon." + "</p><p>" +
                                                 "If you haven't already, make sure to like us on Facebook and " +
