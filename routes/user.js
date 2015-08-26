@@ -1,19 +1,23 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-var enums = require('../models/enum.js');
 var AWS = require('aws-sdk');
 var async = require('async');
 var _ = require('underscore');
 var multiparty = require('multiparty');
 
+var enums = require('../models/enum.js');
 var helper = require('../util/routes_helper.js');
 var config = require('../config.js');
 var validator = require('../library/validations.js');
-var middle = require('./middleware');
+var middle = require('../routes/middleware.js');
 
-var MAX_FILE_SIZE = 1024 * 1024 * 5;
+var Bus = require('../models/bus.js');
+var College = require('../models/college.js');
+var Reimbursement = require('../models/reimbursements.js');
 
+var MAX_FILE_SIZE = 1024 * 1024 * 10;
+var MAX_BUS_PROXIMITY = 20; //miles
 
 /* GET dashboard index page */
 router.get('/', function (req, res, next) {
@@ -45,19 +49,79 @@ router.get('/dashboard', function (req, res, next) {
                 }
                 return done(err, members);
             })
+        },
+        reimbursement: function(done) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, done)
+        },
+        bus: function (done) {
+            var userbus = null;
+            var closestdistance = null;
+            Bus.find({}).exec(function (err, buses) {
+                if (err) {
+                    console.log(err);
+                }
+                //todo optimize this (see if it's possible to perform this operation in a single aggregation
+                async.each(buses, function (bus, callback) {
+                    async.each(bus.stops, function (stop, inner_callback) {
+                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                            function (err, colleges) {
+                                //The case when the query returns only one college because the college of the bus's stop
+                                //is the same as the user's college
+                                if (colleges.length == 1) {
+                                    userbus = bus;
+                                    userbus.message = "a bus stops at your school:";
+                                    closestdistance = 0;
+                                }
+                                //The other case when the query returns two colleges because the college of the bus's
+                                //stop is not the same as the user's college
+                                else if (colleges.length == 2) {
+                                    //find the distance between two colleges
+                                    var distanceBetweenColleges = _distanceBetweenPointsInMiles(
+                                        colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                    if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                        if (closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                            userbus = bus;
+                                            //properly round to two decimal points
+                                            var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
+                                                    100) / 100;
+                                            userbus.message = "a bus stops near your school at " + stop.collegename +
+                                                " (roughly " + roundedDistance + " miles away):";
+                                            closestdistance = distanceBetweenColleges;
+                                        }
+                                    }
+                                }
+                                inner_callback();
+                            });
+                    }, function (err) {
+                        callback();
+                    });
+                }, function (err) {
+                    return done(null, userbus);
+                });
+            });
         }
     }, function (err, results) {
         if (err) {
             console.log(err);
         }
-        res.render('dashboard/index', {
-            name: req.user.name,
+
+        var render_data = {
+            user: req.user,
             resumeLink: results.resumeLink,
             team: results.members,
-            userid: req.user.pubid,
-            teamwithcornell: req.user.internal.teamwithcornell,
+            bus: results.bus,
+            reimbursement: results.reimbursement,
             title: "Dashboard"
-        });
+        };
+
+
+        if (middle.helper.isResultsReleased()) {
+            return res.render('dashboard/results_released/index', render_data);
+        }
+        else {
+            res.render('dashboard/index', render_data);
+        }
+
     })
 });
 
@@ -73,12 +137,12 @@ router.get('/dashboard/edit', function (req, res, next) {
 
 
 /* POST submit edited user data */
-router.post('/dashboard/edit', function (req, res, next) {
+router.post('/dashboard/edit', middle.requireRegistrationOpen, function (req, res, next) {
 
     var user = req.user;
 
-    req = validator.validate(req,[
-        'passwordOptional','phonenumber','dietary','tshirt','yearDropdown','major','linkedin','q1','q2','anythingelse', 'experienceDropdown'
+    req = validator.validate(req, [
+        'passwordOptional', 'phonenumber', 'dietary', 'tshirt', 'yearDropdown', 'major', 'linkedin', 'q1', 'q2', 'anythingelse', 'experienceDropdown'
     ]);
     //console.log(req.validationErrors());
     var errors = req.validationErrors();
@@ -125,7 +189,7 @@ router.post('/dashboard/edit', function (req, res, next) {
 });
 
 /* POST add a user to team */
-router.post('/team/add', function (req, res, next) {
+router.post('/team/add', middle.requireRegistrationOpen, function (req, res, next) {
     var pubid = req.body.userid;
     var user = req.user;
 
@@ -148,7 +212,7 @@ router.post('/team/add', function (req, res, next) {
 });
 
 /* GET leave current team */
-router.get('/team/leave', function (req, res, next) {
+router.get('/team/leave', middle.requireRegistrationOpen , function(req, res, next) {
     req.user.leaveTeam(function (err, resMsg) {
         if (err) {
             console.log(err);
@@ -172,7 +236,7 @@ router.post('/team/cornell', function (req, res, next) {
     var checked = (req.body.checked === "true");
     var user = req.user;
     user.internal.teamwithcornell = checked;
-    user.save(function(err) {
+    user.save(function (err) {
         if (err) {
             res.send(500);
         }
@@ -182,7 +246,7 @@ router.post('/team/cornell', function (req, res, next) {
 
 
 /* POST upload a new resume*/
-router.post('/updateresume', function (req, res, next) {
+router.post('/updateresume', middle.requireRegistrationOpen, function (req, res, next) {
 
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
@@ -216,11 +280,182 @@ router.post('/updateresume', function (req, res, next) {
     })
 });
 
+/* POST user bus decision */
+router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
+    var user = req.user;
+    if (req.body.decision == "signup") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (bus.members.length < bus.capacity && user.internal.busid != req.body.busid) {
+                user.internal.busid = req.body.busid;
+                bus.members.push({
+                    name: user.name.last + ", " + user.name.first,
+                    college: user.school.name,
+                    id: user.id
+                });
+                bus.save(function (err) {
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        user.save(function (err) {
+                            if (err) {
+                                console.error(err);
+                                return res.sendStatus(500);
+                            }
+                            else {
+                                return res.sendStatus(200);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                return res.sendStatus(500);
+            }
+        });
+    }
+    else if (req.body.decision == "optout") {
+        Bus.findOne({_id: req.body.busid}, function (err, bus) {
+            if (user.internal.busid == req.body.busid) {
+                user.internal.busid = null;
+                var newmembers = [];
+                async.each(bus.members, function (member, callback) {
+                    if (member.id != user.id) {
+                        newmembers.push(member);
+                    }
+                    callback()
+                }, function (err) {
+                    bus.members = newmembers;
+                    bus.save(function (err) {
+                        if (err) {
+                            console.error(err);
+                            return res.sendStatus(500);
+                        }
+                        else {
+                            user.save(function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    return res.sendStatus(500);
+                                }
+                                else {
+                                    return res.sendStatus(200);
+                                }
+                            });
+                        }
+                    })
+                });
+            }
+            else {
+                user.internal.busid = null;
+                user.save(function (err) {
+                    if (err) {
+                        return res.sendStatus(500);
+                    }
+                    else {
+                        return res.sendStatus(200);
+                    }
+                });
+            }
+        });
+    }
+    else {
+        return res.sendStatus(500);
+    }
+});
+
+/* POST register a new user */
+router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
+
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error', "Error parsing form.");
+            return res.redirect('/user/dashboard');
+        }
+
+        req.body = helper.reformatFields(fields);
+
+        req.files = files;
+        var resume = files.travel[0];
+        //console.log(resume);
+        //console.log(resume.headers);
+
+        //todo reorder validations to be consistent with form
+        req = validator.validate(req, [
+            'email'
+        ]);
+
+
+        var errors = req.validationErrors();
+        //console.log(errors);
+        if (errors) {
+            var errorParams = errors.map(function (x) {
+                return x.param;
+            });
+            req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
+            res.render('register', {
+                title: 'Register',
+                message: 'The following errors occurred',
+                errors: errors,
+                input: req.body,
+                enums: enums
+            });
+        }
+        else {
+
+            helper.uploadResume(resume, null, function (err, file) {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', "File upload failed. :(");
+                    return res.redirect('/register');
+                }
+                if (typeof file === "string") {
+                    req.flash('error', file);
+                    return res.redirect('/register');
+                }
+
+
+                newUser.save(function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        console.log(err);
+                        req.flash("error", "An error occurred.");
+                        res.render('register', {
+                            title: 'Register', error: req.flash('error'), input: req.body, enums: enums
+                        });
+                    }
+                    else {
+                    }
+                });
+            });
+        }
+    });
+});
 
 /* GET logout the current user */
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
 });
+
+/**
+ * Return distance in miles between two coordinates/points
+ * @param coordinate1 [lon,lat] coordinate pair of first point
+ * @param coordinate2 [lon,lat] coordinate pair of second point
+ * @returns {number} represents distance in miles between the two colleges
+ */
+function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
+    var radius = 3958.754641; // Radius of the earth in miles
+    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
+    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
+        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = radius * c; // Distance in miles
+    return distance;
+}
+
 
 module.exports = router;

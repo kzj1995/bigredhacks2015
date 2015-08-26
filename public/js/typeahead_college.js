@@ -12,7 +12,7 @@ var engine = new Bloodhound({
     sorter: function (a, b) {
 
         //case insensitive matching
-        var input = $('#college').val().toLowerCase();
+        var input = $('#college, .college.typeahead').val().toLowerCase();
         a = a.name.toLowerCase();
         b = b.name.toLowerCase();
 
@@ -36,6 +36,7 @@ var engine = new Bloodhound({
 
 engine.initialize();
 
+//general typeahead
 $('.typeahead').typeahead({
     hint: true,
     highlight: true,
@@ -45,6 +46,24 @@ $('.typeahead').typeahead({
     displayKey: 'name', // if not set, will default to 'value',
     source: engine.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-    $("#collegeid").val(datum.id);
+    $("#collegeid,#new-collegeid").val(datum.id);
+});
 
+//used in admin bus management
+$('.typeaheadlist').typeahead({
+    hint: true,
+    highlight: true,
+    autoselect: false,
+    minLength: 3
+}, {
+    displayKey: 'name', // if not set, will default to 'value',
+    source: engine.ttAdapter()
+}).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
+    var currentidlist = $("#collegeidlist").val();
+    if (currentidlist != "") {
+        $("#collegeidlist").val(currentidlist+","+datum.id);
+    }
+    else{
+        $("#collegeidlist").val(datum.id);
+    }
 });

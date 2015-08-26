@@ -1,0 +1,197 @@
+<% include ../../_header %>
+<% var status = user.internal.status.toLowerCase();
+var errors = errors || []; //form errors
+var error = error || []; //misc errors flash
+var input = input || {}; //persist fields
+var helper = viewHelper;
+%>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <% include ../_dashboardside.ejs %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">dashboard</h1>
+            </div>
+
+            <% if (messages.error) { %>
+            <%- '<div class="alert alert-danger" role="alert">' + messages.error[0].toLowerCase() + '</div>' %>
+            <% } %>
+
+            <% if (messages.success) { %>
+            <%- '<div class="alert alert-success" role="alert">' + messages.success[0].toLowerCase() + '</div>' %>
+            <% } %>
+
+            <p> welcome back, <%= user.name.first %> <%= user.name.last %>. </p>
+
+
+            <br/>
+
+            <div class="header-wrapper">
+                <h2 class="page-title">status</h2>
+            </div>
+            <% if (status === "rejected") { %>
+
+<p class="long-text">Thank you for applying for BigRed//Hacks!  With so many hackathons happening this year, we're honored that we were on your list.</p>
+
+<p class="long-text">Unfortunately, we aren't able to offer you a spot at BigRed//Hacks 2015.  We had a record number of applications, and a very limited amount of space.  But know that we still think you're awesome, and would love for you to apply again for BigRed//Hacks 2015!</p>
+
+<p class="long-text">All the best for the future, and keep on hacking!</p>
+
+<p>BigRed//Hacks Team</p>
+
+            <% } else if (status === "waitlisted") { %>
+
+
+<p class="long-text" class="long-text">Thank you for applying for BigRed//Hacks!  With so many hackathons happening this year, we're honored that we were on your list.</p>
+
+<p class="long-text">We had a record number of applications, and a very limited amount of space.  While we aren't able to offer you a spot immediately, you are on our waitlist and we'll reach out to you as soon as one becomes available.  Last year, we were able to accept a lot of hackers from our waitlist, so check your email often!</p>
+
+<p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check the box below.  We'll be sad, but it'll be super helpful.</p>
+
+<p class="long-text">All the best for the future, and keep on hacking!</p>
+
+<p>BigRed//Hacks Team</p>
+
+
+
+            <% } else if (status === "accepted") { %>
+
+<p class="long-text">Congratulations - you're in!  We're excited to offer you a spot in BigRed//Hacks 2015, taking place on September 18-20 at Cornell University.  You'll be one of 400 hackers from universities all across the U.S. coming together to hack, build, and learn.</p>
+
+<p class="long-text">Because the event is fast approaching, <b>we're asking that all attendees RSVP by September 1, 2015.</b>.  RSVPing involves two steps: confirming your mode of transportation (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and Major League Hacking's code of conduct.</p>
+
+<p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check the appropriate box.  We'll be sad, but it'll be super helpful and we'll be able to give your spot to someone else.</p>
+
+<p class="long-text">We'll be sending lots more information as we get closer to the event, so stay tuned!</p>
+
+<p class="long-text">Looking forward to seeing you in Ithaca,</p>
+
+<p>BigRed//Hacks Team</p>
+
+
+            <br/>
+
+            <div class="header-wrapper">
+                <h2 class="page-title">transportation</h2>
+            </div>
+
+            <% if (bus == null) { %>
+            <p>method: charter bus/public transportation/drive</p>
+
+            <p>allowance: n/a for charter bus, $__ for public transportion, $___/mile for drive</p>
+
+            <p>please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.
+            </p>
+
+            <button type="button" class="btn btn-red">upload receipts</button>
+            <% } else { %>
+            <p> <%= bus.message %> </p>
+
+            <div class="businfobox" data-busid="<%= bus.id %>">
+                <div class="busname">
+                    <%= bus.name %>
+                </div>
+                <ul class="businfo">
+                    <li class="busstopslist">
+                        <b>Bus Stops:</b>
+                        <ul class="busstops">
+                            <% for (var i = 0; i < bus.stops.length; i++) { %>
+                            <li data-collegeid="<%= bus.stops[i].collegeid %>">
+                                <span class="collegename"><%= bus.stops[i].collegename %></span>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                    <li class="currentnumber" data-currentnumber="<%= bus.members.length %>">
+                        <b>Current Number on Bus:</b> <%= bus.members.length %>
+                    </li>
+                    <li class="maxcapacity">
+                        <b>Max Capacity:</b> <span class="maxcapacitynumber"> <%= bus.capacity %> </span>
+                    </li>
+                    <% if (user.internal.busid == bus.id) { %>
+                    <li class="userbusdecision"><b>Your Current Bus Decision:</b> Signed Up</li>
+                    <% } else { %>
+                    <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
+                    <% } %>
+                </ul>
+                <div class="busselection">
+                    <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">
+                    <input type="button" value="opt out" name="optout" id="optout" class="btn btn-primary">
+                </div>
+            </div>
+            <% } %>
+
+            <br/>
+
+
+            <div class="header-wrapper">
+                <h2 class="page-title">rsvp</h2>
+            </div>
+            <% if (user.internal.going == null) { %>
+            <form method="post" action="/user/rsvp" id="rsvp-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="genderDropdown">Are you coming? *</label>
+                    <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
+                        <option value="">select</option>
+                        <%- helper.generateOptions("yes no".split(" "), {selected: (input.rsvp || "")}); %>
+                    </select>
+                </div>
+
+
+                <p>Before reserving your spot, you must read and accept to the following codes of conduct from us
+                    and major league hacking.</p>
+
+                <div class="form-group">
+                    <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
+                       target="_blank">mlh</a>
+                    <a type="button" class="btn btn-red" href="" target="_blank">bigred//hacks</a>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="legal" value="true"
+                                   class="checkbox"> by checking this box, I have read and agree to abide by the
+                            mlh and bigred//hacks codes of.conduct
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" id="rsvp" class="btn btn-red">submit</button>
+                </div>
+            </form>
+            <% } else { %>
+            <p>You told us that you would be <%= user.internal.going ? "going" : "not going" %> to bigred//hacks.</p>
+            <% if (user.internal.going == false) { %>
+            <p>If you can't make it, please let us know at <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>
+                as soon as possible!</p>
+            <% } %>
+            <% } %>
+            <br/>
+
+
+            <div class="header-wrapper">
+                <h2 class="page-title">resume</h2>
+            </div>
+            <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
+            <button class="btn btn-red" id="resume-update">update my resume</button>
+
+            <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
+                  enctype="multipart/form-data">
+                <label>upload a new resume (.pdf)</label><br/>
+
+                <div class="form-group has-error">
+                    <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="resumeinput"
+                           name="resumeinput" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-red" id="resume-save" disabled>Save</button>
+                </div>
+            </form>
+            <% } %>
+        </div>
+    </div>
+</div>
+<script src="/js/vendor/jquery.filepicker.min.js"></script>
+<script src="/js/dashboard.js"></script>
+<% include ../../_footer %>

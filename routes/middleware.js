@@ -10,6 +10,10 @@ function _isCornellRegistrationOpen() {
     return config.admin.cornell_reg_open;
 }
 
+function _isResultsReleased() {
+    return config.admin.results_released;
+}
+
 middle.requireNoAuthentication = function (req, res, next) {
     if (req.user) {
         return res.redirect('/user/dashboard')
@@ -63,9 +67,19 @@ middle.requireCornellRegistrationOpen = function (req, res, next) {
     }
 };
 
+middle.requireResultsReleased = function (req, res, next) {
+    if (_isResultsReleased()) {
+        return next();
+    }
+    else {
+        return res.redirect('/')
+    }
+};
+
 middle.helper = {
     isRegistrationOpen: _isRegistrationOpen,
     isCornellRegistrationOpen: _isCornellRegistrationOpen
+    isResultsReleased: _isResultsReleased
 };
 
 module.exports = middle;

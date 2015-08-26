@@ -91,6 +91,7 @@ app.use('/subdomain/fa14/', express.static(__dirname + '/brh_old/2014/fa14'));
 app.use('/', routes);
 app.use('/api/admin', middle.requireAdmin, apiAdminRoute);
 app.use('/api', apiRoute);
+
 app.use('/admin', middle.requireAdmin, admin);
 app.use('/user', middle.requireAuthentication, user);
 app.use('/', authRoute); //todo mount on separate route to allow use of noAuth without disabling 404 pages

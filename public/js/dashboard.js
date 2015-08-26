@@ -36,6 +36,55 @@ $(document).ready(function () {
         })
     });
 
+    /**
+     * generic ajax to handle a user's bus decision (sign up or opt out)
+     * @param busid
+     * @param decision signup, optout
+     * @param callback
+     */
+    var userBusDecision = function userBusDecision(busid, decision, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/user/busdecision",
+            data: {
+                busid: busid,
+                decision: decision
+            },
+            success: function (data) {
+                callback(data);
+            },
+            error: function (e) {
+                console.log("Couldn't sign up or opt out of bus.");
+            }
+        });
+    };
+
+    //Sign up for bus
+    $("#signup").on('click', function () {
+        var businfobox = $(this).parents(".businfobox");
+        if(businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
+            userBusDecision(businfobox.data("busid"), "signup", function(data){
+                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) + 1;
+                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
+                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
+                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Signed Up")
+            });
+        }
+    });
+
+    //Opt out of bus
+    $("#optout").on('click', function () {
+        var businfobox = $(this).parents(".businfobox");
+        if(businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
+            userBusDecision(businfobox.data("busid"), "optout", function (data) {
+                var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) - 1;
+                businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
+                businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
+                businfobox.find(".userbusdecision").html("<b>Your Current Bus Decision:</b> Opt Out")
+            });
+        }
+    });
+
 });
 
 

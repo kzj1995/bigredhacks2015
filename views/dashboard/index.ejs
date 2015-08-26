@@ -22,7 +22,7 @@ var teamwithcornell = teamwithcornell || false;
             <%- '<div class="alert alert-success" role="alert">' + messages.success[0].toLowerCase() + '</div>' %>
             <% } %>
 
-            <p> welcome back, <%= name.first %> <%= name.last %>. </p>
+            <p> welcome back, <%= user.name.first %> <%= user.name.last %>. </p>
 
 
             <br/>
@@ -46,7 +46,7 @@ var teamwithcornell = teamwithcornell || false;
                     instead.</p>
 
                 <form action="/user/team/add" class="form-inline" method="POST">
-                    <label>enter teammate id</label><span class="label-helper">me: <%= userid %></span><br/>
+                    <label>enter teammate id</label><span class="label-helper">me: <%= user.pubid %></span><br/>
 
                     <div class="form-group has-error">
                         <label for="addteamid" class="sr-only">enter teammate id</label>
@@ -76,7 +76,7 @@ var teamwithcornell = teamwithcornell || false;
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" id="cornellteamcheck" value=""
-                               class="checkbox" <%- teamwithcornell ? "checked" : "" %>> I plan to work with (a) Cornell
+                               class="checkbox" <%- user.internal.teamwithcornell ? "checked" : "" %>> I plan to work with (a) Cornell
                         student(s).
                     </label>
                 </div>
@@ -90,6 +90,10 @@ var teamwithcornell = teamwithcornell || false;
             </div>
             <a class="btn btn-red" href="<%= resumeLink %>" target="_blank">view my resume</a>
             <button class="btn btn-red" id="resume-update">update my resume</button>
+
+            <br/>
+            <br/>
+            <br/>
 
             <form method="post" class="form-inline" action="/user/updateresume" style="display:none" id="resume-form"
                   enctype="multipart/form-data">
