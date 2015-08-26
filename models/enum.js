@@ -15,7 +15,7 @@ var en = {
         role: "user/admin/bus captain/test".split("/")
     },
     admin: {
-      travel_mode: "Charter Bus/Public Bus/Plane/Carpool".split("/")
+      travel_mode: "Charter Bus/Other".split("/")
     },
     virtual: { //virtual params are used in front end display only - these should always correspond to above
         status: {

@@ -32,9 +32,11 @@ var helper = viewHelper;
                 <h2 class="page-title">status</h2>
             </div>
             <% if (status === "pending") { %>
-            <p class="long-text">Something went wrong. Please contact us at <a href="mailto:info@bigredhacks.com?Subject=Application%20Status%20Error">info@bigredhacks.com</a></p>
+            <p class="long-text">Something went wrong. Please contact us at <a
+                        href="mailto:info@bigredhacks.com?Subject=Application%20Status%20Error">info@bigredhacks.com</a>
+            </p>
             <% } else if (status === "rejected") { %>
-            
+
             <p class="long-text">Thank you for applying for BigRed//Hacks! With so many hackathons happening this year,
                 we're honored that we were on your list.</p>
 
@@ -69,15 +71,18 @@ var helper = viewHelper;
                 taking place on September 18-20 at Cornell University. You'll be one of 400 hackers from universities
                 all across the U.S. coming together to hack, build, and learn.</p>
 
-<% if (!user.internal.cornell_applicant) { %>
+            <% if (!user.internal.cornell_applicant) { %>
 
-            <p class="long-text">Because the event is fast approaching, <b>we're asking that all attendees RSVP by September 1, 2015.</b>.  RSVPing involves two steps: confirming your mode of transportation (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and Major League Hacking's code of conduct.</p>
+            <p class="long-text">Because the event is fast approaching, <b>we're asking that all attendees RSVP by
+                    September 1, 2015.</b>. RSVPing involves two steps: confirming your mode of transportation
+                (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
+                Major League Hacking's code of conduct.</p>
 
             <p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check
                 the appropriate box. We'll be sad, but it'll be super helpful and we'll be able to give your spot to
                 someone else.</p>
 
-<% } %>
+            <% } %>
             <p class="long-text">We'll be sending lots more information as we get closer to the event, so stay
                 tuned!</p>
 
@@ -88,16 +93,16 @@ var helper = viewHelper;
 
             <br/>
 
-
-<% if (!user.internal.cornell_applicant) { %>
+            <% if (!user.internal.cornell_applicant) { %>
             <div class="header-wrapper">
                 <h2 class="page-title">transportation</h2>
             </div>
 
-            <% if (bus == null) { %>
-            <p>method: charter bus/public transportation/drive</p>
+            <% if (bus == null ) { %>
+            <p>Allowance: <%= reimbursement.amount %></p>
 
-            <p>allowance: n/a for charter bus, $__ for public transportion, $___/mile for drive</p>
+            <p>Your allowance was determined based on your location. You may select any method of transportation, but we
+                will only reimburse you up to the allowance.</p>
 
             <p>please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.
             </p>
@@ -163,11 +168,14 @@ var helper = viewHelper;
                 <div class="form-group">
                     <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
                        target="_blank">mlh</a>
-                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf" target="_blank">bigred//hacks</a>
+                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf"
+                       target="_blank">bigred//hacks</a>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="legal" value="true" class="checkbox"> By checking this box, I have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.
+                            <input type="checkbox" id="legal" value="true" class="checkbox"> By checking this box, I
+                            have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree
+                            to comply with the Major League Hacking Code of Conduct.
                         </label>
                     </div>
                 </div>
@@ -184,7 +192,7 @@ var helper = viewHelper;
             <% } %>
             <br/>
 
-<% } %>
+            <% } %>
 
             <div class="header-wrapper">
                 <h2 class="page-title">resume</h2>
