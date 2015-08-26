@@ -123,7 +123,7 @@ router.get('/dashboard', function (req, res, next) {
 
 
         if (req.user.internal.cornell_applicant) {
-            return res.render('dashboard/results_released/index_cornell.ejs', {
+            return res.render('dashboard/results_released/index_cornell', {
                 user: req.user,
                 resumeLink: results.resumeLink,
                 title: "Dashboard"

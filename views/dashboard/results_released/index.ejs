@@ -99,13 +99,15 @@ var helper = viewHelper;
             </div>
 
             <% if (bus == null ) { %>
-            <p>Allowance: <%= reimbursement.amount %></p>
+            <p>Allowance: $<%= reimbursement ? reimbursement.amount : "150" %></p>
 
-            <p>Your allowance was determined based on your location. You may select any method of transportation, but we
-                will only reimburse you up to the allowance.</p>
+            <p class="long-text">Allowances are based on the general cost of inexpensive transportation in your area.  You may select any method
+                of transportation, but we will only reimburse you up to the amount above.  If you believe that this amount is unfair,
+                then please reach out to us and we'll make adjustements as necessary.</p>
 
-            <p>please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.
-            </p>
+            <p class="long-text">Notes for drivers: We ask that you make every effort to carpool with as many students as possible in your school.  We will provide a Facebook page for you to find others in your area.  Parking is free at Cornell after 5pm on Friday through Sunday.  We are not responsible for any fines for parking violations.</p>
+
+            <p>Please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.</p>
 
             <button type="button" class="btn btn-red">upload receipts</button>
             <% } else { %>
@@ -161,21 +163,15 @@ var helper = viewHelper;
                     </select>
                 </div>
 
-
-                <p>Before reserving your spot, you must read and accept to the following codes of conduct from us
-                    and major league hacking.</p>
-
                 <div class="form-group">
+                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf" target="_blank">liability waiver & release</a>
                     <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
-                       target="_blank">mlh</a>
-                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf"
-                       target="_blank">bigred//hacks</a>
+                       target="_blank">code of conduct</a><br>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="legal" value="true" class="checkbox"> By checking this box, I
-                            have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree
-                            to comply with the Major League Hacking Code of Conduct.
+                            <input type="checkbox" id="legal" value="true" class="checkbox">
+                            I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct. I understand that if I do not agree with any component of these agreements, I should not RSVP for the event.
                         </label>
                     </div>
                 </div>
