@@ -51,7 +51,14 @@ router.get('/dashboard', function (req, res, next) {
             })
         },
         reimbursement: function(done) {
-            Reimbursement.findOne({"college.id": req.user.school.id}, done)
+            Reimbursement.findOne({"college.id": req.user.school.id}, function(err, res) {
+                if (err || res == null) {
+                    var default_rem = {};
+                    default_rem.amount = 150;
+                    done(err, default_rem);
+                }
+
+            })
         },
         bus: function (done) {
             var userbus = null;
@@ -246,7 +253,7 @@ router.post('/team/cornell', function (req, res, next) {
 
 
 /* POST upload a new resume*/
-router.post('/updateresume', middle.requireRegistrationOpen, function (req, res, next) {
+router.post('/updateresume', function (req, res, next) {
 
     var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
 
