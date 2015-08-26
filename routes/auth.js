@@ -366,7 +366,7 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                             major: req.body.major
                         },
                         internal: {
-                            conrell_applicant: true
+                            cornell_applicant: true
                         },
                         app: {
                             github: req.body.github,
