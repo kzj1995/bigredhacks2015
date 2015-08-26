@@ -38,6 +38,8 @@ if (messages.error) {
 
     <p>Don't miss this amazing event, sign up now!</p>
 
+    <p><strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong></p>
+
     <form id="registrationForm" action="/register/<%= urlparam %>" name='registrationForm' method="POST"
           autocomplete="on"
           enctype="multipart/form-data">
@@ -179,6 +181,21 @@ if (messages.error) {
                         <textarea id="anythingelse" name="anythingelse" class="form-control"
                                   rows="2"><%= input.anythingelse %></textarea>
             </div>
+        </fieldset>
+        <fieldset>
+            <div class="header-wrapper">
+                <legend class="page-title">terms</legend>
+            </div>
+            <p>Please carefully read the two documents below:</p>
+                <div class="form-group">
+                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf" target="_blank">liability waiver & release</a>
+                    <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
+                       target="_blank">code of conduct</a><br>
+
+                    <br>
+                    <p><label>By registering and taking part in BigRed//Hacks, you affirm that you have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.
+                        </label><p>
+                </div>
         </fieldset>
         <fieldset>
             <button type="submit" id="submit" value="submit" class="btn btn-primary">submit</button>
