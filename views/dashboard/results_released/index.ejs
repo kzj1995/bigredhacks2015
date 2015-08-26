@@ -60,10 +60,12 @@ var helper = viewHelper;
 
 <p class="long-text">Congratulations - you're in!  We're excited to offer you a spot in BigRed//Hacks 2015, taking place on September 18-20 at Cornell University.  You'll be one of 400 hackers from universities all across the U.S. coming together to hack, build, and learn.</p>
 
+<% if (!user.internal.cornell_applicant) { %>
 <p class="long-text">Because the event is fast approaching, <b>we're asking that all attendees RSVP by September 1, 2015.</b>.  RSVPing involves two steps: confirming your mode of transportation (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and Major League Hacking's code of conduct.</p>
 
 <p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check the appropriate box.  We'll be sad, but it'll be super helpful and we'll be able to give your spot to someone else.</p>
 
+<% } %>
 <p class="long-text">We'll be sending lots more information as we get closer to the event, so stay tuned!</p>
 
 <p class="long-text">Looking forward to seeing you in Ithaca,</p>
@@ -74,7 +76,7 @@ var helper = viewHelper;
             <br/>
 
 
-<% if (user.internal.cornell_applicant) { %>
+<% if (!user.internal.cornell_applicant) { %>
             <div class="header-wrapper">
                 <h2 class="page-title">transportation</h2>
             </div>
