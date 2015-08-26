@@ -3,21 +3,11 @@ var config = require('../config');
 var middle = {};
 
 function _isRegistrationOpen() {
-    if (config.admin.reg_open) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return config.admin.reg_open;
 }
 
 function _isCornellRegistrationOpen() {
-    if (config.admin.cornell_reg_open) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return config.admin.cornell_reg_open;
 }
 
 middle.requireNoAuthentication = function (req, res, next) {
@@ -71,10 +61,11 @@ middle.requireCornellRegistrationOpen = function (req, res, next) {
     else {
         return res.redirect('/');
     }
-}
+};
 
 middle.helper = {
-    isRegistrationOpen: _isRegistrationOpen
+    isRegistrationOpen: _isRegistrationOpen,
+    isCornellRegistrationOpen: _isCornellRegistrationOpen
 };
 
 module.exports = middle;

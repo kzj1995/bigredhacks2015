@@ -13,7 +13,8 @@ router.get('/colleges', function (req, res, next) {
 });
 
 
-router.get('/validEmail', middle.requireRegistrationOpen, function (req, res, next) {
+//todo prevent access when registration is completely closed
+router.get('/validEmail', function (req, res, next) {
     User.findOne({email: req.query.email}, function (err, user) {
         console.log(user);
         if (err) console.err(err);
