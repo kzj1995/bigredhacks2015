@@ -154,7 +154,7 @@ var helper = viewHelper;
                 <h2 class="page-title">rsvp</h2>
             </div>
             <% if (user.internal.going == null) { %>
-            <form method="post" action="/user/rsvp" id="rsvp-form" enctype="multipart/form-data">
+            <form method="post" action="/user/rsvp" id="rsvp-form">
                 <div class="form-group">
                     <label for="genderDropdown">Are you coming? *</label>
                     <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
