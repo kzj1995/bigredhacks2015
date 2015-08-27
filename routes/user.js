@@ -69,6 +69,7 @@ router.get('/dashboard', function (req, res, next) {
             console.log(err);
         }
 
+        console.log(results.bus)
         var render_data = {
             user: req.user,
             resumeLink: results.resumeLink,
@@ -476,7 +477,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                 if (err) {
                     console.log(err);
                 }
-                done(userbus);
+                done(null, userbus);
                 //temporarily disable
                 //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
                 //todo consider storing bus captain info in bus
