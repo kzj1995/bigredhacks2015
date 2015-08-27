@@ -67,8 +67,6 @@ router.get('/dashboard', function (req, res, next) {
             console.log(err);
         }
 
-        console.log('error:' + err)
-        console.log(results.bus)
         var render_data = {
             user: req.user,
             resumeLink: results.resumeLink,
@@ -363,7 +361,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
         }
 
         //travel receipt
-        _findAssignedOrNearestBus(function (err, bus) {
+        _findAssignedOrNearestBus(req, function (err, bus) {
             if (err) {
                 console.log(err);
             }
@@ -384,6 +382,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                         req.flash('error', file);
                     }
                     else {
+                        console.log(file);
                         req.flash('success', 'Resume successfully updated');
                         req.user.internal.travel_receipt = file.filename;
                         req.user.save(function (err) {

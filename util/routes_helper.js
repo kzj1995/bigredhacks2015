@@ -117,7 +117,7 @@ helper.uploadFile = function uploadFile(file, options, callback) {
     //console.log(filename);
     s3.putObject({
         Bucket: config.setup.AWS_S3_bucket,
-        Key: RESUME_DEST + filename,
+        Key: dest + filename,
         ACL: 'public-read',
         Body: body,
         ContentType: 'application/pdf'
