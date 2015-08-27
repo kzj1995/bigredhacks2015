@@ -50,8 +50,8 @@ router.get('/dashboard', function (req, res, next) {
                 return done(err, members);
             })
         },
-        reimbursement: function(done) {
-            Reimbursement.findOne({"college.id": req.user.school.id}, function(err, res) {
+        reimbursement: function (done) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, function (err, res) {
                 if (err || res == null) {
                     var default_rem = {};
                     default_rem.amount = 150;
@@ -91,9 +91,9 @@ router.get('/dashboard', function (req, res, next) {
                                             userbus = bus;
                                             //properly round to two decimal points
                                             var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                                    100) / 100;
+                                                100) / 100;
                                             userbus.message = "a bus stops near your school at " + stop.collegename +
-                                                " (roughly " + roundedDistance + " miles away):";
+                                            " (roughly " + roundedDistance + " miles away):";
                                             closestdistance = distanceBetweenColleges;
                                         }
                                     }
@@ -104,19 +104,29 @@ router.get('/dashboard', function (req, res, next) {
                         callback();
                     });
                 }, function (err) {
-                    async.each(userbus.members, function (member, finalcallback) {
-                        User.findOne({_id: member.id}, function (err, user) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else if (user.role == "bus captain") {
-                                userbus.buscaptain = user;
-                            }
-                            finalcallback();
-                        });
-                    }, function (err) {
-                        return done(null, userbus);
-                    });
+                    if (err) {
+                        console.log(err);
+                    }
+                    done(userbus);
+                    //temporarily disable
+                    //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
+                    //todo consider storing bus captain info in bus
+                    //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
+                    /*
+                     async.each(userbus.members, function (member, finalcallback) {
+                     User.findOne({_id: member.id}, function (err, user) {
+                     if (err) {
+                     console.log(err);
+                     }
+                     else if (user.role == "bus captain") {
+                     userbus.buscaptain = user;
+                     }
+                     finalcallback();
+                     });
+                     }, function (err) {
+                     return done(null, userbus);
+                     });
+                     */
                 });
             });
         }
@@ -144,7 +154,7 @@ router.get('/dashboard', function (req, res, next) {
         }
 
         if (middle.helper.isResultsReleased()) {
-            return res.render('dashboard/results_released/index', render_data);
+            return res.render('dashboard/results_released/index_general', render_data);
         }
         else {
             return res.render('dashboard/index', render_data);
@@ -240,7 +250,7 @@ router.post('/team/add', middle.requireRegistrationOpen, function (req, res, nex
 });
 
 /* GET leave current team */
-router.get('/team/leave', middle.requireRegistrationOpen , function(req, res, next) {
+router.get('/team/leave', middle.requireRegistrationOpen, function (req, res, next) {
     req.user.leaveTeam(function (err, resMsg) {
         if (err) {
             console.log(err);
@@ -394,10 +404,10 @@ router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
 
 /* POST register a new user */
 router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
-    if (req.body.rsvpDropdown == "yes"){
+    if (req.body.rsvpDropdown == "yes") {
         req.user.internal.going = true;
     }
-    else if (req.body.rsvpDropdown == "no"){
+    else if (req.body.rsvpDropdown == "no") {
         req.user.internal.going = false;
     }
     req.user.save(function (err) {
