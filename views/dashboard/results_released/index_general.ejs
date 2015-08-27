@@ -224,10 +224,14 @@ var helper = viewHelper;
                 </div>
             </form>
             <% } else { %>
-            <p>You told us that you would be <%= user.internal.going ? "going" : "not going" %> to bigred//hacks.</p>
-            <% if (user.internal.going) { %>
-            <p>If you can't make it, please let us know at <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>
-                as soon as possible!</p>
+                <%= if (user.internal.going) { %>
+                    <p>You told us that you are going to BigRed//Hacks.</p>
+            <p>If you can't make it, please let us know at <a
+href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.
+                <%= } else { %>
+                <p>You told us that you weren't going to BigRed//Hacks.  If your
+plans have changed, please let us know as know at <a
+href="mailto:info@bigredhacks.com?subject=Transportation">info@bigredhacks.com</a>.</p>
             <% } %>
             <br/>
 
