@@ -249,6 +249,12 @@ router.get('/review', function (req, res, next) {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
+
+                //redirect if no applicants left to review
+                if (user == null) {
+                    return res.redirect('/admin');
+                }
+                
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
                     school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
