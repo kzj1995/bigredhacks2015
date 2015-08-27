@@ -96,7 +96,7 @@ var helper = viewHelper;
             </div>
 
             <% if (bus == null ) { %>
-            <p>Allowance: $<%= reimbursement %></p>
+            <p>Allowance: $<%= reimbursement.amount %></p>
 
             <p class="long-text">Allowances are based on the general cost of inexpensive transportation in your area.
                 You may select any method
@@ -112,7 +112,6 @@ var helper = viewHelper;
             <p>Please send any questions or concerns to <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>.
             </p>
 
-            <button type="button" class="btn btn-red">upload receipts</button>
             <% } else { %>
             <p> <%= bus.message %> </p>
 
@@ -172,7 +171,16 @@ var helper = viewHelper;
                         <%- helper.generateOptions("yes no".split(" "), {selected: (input.rsvp || "")}); %>
                     </select>
                 </div>
+                <% if (bus == null) {%>
+                <div class="form-group travel-group">
+                    <label for="receipt">Travel Receipt (.pdf, max: 10MB) *</label>
 
+                    <div class="wrapper">
+                        <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="receipt"
+                               name="receipt" accept=".pdf" required>
+                    </div>
+                </div>
+                <% } %>
                 <div class="form-group">
                     <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf"
                        target="_blank">liability waiver & release</a>

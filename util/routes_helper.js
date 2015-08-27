@@ -9,7 +9,11 @@ var mcapi = require('mailchimp-api');
 var config = require('../config.js');
 
 var MAX_RESUME_SIZE = 1024 * 1024 * 5;
+var MAX_RECEIPT_SIZE = 1024 * 1024 * 10;
+
 var RESUME_DEST = 'resume/';
+var RECEIPT_DEST = 'travel/';
+
 var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
@@ -74,33 +78,43 @@ helper.s3url = function s3url() {
 /**
  * upload a resume to aws
  * resume must be a multiparty file object
- * @param resume
+ * @param file
  * @param options
  * @param callback
  * @returns {*}
  */
-helper.uploadResume = function uploadResume(resume, options, callback) {
+helper.uploadFile = function uploadFile(file, options, callback) {
     if (!options) {
         options = {};
+    }
+    var dest, max_size;
+    if (options.type == "resume") {
+        dest = RESUME_DEST;
+        max_size = MAX_RESUME_SIZE;
+    } else if (options.type == "receipt") {
+        dest = RECEIPT_DEST;
+        max_size = MAX_RECEIPT_SIZE;
+    } else {
+        console.error("uploadFile must define options.type");
     }
     var filename = options.filename;
 
     // /check file validity
-    if (resume.size > MAX_RESUME_SIZE) {
+    if (file.size > max_size) {
         return callback(null, "File is too big!");
     }
 
-    if (resume.headers['content-type'] !== 'application/pdf') {
+    if (file.headers['content-type'] !== 'application/pdf') {
         return callback(null, 'File must be a pdf!');
     }
 
     //prepare to upload file
-    var body = fs.createReadStream(resume.path);
+    var body = fs.createReadStream(file.path);
     //generate a filename if not provided
     if (!filename) {
         filename = uid(15) + ".pdf";
     }
-    console.log(filename);
+    //console.log(filename);
     s3.putObject({
         Bucket: config.setup.AWS_S3_bucket,
         Key: RESUME_DEST + filename,
