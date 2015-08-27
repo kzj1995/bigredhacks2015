@@ -139,6 +139,13 @@ var helper = viewHelper;
                     <% } else { %>
                     <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
                     <% } %>
+                    <% if (bus.buscaptain != null) %>
+                    <li class="buscaptain">
+                        <b>Bus Captain:</b>
+                        <%= bus.buscaptain.name.last %>, <%= bus.buscaptain.name.first %>
+                        (<%= bus.buscaptain.email %>)
+                    </li>
+                    <% } %>
                 </ul>
                 <div class="busselection">
                     <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">

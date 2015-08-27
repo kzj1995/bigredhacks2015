@@ -104,7 +104,19 @@ router.get('/dashboard', function (req, res, next) {
                         callback();
                     });
                 }, function (err) {
-                    return done(null, userbus);
+                    async.each(userbus.members, function (member, finalcallback) {
+                        User.findOne({_id: member.id}, function (err, user) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else if (user.role == "bus captain") {
+                                userbus.buscaptain = user;
+                            }
+                            finalcallback();
+                        });
+                    }, function (err) {
+                        return done(null, userbus);
+                    });
                 });
             });
         }
