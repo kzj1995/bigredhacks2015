@@ -397,14 +397,15 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                 })
             }
             else {
-
+                /*
                 //remove user from bus
-                bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user._id}));
+                //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
                 _.omit(bus, 'message');
-                bus.save(function (err, res) {
+                /*bus.save(function (err, res) {
                     if (err) {
                         console.log(err);
                     }
+                
                     req.flash('success', 'We have received your response!');
                     req.user.save(function (err) {
                         if (err) {
@@ -412,7 +413,15 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                         }
                         return res.redirect('/user/dashboard');
                     });
-                })
+                }) */
+
+                    req.flash('success', 'We have received your response!');
+                    req.user.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        return res.redirect('/user/dashboard');
+                    });
             }
         });
     })

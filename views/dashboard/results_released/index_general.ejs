@@ -99,7 +99,7 @@ var helper = viewHelper;
 
             <br/>
 
-            <% if (!user.internal.cornell_applicant || (!user.internal.going)) { %>
+            <% if (!(user.internal.going == false)) { %>
             <div class="header-wrapper">
                 <h2 class="page-title">transportation</h2>
             </div>
@@ -165,6 +165,7 @@ var helper = viewHelper;
             </div>
             <% } %>
 
+            <% } %>
             <br/>
 
 
@@ -224,10 +225,9 @@ var helper = viewHelper;
             </form>
             <% } else { %>
             <p>You told us that you would be <%= user.internal.going ? "going" : "not going" %> to bigred//hacks.</p>
-            <% if (user.internal.going == false) { %>
+            <% if (user.internal.going) { %>
             <p>If you can't make it, please let us know at <a href="mailto:info@bigredhacks.com?Subject=Transportation">info@bigredhacks.com</a>
                 as soon as possible!</p>
-            <% } %>
             <% } %>
             <br/>
 
