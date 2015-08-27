@@ -99,7 +99,7 @@ var helper = viewHelper;
 
             <br/>
 
-            <% if (!user.internal.cornell_applicant) { %>
+            <% if (!user.internal.cornell_applicant || (!user.internal.going)) { %>
             <div class="header-wrapper">
                 <h2 class="page-title">transportation</h2>
             </div>
