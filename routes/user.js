@@ -104,7 +104,19 @@ router.get('/dashboard', function (req, res, next) {
                         callback();
                     });
                 }, function (err) {
-                    return done(null, userbus);
+                    async.each(userbus.members, function (member, finalcallback) {
+                        User.findOne({_id: member.id}, function (err, user) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else if (user.role == "bus captain") {
+                                userbus.buscaptain = user;
+                            }
+                            finalcallback();
+                        });
+                    }, function (err) {
+                        return done(null, userbus);
+                    });
                 });
             });
         }
@@ -382,72 +394,15 @@ router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
 
 /* POST register a new user */
 router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
-    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
-
-    form.parse(req, function (err, fields, files) {
-        if (err) {
-            console.log(err);
-            req.flash('error', "Error parsing form.");
-            return res.redirect('/user/dashboard');
-        }
-
-        req.body = helper.reformatFields(fields);
-
-        req.files = files;
-        var resume = files.travel[0];
-        //console.log(resume);
-        //console.log(resume.headers);
-
-        //todo reorder validations to be consistent with form
-        req = validator.validate(req, [
-            'email'
-        ]);
-
-
-        var errors = req.validationErrors();
-        //console.log(errors);
-        if (errors) {
-            var errorParams = errors.map(function (x) {
-                return x.param;
-            });
-            req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
-            res.render('register', {
-                title: 'Register',
-                message: 'The following errors occurred',
-                errors: errors,
-                input: req.body,
-                enums: enums
-            });
-        }
-        else {
-
-            helper.uploadResume(resume, null, function (err, file) {
-                if (err) {
-                    console.log(err);
-                    req.flash('error', "File upload failed. :(");
-                    return res.redirect('/register');
-                }
-                if (typeof file === "string") {
-                    req.flash('error', file);
-                    return res.redirect('/register');
-                }
-
-
-                newUser.save(function (err, doc) {
-                    if (err) {
-                        // If it failed, return error
-                        console.log(err);
-                        req.flash("error", "An error occurred.");
-                        res.render('register', {
-                            title: 'Register', error: req.flash('error'), input: req.body, enums: enums
-                        });
-                    }
-                    else {
-                    }
-                });
-            });
-        }
-    });
+    if (req.body.rsvpDropdown == "yes"){
+        req.user.internal.going = true;
+    }
+    else if (req.body.rsvpDropdown == "no"){
+        req.user.internal.going = false;
+    }
+    req.user.save(function (err) {
+        res.redirect('/user/dashboard');
+    })
 });
 
 /* GET logout the current user */

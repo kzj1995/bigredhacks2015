@@ -139,6 +139,13 @@ var helper = viewHelper;
                     <% } else { %>
                     <li class="userbusdecision"><b>Your Current Bus Decision:</b> Opt Out</li>
                     <% } %>
+                    <% if (bus.buscaptain != null) %>
+                    <li class="buscaptain">
+                        <b>Bus Captain:</b>
+                        <%= bus.buscaptain.name.last %>, <%= bus.buscaptain.name.first %>
+                        (<%= bus.buscaptain.email %>)
+                    </li>
+                    <% } %>
                 </ul>
                 <div class="busselection">
                     <input type="button" value="sign up" name="signup" id="signup" class="btn btn-primary">
@@ -154,7 +161,7 @@ var helper = viewHelper;
                 <h2 class="page-title">rsvp</h2>
             </div>
             <% if (user.internal.going == null) { %>
-            <form method="post" action="/user/rsvp" id="rsvp-form" enctype="multipart/form-data">
+            <form method="post" action="/user/rsvp" id="rsvp-form">
                 <div class="form-group">
                     <label for="genderDropdown">Are you coming? *</label>
                     <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
