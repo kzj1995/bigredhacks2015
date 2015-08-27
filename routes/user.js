@@ -51,85 +51,16 @@ router.get('/dashboard', function (req, res, next) {
             })
         },
         reimbursement: function (done) {
-            Reimbursement.findOne({"college.id": req.user.school.id}, function (err, res) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                 if (err || res == null) {
                     var default_rem = {};
                     default_rem.amount = 150;
-                    done(err, default_rem);
+                    return done(err, default_rem);
                 }
-
+                return done(err, rem);
             })
         },
-        bus: function (done) {
-            var userbus = null;
-            var closestdistance = null;
-            Bus.find({}).exec(function (err, buses) {
-                if (err) {
-                    console.log(err);
-                }
-                //todo optimize this (see if it's possible to perform this operation in a single aggregation
-                async.each(buses, function (bus, callback) {
-                    async.each(bus.stops, function (stop, inner_callback) {
-                        College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
-                            function (err, colleges) {
-                                //The case when the query returns only one college because the college of the bus's stop
-                                //is the same as the user's college
-                                if (colleges.length == 1) {
-                                    userbus = bus;
-                                    userbus.message = "a bus stops at your school:";
-                                    closestdistance = 0;
-                                }
-                                //The other case when the query returns two colleges because the college of the bus's
-                                //stop is not the same as the user's college. Additionally check to make sure the user's
-                                //school is not Cornell Tech (id = "x000001")
-                                else if (colleges.length == 2 && req.user.school.id != "x000001") {
-                                    //find the distance between two colleges
-                                    var distanceBetweenColleges = _distanceBetweenPointsInMiles(
-                                        colleges[0].loc.coordinates, colleges[1].loc.coordinates);
-                                    if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
-                                        if (closestdistance == null || distanceBetweenColleges < closestdistance) {
-                                            userbus = bus;
-                                            //properly round to two decimal points
-                                            var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                                100) / 100;
-                                            userbus.message = "a bus stops near your school at " + stop.collegename +
-                                            " (roughly " + roundedDistance + " miles away):";
-                                            closestdistance = distanceBetweenColleges;
-                                        }
-                                    }
-                                }
-                                inner_callback();
-                            });
-                    }, function (err) {
-                        callback();
-                    });
-                }, function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    done(userbus);
-                    //temporarily disable
-                    //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
-                    //todo consider storing bus captain info in bus
-                    //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
-                    /*
-                     async.each(userbus.members, function (member, finalcallback) {
-                     User.findOne({_id: member.id}, function (err, user) {
-                     if (err) {
-                     console.log(err);
-                     }
-                     else if (user.role == "bus captain") {
-                     userbus.buscaptain = user;
-                     }
-                     finalcallback();
-                     });
-                     }, function (err) {
-                     return done(null, userbus);
-                     });
-                     */
-                });
-            });
-        }
+        bus: _findAssignedOrNearestBus
     }, function (err, results) {
         if (err) {
             console.log(err);
@@ -301,8 +232,9 @@ router.post('/updateresume', function (req, res, next) {
         if (req.user.app.resume) {
             options.filename = req.user.app.resume;
         }
+        options.type = "resume";
 
-        helper.uploadResume(resume, options, function (err, file) {
+        helper.uploadFile(resume, options, function (err, file) {
             if (err) {
                 console.log(err);
                 req.flash('error', "File upload failed. :(");
@@ -404,39 +336,164 @@ router.post('/busdecision', middle.requireResultsReleased, function (req, res) {
 
 /* POST register a new user */
 router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
-    if (req.body.rsvpDropdown == "yes") {
-        req.user.internal.going = true;
-    }
-    else if (req.body.rsvpDropdown == "no") {
-        req.user.internal.going = false;
-    }
-    req.user.save(function (err) {
-        res.redirect('/user/dashboard');
+    var form = new multiparty.Form({maxFilesSize: MAX_FILE_SIZE});
+
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.log(err);
+            req.flash('error', "Error parsing form.");
+            return res.redirect('/user/dashboard');
+        }
+
+        console.log(files);
+        if (files.receipt) {
+            var receipt = files.receipt[0];
+        }
+
+        req.body = helper.reformatFields(fields);
+
+        if (req.body.rsvpDropdown == "yes") {
+            req.user.internal.going = true;
+        }
+        else if (req.body.rsvpDropdown == "no") {
+            req.user.internal.going = false;
+        }
+
+        //travel receipt
+        _findAssignedOrNearestBus(function (err, bus) {
+            if (err) {
+                console.log(err);
+            }
+            //travel receipt required if no bus
+            if (bus == null) {
+                //fail if no receipt uploaded
+                if (!receipt) {
+                    req.flash('error', "Please upload a resume.");
+                    return res.redirect('/user/dashboard');
+                }
+
+                helper.uploadFile(receipt, {type: "receipt"}, function (err, file) {
+                    if (err) {
+                        console.log(err);
+                        req.flash('error', "File upload failed. :(");
+                    }
+                    if (typeof file === "string") {
+                        req.flash('error', file);
+                    }
+                    else {
+                        req.flash('success', 'Resume successfully updated');
+                        req.user.internal.travel_receipt = file.filename;
+                        req.user.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+                    return res.redirect('/user/dashboard');
+                })
+            }
+        });
+
     })
 });
 
-/* GET logout the current user */
-router.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/');
-});
+    /* GET logout the current user */
+    router.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
-/**
- * Return distance in miles between two coordinates/points
- * @param coordinate1 [lon,lat] coordinate pair of first point
- * @param coordinate2 [lon,lat] coordinate pair of second point
- * @returns {number} represents distance in miles between the two colleges
- */
-function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
-    var radius = 3958.754641; // Radius of the earth in miles
-    var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
-    var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
-        Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var distance = radius * c; // Distance in miles
-    return distance;
-}
+    /**
+     * Return distance in miles between two coordinates/points
+     * @param coordinate1 [lon,lat] coordinate pair of first point
+     * @param coordinate2 [lon,lat] coordinate pair of second point
+     * @returns {number} represents distance in miles between the two colleges
+     */
+    function _distanceBetweenPointsInMiles(coordinate1, coordinate2) {
+        var radius = 3958.754641; // Radius of the earth in miles
+        var dLat = (Math.PI / 180) * (coordinate2[1] - coordinate1[1]);
+        var dLon = (Math.PI / 180) * (coordinate2[0] - coordinate1[0]);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos((Math.PI / 180) * (coordinate1[1])) *
+            Math.cos((Math.PI / 180) * (coordinate2[1])) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var distance = radius * c; // Distance in miles
+        return distance;
+    }
 
+    /**
+     * Find the bus assigned to the user or the nearest bus within a certain threshold. Returns the bus object, or null if no bus exists
+     * @param done callback (err, res)
+     * @private
+     */
+    function _findAssignedOrNearestBus(done) {
+        var userbus = null;
+        var closestdistance = null;
+        Bus.find({}).exec(function (err, buses) {
+            if (err) {
+                console.log(err);
+            }
+            //todo optimize this (see if it's possible to perform this operation in a single aggregation
+            async.each(buses, function (bus, callback) {
+                async.each(bus.stops, function (stop, inner_callback) {
+                    College.find({$or: [{'_id': stop.collegeid}, {'_id': req.user.school.id}]},
+                        function (err, colleges) {
+                            //The case when the query returns only one college because the college of the bus's stop
+                            //is the same as the user's college
+                            if (colleges.length == 1) {
+                                userbus = bus;
+                                userbus.message = "a bus stops at your school:";
+                                closestdistance = 0;
+                            }
+                            //The other case when the query returns two colleges because the college of the bus's
+                            //stop is not the same as the user's college. Additionally check to make sure the user's
+                            //school is not Cornell Tech (id = "x000001")
+                            else if (colleges.length == 2 && req.user.school.id != "x000001") {
+                                //find the distance between two colleges
+                                var distanceBetweenColleges = _distanceBetweenPointsInMiles(
+                                    colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                                if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
+                                    if (closestdistance == null || distanceBetweenColleges < closestdistance) {
+                                        userbus = bus;
+                                        //properly round to two decimal points
+                                        var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
+                                            100) / 100;
+                                        userbus.message = "a bus stops near your school at " + stop.collegename +
+                                        " (roughly " + roundedDistance + " miles away):";
+                                        closestdistance = distanceBetweenColleges;
+                                    }
+                                }
+                            }
+                            inner_callback(err);
+                        });
+                }, function (err) {
+                    callback(err);
+                });
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                done(userbus);
+                //temporarily disable
+                //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
+                //todo consider storing bus captain info in bus
+                //todo optimize, query  { role: "Bus Captain", internal.busid: xxx } instead
+                /*
+                 async.each(userbus.members, function (member, finalcallback) {
+                 User.findOne({_id: member.id}, function (err, user) {
+                 if (err) {
+                 console.log(err);
+                 }
+                 else if (user.role == "bus captain") {
+                 userbus.buscaptain = user;
+                 }
+                 finalcallback();
+                 });
+                 }, function (err) {
+                 return done(null, userbus);
+                 });
+                 */
+            });
+        });
+    }
 
-module.exports = router;
+    module.exports = router;

@@ -48,6 +48,7 @@ var userSchema = new mongoose.Schema({
         busid: {type: mongoose.Schema.Types.ObjectId, ref: "Bus", default: null},
         status: {type: String, enum: en.user.status, default: "Pending"},
         going: {type: Boolean, default: null},
+        travel_receipt: {type: String, default: null},
         not_interested: {type: Boolean, default: null}, //waitlisted - if true, they forfeit their spot
         cornell_applicant: {type: Boolean, default: false}
     },

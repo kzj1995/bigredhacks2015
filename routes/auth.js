@@ -101,7 +101,7 @@ router.post('/register', middle.requireRegistrationOpen, function (req, res) {
         }
         else {
 
-            helper.uploadResume(resume, null, function (err, file) {
+            helper.uploadFile(resume, {type: "resume"}, function (err, file) {
                 if (err) {
                     console.log(err);
                     req.flash('error', "File upload failed. :(");
@@ -332,7 +332,7 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                 });
             }
             else {
-                helper.uploadResume(resume, null, function (err, file) {
+                helper.uploadFile(resume, {type: "resume"}, function (err, file) {
                     if (err) {
                         console.log(err);
                         req.flash('error', "File upload failed. :(");
