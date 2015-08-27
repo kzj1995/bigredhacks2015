@@ -164,7 +164,7 @@ var helper = viewHelper;
             </div>
             <% if (user.internal.going == null) { %>
             <form method="post" action="/user/rsvp" id="rsvpForm"
-enctype="multipart/form-data">
+                  enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="rsvpDropdown">Are you coming? *</label>
                     <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
@@ -172,34 +172,41 @@ enctype="multipart/form-data">
                         <%- helper.generateOptions("yes no".split(" "), {selected: (input.rsvp || "")}); %>
                     </select>
                 </div>
-                <% if (bus == null) {%>
-                <div class="form-group travel-group">
-                    <label for="receipt">Travel Receipt (.pdf, max: 10MB) *</label>
-                    <p>Upload a copy of receipt for a roundtrip ticket.  If you
-are driving, then include a screenshot of your route on Google Maps.</p>
+                <div id="coming-only" style="display:none">
+                    <% if (bus == null) { %>
+                    <div class="form-group">
+                        <label for="receipt">Travel Receipt (.pdf, max: 10MB) *</label>
 
-                    <div class="wrapper">
-                        <input data-label="upload" class="form-control filepicker-bootstrap" type="file" id="receipt"
-                               name="receipt" accept=".pdf" required>
+                        <p>Upload a copy of receipt for a roundtrip ticket. If you
+                            are driving, then include a screenshot of your route on Google Maps.</p>
+
+                        <div class="wrapper">
+                            <input data-label="upload" class="form-control filepicker-bootstrap" type="file"
+                                   id="receipt"
+                                   name="receipt" accept=".pdf">
+                        </div>
                     </div>
-                </div>
-                <% } %>
+                    <% } %>
                     <p>Please click the two following links and read the
-documents carefully.</p>
-                <div class="form-group">
-                    <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf"
-                       target="_blank">liability waiver & release</a>
-                    <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
-                       target="_blank">code of conduct</a><br>
+                        documents carefully.</p>
 
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="legal" name="legal" value="true" class="checkbox" required>
-                            I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and Release
-                            of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
-                            understand that if I do not agree with any component of these agreements, I should not RSVP
-                            for the event.
-                        </label>
+                    <div class="form-group">
+                        <a type="button" class="btn btn-red" href="http://www.bigredhacks.com/docs/waiver2015.pdf"
+                           target="_blank">liability waiver & release</a>
+                        <a type="button" class="btn btn-red" href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf"
+                           target="_blank">code of conduct</a><br>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="legal" name="legal" value="true" class="checkbox">
+                                I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and
+                                Release
+                                of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
+                                understand that if I do not agree with any component of these agreements, I should not
+                                RSVP
+                                for the event.
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -240,6 +247,7 @@ documents carefully.</p>
     </div>
 </div>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
 <script src="/js/jquery.validate.options.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/dashboard.js"></script>
