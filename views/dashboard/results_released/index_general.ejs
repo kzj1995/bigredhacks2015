@@ -163,7 +163,7 @@ var helper = viewHelper;
                 <h2 class="page-title">rsvp</h2>
             </div>
             <% if (user.internal.going == null) { %>
-            <form method="post" action="/user/rsvp" id="rsvp-form">
+            <form method="post" action="/user/rsvp" id="rsvpForm">
                 <div class="form-group">
                     <label for="rsvpDropdown">Are you coming? *</label>
                     <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
@@ -193,7 +193,7 @@ documents carefully.</p>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="legal" id="legal" value="true" class="checkbox">
+                            <input type="checkbox" id="legal" name="legal" value="true" class="checkbox" required>
                             I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and Release
                             of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
                             understand that if I do not agree with any component of these agreements, I should not RSVP
@@ -238,6 +238,8 @@ documents carefully.</p>
         </div>
     </div>
 </div>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="/js/jquery.validate.options.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
 <script src="/js/dashboard.js"></script>
 <% include ../../_footer %>
