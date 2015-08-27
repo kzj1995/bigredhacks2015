@@ -117,6 +117,22 @@ function checkResume() {
  /********RSVP**********
  /*********************/
 
+//not interested in going check for waitlisted
+$("#notinterested").on("change", function () {
+    var _this = this;
+    $(".checkbox").addClass("disabled");
+    $(_this).prop("disabled", true);
+    var checked = this.checked;
+    $.ajax({
+        url: "/api/rsvp/notinterested",
+        type: "POST",
+        data: {checked: checked},
+        success: function (d) {
+            $(".checkbox").removeClass("disabled");
+            $(_this).prop("disabled", false);
+        }
+    })
+});
 $("#rsvpDropdown").on('change', function() {
     if ($(this).val() == "yes") {
         $("#coming-only").show();

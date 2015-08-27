@@ -65,6 +65,15 @@ var helper = viewHelper;
 
             <p>BigRed//Hacks Team</p>
 
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="notinterested" value=""
+                               class="checkbox" <%- user.internal.not_interested ? "checked" : "" %>> I'm not interested in going anymore.
+                    </label>
+                </div>
+            </div>
+
             <% } else if (status === "accepted") { %>
 
             <p class="long-text">Congratulations - you're in! We're excited to offer you a spot in BigRed//Hacks 2015,
