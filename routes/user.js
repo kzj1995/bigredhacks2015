@@ -51,12 +51,13 @@ router.get('/dashboard', function (req, res, next) {
             })
         },
         reimbursement: function (done) {
-            Reimbursement.findOne({"college.id": req.user.school.id}, function (err, res) {
-                if (err || res == null) {
+            Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
+                if (err || rem == null) {
                     var default_rem = {};
                     default_rem.amount = 150;
-                    done(err, default_rem);
+                    return done(err, default_rem);
                 }
+                return done(err, rem);
 
             })
         },
@@ -98,16 +99,16 @@ router.get('/dashboard', function (req, res, next) {
                                         }
                                     }
                                 }
-                                inner_callback();
+                                inner_callback(err);
                             });
                     }, function (err) {
-                        callback();
+                        callback(err);
                     });
                 }, function (err) {
                     if (err) {
                         console.log(err);
                     }
-                    done(userbus);
+                    return done(err, userbus);
                     //temporarily disable
                     //assumptions to check: no bus exists, bus has a bus captain, bus does not have more than one bus captaion
                     //todo consider storing bus captain info in bus
@@ -135,6 +136,8 @@ router.get('/dashboard', function (req, res, next) {
             console.log(err);
         }
 
+        console.log('error:' + err)
+        console.log(results.bus)
         var render_data = {
             user: req.user,
             resumeLink: results.resumeLink,

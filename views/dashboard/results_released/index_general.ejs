@@ -166,7 +166,7 @@ var helper = viewHelper;
             <% if (user.internal.going == null) { %>
             <form method="post" action="/user/rsvp" id="rsvp-form">
                 <div class="form-group">
-                    <label for="genderDropdown">Are you coming? *</label>
+                    <label for="rsvpDropdown">Are you coming? *</label>
                     <select class="form-control" id="rsvpDropdown" name="rsvpDropdown" required>
                         <option value="">select</option>
                         <%- helper.generateOptions("yes no".split(" "), {selected: (input.rsvp || "")}); %>
@@ -181,7 +181,7 @@ var helper = viewHelper;
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="legal" value="true" class="checkbox">
+                            <input type="checkbox" name="legal" id="legal" value="true" class="checkbox">
                             I affirm that I have read and agree in full to the BigRed//Hacks Accident Waiver and Release
                             of Liability, and agree to comply with the Major League Hacking Code of Conduct. I
                             understand that if I do not agree with any component of these agreements, I should not RSVP
@@ -190,7 +190,7 @@ var helper = viewHelper;
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" id="rsvp" class="btn btn-red">submit</button>
+                    <button type="submit" id="rsvp" name="rsvpsubmit" class="btn btn-red">submit</button>
                 </div>
             </form>
             <% } else { %>
