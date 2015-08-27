@@ -365,7 +365,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
         }
 
         //travel receipt
-        _findAssignedOrNearestBus(function (err, bus) {
+        _findAssignedOrNearestBus(req, function (err, bus) {
             if (err) {
                 console.log(err);
             }
