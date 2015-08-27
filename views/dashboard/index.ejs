@@ -33,7 +33,24 @@ var teamwithcornell = teamwithcornell || false;
             <% if (middlehelp.isRegistrationOpen()) { %>
             <p>registration process is still open.</p>
             <% } else { %>
-            <p>Registration is closed.</p>
+                <% if (user.internal.status == "Accepted") { %>
+                    <p>congratulations!</p>
+                    <br>
+                    <p>After reviewing your application, we have decided that you would be a great addition to our
+                    hackathon and would love for you to attend! Please view the information and items below for next
+                    steps</p>
+                <% } else if (user.internal.status == "Waitlisted") { %>
+                    <p>You have been waitlisted.</p>
+                    <br>
+                    <p>After reviewing your application, we have decided that although you could certainly be a
+                    great addition to our hackathon, we will not be accepting you now, and will be placing you on the
+                    waitlist. It is still very possible that we will be able to accept you eventually, so please login
+                    on periodically and check your email for updates!</p>
+                <% } else if (user.internal.status == "Rejected") { %>
+                    <p>After reviewing your application, we have decided that although you possess many achievements
+                    and great qualities, we will not be able to provide you a spot in this year's hackathon. However, we
+                    would love for you to apply next year if you are still interested then!</p>
+                <% } %>
             <% } %>
             <br/>
 
