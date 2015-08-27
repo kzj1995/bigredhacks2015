@@ -117,12 +117,40 @@ function checkResume() {
  /********RSVP**********
  /*********************/
 
-$.validator.addMethod("conditionalReceipt", function (val, elem, params) {
-    if ($("#rsvpDropdown").val() == "yes" && val) {
-        return true
+//not interested in going check for waitlisted
+$("#notinterested").on("change", function () {
+    var _this = this;
+    $(".checkbox").addClass("disabled");
+    $(_this).prop("disabled", true);
+    var checked = this.checked;
+    $.ajax({
+        url: "/api/rsvp/notinterested",
+        type: "POST",
+        data: {checked: checked},
+        success: function (d) {
+            $(".checkbox").removeClass("disabled");
+            $(_this).prop("disabled", false);
+        }
+    })
+});
+$("#rsvpDropdown").on('change', function() {
+    if ($(this).val() == "yes") {
+        $("#coming-only").show();
     }
-    else return true;
-}, "Please upload a pdf of your receipt");
+    else $("#coming-only").hide();
+});
+
+$.validator.addMethod("conditionalRSVP", function (val, elem, params) {
+    //require value if yes response
+    if ($("#rsvpDropdown").val() == "yes" && val) {
+        return true;
+    }
+    //dont require value if no response
+    if ($("#rsvpDropdown").val() == "no") {
+        return true;
+    }
+    else return false;
+});
 
 $('#rsvpForm').validate({
     ignore: 'input:not([name])', //ignore unnamed input tags
@@ -135,16 +163,21 @@ $('#rsvpForm').validate({
             required: true
         },
         receipt: {
-            conditionalReceipt: true,
+            conditionalRSVP: true,
             extension: "pdf",
             accept: 'application/pdf'
         },
         legal: {
-            required: true
+            conditionalRSVP: true
         }
     },
     messages: {
         rsvpDropdown: "Please indicate whether you will be able to attend",
-        legal: "Please review the legal information"
+        receipt: {
+            conditionalRSVP: "Please upload a travel receipt"
+        },
+        legal: {
+            conditionalRSVP: "Please review the legal information"
+        }
     }
 });

@@ -372,7 +372,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
             if (bus == null) {
                 //fail if no receipt uploaded
                 if (!receipt) {
-                    req.flash('error', "Please upload a resume.");
+                    req.flash('error', "Please upload a travel receipt.");
                     return res.redirect('/user/dashboard');
                 }
 
@@ -386,7 +386,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                     }
                     else {
                         console.log(file);
-                        req.flash('success', 'Resume successfully updated');
+                        req.flash('success', 'We have received your response!');
                         req.user.internal.travel_receipt = file.filename;
                         req.user.save(function (err) {
                             if (err) {

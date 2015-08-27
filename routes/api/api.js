@@ -22,4 +22,19 @@ router.get('/validEmail', function (req, res, next) {
     });
 });
 
+/* POST toggle interested in attending for waitlisted */
+router.post('/rsvp/notinterested', function (req, res, next) {
+    var checked = (req.body.checked === "true");
+    var user = req.user;
+    if (user.internal.status == "Waitlisted") {
+        user.internal.not_interested = checked;
+        user.save(function (err) {
+            if (err) {
+                res.send(500);
+            }
+            else res.send(200);
+        });
+    }
+});
+
 module.exports = router;
