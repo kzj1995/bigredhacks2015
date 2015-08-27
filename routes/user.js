@@ -61,7 +61,9 @@ router.get('/dashboard', function (req, res, next) {
 
             })
         },
-        bus: _findAssignedOrNearestBus
+        bus: function(done) {
+            _findAssignedOrNearestBus(req, done)
+        }
     }, function (err, results) {
         if (err) {
             console.log(err);
@@ -427,7 +429,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
      * @param done callback (err, res)
      * @private
      */
-    function _findAssignedOrNearestBus(done) {
+    function _findAssignedOrNearestBus(req, done) {
         var userbus = null;
         var closestdistance = null;
         Bus.find({}).exec(function (err, buses) {
