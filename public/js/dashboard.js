@@ -62,8 +62,8 @@ $(document).ready(function () {
     //Sign up for bus
     $("#signup").on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        if(businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
-            userBusDecision(businfobox.data("busid"), "signup", function(data){
+        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Signed Up") {
+            userBusDecision(businfobox.data("busid"), "signup", function (data) {
                 var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) + 1;
                 businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
                 businfobox.find(".currentnumber").data("currentnumber", newmembernumber.toString());
@@ -75,7 +75,7 @@ $(document).ready(function () {
     //Opt out of bus
     $("#optout").on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        if(businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
+        if (businfobox.find(".userbusdecision").html() != "<b>Your Current Bus Decision:</b> Opt Out") {
             userBusDecision(businfobox.data("busid"), "optout", function (data) {
                 var newmembernumber = parseInt(businfobox.find(".currentnumber").data("currentnumber")) - 1;
                 businfobox.find(".currentnumber").html("<b>Current Number on Bus:</b> " + newmembernumber);
@@ -112,3 +112,38 @@ function checkResume() {
     }
 }
 
+/**********************
+ /********RSVP**********
+ /*********************/
+
+$.validator.addMethod("conditionalReceipt", function (val, elem, params) {
+    if ($("#rsvpDropdown").val() == "yes" && val) {
+        return true
+    }
+    else return true;
+}, "Please upload a pdf of your receipt");
+
+$('#rsvpForm').validate({
+    ignore: 'input:not([name])', //ignore unnamed input tags
+    onfocusout: function (e, event) {
+        this.element(e); //validate field immediately
+    },
+    onkeyup: false,
+    rules: {
+        rsvpDropdown: {
+            required: true
+        },
+        receipt: {
+            conditionalReceipt: true,
+            extension: "pdf",
+            accept: 'application/pdf'
+        },
+        legal: {
+            required: true
+        }
+    },
+    messages: {
+        rsvpDropdown: "Please indicate whether you will be able to attend",
+        legal: "Please review the legal information"
+    }
+});

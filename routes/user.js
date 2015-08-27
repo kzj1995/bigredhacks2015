@@ -52,7 +52,7 @@ router.get('/dashboard', function (req, res, next) {
         },
         reimbursement: function (done) {
             Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
-                if (err || res == null) {
+                if (err || rem == null) {
                     var default_rem = {};
                     default_rem.amount = 150;
                     return done(err, default_rem);
