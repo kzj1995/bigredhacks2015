@@ -58,6 +58,7 @@ router.get('/dashboard', function (req, res, next) {
                     return done(err, default_rem);
                 }
                 return done(err, rem);
+
             })
         },
         bus: _findAssignedOrNearestBus
@@ -66,6 +67,8 @@ router.get('/dashboard', function (req, res, next) {
             console.log(err);
         }
 
+        console.log('error:' + err)
+        console.log(results.bus)
         var render_data = {
             user: req.user,
             resumeLink: results.resumeLink,
