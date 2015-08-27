@@ -50,7 +50,7 @@ var helper = viewHelper;
 
             <% } else if (status === "waitlisted") { %>
 
-            <p class="long-text" class="long-text">Thank you for applying for BigRed//Hacks! With so many hackathons
+            <p class="long-text">Thank you for applying for BigRed//Hacks! With so many hackathons
                 happening this year, we're honored that we were on your list.</p>
 
             <p class="long-text">We had a record number of applications, and a very limited amount of space. While we
@@ -74,13 +74,10 @@ var helper = viewHelper;
             <% if (!user.internal.cornell_applicant) { %>
 
             <p class="long-text">Because the event is fast approaching, <b>we're asking that all attendees RSVP by
-                    September 1, 2015.</b>. RSVPing involves two steps: confirming your mode of transportation
+                    September 1, 2015,</b> or you risk losing your spot. RSVPing involves two steps: confirming your
+                mode of transportation
                 (including providing a receipt if requesting a reimbursement), and agreeing to the BigRed//Hacks and
                 Major League Hacking's code of conduct.</p>
-
-            <p class="long-text">If you aren't interested in coming to BigRed//Hacks at all anymore, then please check
-                the appropriate box. We'll be sad, but it'll be super helpful and we'll be able to give your spot to
-                someone else.</p>
 
             <% } %>
             <p class="long-text">We'll be sending lots more information as we get closer to the event, so stay
@@ -99,7 +96,7 @@ var helper = viewHelper;
             </div>
 
             <% if (bus == null ) { %>
-            <p>Allowance: $<%= reimbursement ? reimbursement.amount : "150" %></p>
+            <p>Allowance: $<%= reimbursement %></p>
 
             <p class="long-text">Allowances are based on the general cost of inexpensive transportation in your area.
                 You may select any method

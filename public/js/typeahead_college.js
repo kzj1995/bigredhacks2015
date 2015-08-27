@@ -12,7 +12,8 @@ var engine = new Bloodhound({
     sorter: function (a, b) {
 
         //case insensitive matching
-        var input = $('#college, .college.typeahead').val().toLowerCase();
+        var input = $('#college,#new-college').val().toLowerCase();
+
         a = a.name.toLowerCase();
         b = b.name.toLowerCase();
 
