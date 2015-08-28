@@ -17,7 +17,7 @@ var College = require('../models/college.js');
 var Reimbursement = require('../models/reimbursements.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 10;
-var MAX_BUS_PROXIMITY = 20; //miles
+var MAX_BUS_PROXIMITY = 50; //miles
 
 /* GET dashboard index page */
 router.get('/', function (req, res, next) {
