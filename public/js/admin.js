@@ -370,9 +370,9 @@ $('document').ready(function () {
                 businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity: </b>" +
                 "<span class='maxcapacitynumber'>" + businfobox.find("#maxcapacitynumber").val() + "</span> </li>");
                 businfobox.find(".btn.btn-primary.cancel").replaceWith("<input type='button' value='remove'" +
-                "name='removebus' class='btn btn-primary removebus'>");
+                "name='removebus' class='btn btn-danger removebus'>");
                 businfobox.find(".btn.btn-primary.update").replaceWith("<input type='button' value='edit'" +
-                "name='editbus' class='btn btn-primary editbus'>");
+                "name='editbus' class='btn btn-success editbus'>");
 
             },
             error: function (e) {
