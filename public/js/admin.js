@@ -274,13 +274,16 @@ $('document').ready(function () {
 
         //add college to list of bus stops
     $('#addcollege').on('click', function () {
+        //FIXME: highly error-prone implementation
+        //college id is added in typeahead, modify both in this function instead
         var newCollege = $("#college").val();
         var currentBusStops = $("#busstops").val();
-        if (currentBusStops != "") {
-            $("#busstops").val(currentBusStops + "," + newCollege);
+        var currentBusStopsDisplay = $("#busstops-display").text();
+        if (currentBusStopsDisplay != "") {
+            $("#busstops,#busstops-display").val(currentBusStops + "," + newCollege).text(currentBusStops + "," + newCollege);
         }
         else {
-            $("#busstops").val(newCollege);
+            $("#busstops,#busstops-display").val(newCollege).text(newCollege);
         }
         $("#college").val("");
     });
@@ -310,20 +313,23 @@ $('document').ready(function () {
     //remove bus from list of buses
     $('.removebus').on('click', function () {
         var _this = this;
-        $.ajax({
-            type: "DELETE",
-            url: "/api/admin/removeBus",
-            data: {
-                busid: $(_this).parents(".businfobox").data("busid")
-            },
-            success: function (data) {
-                $(_this).parents(".businfobox").remove();
-                $(".header-wrapper-leaf").after("<h3 id='nobuses'> No Buses Currently </h3>");
-            },
-            error: function (e) {
-                console.log("Couldn't remove the bus!");
-            }
-        });
+        var c = confirm("Are you sure you want to remove this bus?");
+        if (c) {
+            $.ajax({
+                type: "DELETE",
+                url: "/api/admin/removeBus",
+                data: {
+                    busid: $(_this).parents(".businfobox").data("busid")
+                },
+                success: function (data) {
+                    $(_this).parents(".businfobox").remove();
+                    $(".header-wrapper-leaf").after("<h3 id='nobuses'> No Buses Currently </h3>");
+                },
+                error: function (e) {
+                    console.log("Couldn't remove the bus!");
+                }
+            });
+        }
     });
 
     //remove college from list of colleges

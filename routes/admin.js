@@ -308,9 +308,13 @@ router.get('/businfo', function (req, res, next) {
 
 /* POST new bus to list of buses */
 router.post('/businfo', function (req, res, next) {
+    //todo clean this up so that college ids and names enter coupled
     var collegeidlist = req.body.collegeidlist.split(",");
     var collegenamelist = req.body.busstops.split(",");
     var stops = [];
+    if (collegeidlist.length != collegenamelist.length) {
+        console.error("Invariant error: Cannont create bus route when colleges do not match!")
+    }
     for (var i = 0; i < collegeidlist.length; i++) {
         stops.push({
             collegeid: collegeidlist[i],
