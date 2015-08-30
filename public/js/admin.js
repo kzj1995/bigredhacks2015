@@ -388,7 +388,13 @@ $('document').ready(function () {
 
         //disable amount for charter bus
     $("#new-travel, .modeDropdown").on('change', function () {
-        var newAmount = $("#new-amount");
+        var newAmount;
+        if ($(this).is("#new-travel")) {
+            newAmount = $("#new-amount");
+        }
+        else {
+            newAmount = $(this).closest("tr").find(".amount");
+        }
         if ($(this).val() == "Charter Bus") {
             newAmount.val(0);
             newAmount.prop("disabled", true);

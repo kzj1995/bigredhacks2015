@@ -51,13 +51,15 @@
                                     </form>
                                 </td>
                                 <td>
+                                    <form class="form-inline">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <!--<div class="input-group-addon">$</div>-->
-                                            <input type="number" name="amount" class="amount"
+                                            <div class="input-group-addon">$</div>
+                                            <input type="number" name="amount" class="form-control amount"
                                                    value="<%= reimbursements[i].amount %>" disabled>
                                         </div>
                                     </div>
+                                    </form>
                                 </td>
 
                                 <td>
@@ -92,7 +94,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
-                                    <input type="number" class="form-control" id="new-amount" name="amount"
+                                    <input type="number" class="amount form-control" id="new-amount" name="amount"
                                            placeholder="amount">
                                 </div>
                             </div>

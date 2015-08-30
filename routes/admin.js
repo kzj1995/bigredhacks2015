@@ -241,19 +241,18 @@ router.get('/review', function (req, res, next) {
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
     query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
-        console.log(count);
         if (err) {
             console.log(err);
         }
+        //redirect if no applicants left to review
+        if (count == 0) {
+            return res.redirect('/admin');
+        }
+
         else {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
-
-                //redirect if no applicants left to review
-                if (user == null) {
-                    return res.redirect('/admin');
-                }
                 
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
