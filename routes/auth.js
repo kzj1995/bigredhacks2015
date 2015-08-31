@@ -8,6 +8,7 @@ var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var College = require('../models/college.js');
+var Mentor = require('../models/mentor.js')
 var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
 var middle = require('./middleware');
@@ -518,6 +519,35 @@ router.post('/login',
         }
     }
 );
+
+/* GET mentor regsitration */
+router.get('/mentorregistration', function (req, res) {
+    res.render("register_mentor",
+        {title: "Mentor Registration", enums: enums, error: req.flash('error')});
+});
+
+/* POST mentor registration */
+router.post('/mentorregistration', function(req, res) {
+    var skilllist = req.body.skills.split(",");
+    for (var i = 0; i < skilllist.length; i++) {
+        skilllist[i] = skilllist[i].trim();
+    }
+    var newMentor = new Mentor({
+        name: {
+            first: req.body.firstname,
+            last: req.body.lastname
+        },
+        email: req.body.email,
+        password: req.body.password,
+        company: req.body.companyDropdown,
+        skills: skilllist,
+        bio: req.body.bio
+    });
+    newMentor.save(function (err) {
+        if (err) console.log(err);
+        res.redirect('/');
+    });
+});
 
 /* GET reset password */
 router.get('/resetpassword', function (req, res) {

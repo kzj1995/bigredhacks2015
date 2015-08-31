@@ -2,7 +2,7 @@
 var _ = require('underscore');
 
 /*
-Consistent list of enums used throughout the app.
+ Consistent list of enums used throughout the app.
  */
 var en = {
     user: { //user params enforce database integrity
@@ -15,7 +15,7 @@ var en = {
         role: "user/admin/bus captain/test".split("/")
     },
     admin: {
-      travel_mode: "Charter Bus/Other".split("/")
+        travel_mode: "Charter Bus/Other".split("/")
     },
     virtual: { //virtual params are used in front end display only - these should always correspond to above
         status: {
@@ -25,6 +25,10 @@ var en = {
         role: {
             long: "test/bus captain/admin".split("/")//remove "user item"
         }
+    },
+    mentor: {
+        companyname: "Capital One/Uber/Priceline.com/Bloomberg/Andreessen Horowitz/Goldman Sachs/MathWorks".split("/"),
+        companyimage: "capitalone.png/uber.png/priceline.png/bloomberg.png/a16z.png/goldmansachs.png/mathworks.png".split("/")
     }
 };
 
