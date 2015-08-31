@@ -482,8 +482,6 @@ function _findAssignedOrNearestBus(req, done) {
                             //find the distance between two colleges
                             var distanceBetweenColleges = _distanceBetweenPointsInMiles(
                                 colleges[0].loc.coordinates, colleges[1].loc.coordinates);
-                            console.log(colleges)
-                            console.log(distanceBetweenColleges)
                             if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
                                 if (closestdistance == null || distanceBetweenColleges < closestdistance) {
                                     userbus = bus;
