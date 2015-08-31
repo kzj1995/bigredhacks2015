@@ -399,30 +399,30 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
             }
             else {
                 /*
-                //remove user from bus
-                //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
-                _.omit(bus, 'message');
-                /*bus.save(function (err, res) {
+                 //remove user from bus
+                 //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
+                 _.omit(bus, 'message');
+                 /*bus.save(function (err, res) {
+                 if (err) {
+                 console.log(err);
+                 }
+
+                 req.flash('success', 'We have received your response!');
+                 req.user.save(function (err) {
+                 if (err) {
+                 console.log(err);
+                 }
+                 return res.redirect('/user/dashboard');
+                 });
+                 }) */
+
+                req.flash('success', 'We have received your response!');
+                req.user.save(function (err) {
                     if (err) {
                         console.log(err);
                     }
-                
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
-                }) */
-
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
+                    return res.redirect('/user/dashboard');
+                });
             }
         });
     })
@@ -487,9 +487,9 @@ function _findAssignedOrNearestBus(req, done) {
                                     userbus = bus;
                                     //properly round to two decimal points
                                     var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                        100) / 100;
+                                            100) / 100;
                                     userbus.message = "a bus stops near your school at " + stop.collegename +
-                                    " (roughly " + roundedDistance + " miles away):";
+                                        " (roughly " + roundedDistance + " miles away):";
                                     closestdistance = distanceBetweenColleges;
                                 }
                             }

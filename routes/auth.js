@@ -527,7 +527,7 @@ router.get('/mentorregistration', function (req, res) {
 });
 
 /* POST mentor registration */
-router.post('/mentorregistration', function(req, res) {
+router.post('/mentorregistration', function (req, res) {
     var skilllist = req.body.skills.split(",");
     for (var i = 0; i < skilllist.length; i++) {
         skilllist[i] = skilllist[i].trim();
