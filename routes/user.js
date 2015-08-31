@@ -17,7 +17,7 @@ var College = require('../models/college.js');
 var Reimbursement = require('../models/reimbursements.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 10;
-var MAX_BUS_PROXIMITY = 20; //miles
+var MAX_BUS_PROXIMITY = 50; //miles
 
 /* GET dashboard index page */
 router.get('/', function (req, res, next) {
@@ -481,6 +481,8 @@ function _findAssignedOrNearestBus(req, done) {
                             //find the distance between two colleges
                             var distanceBetweenColleges = _distanceBetweenPointsInMiles(
                                 colleges[0].loc.coordinates, colleges[1].loc.coordinates);
+                            console.log(colleges)
+                            console.log(distanceBetweenColleges)
                             if (distanceBetweenColleges <= MAX_BUS_PROXIMITY) {
                                 if (closestdistance == null || distanceBetweenColleges < closestdistance) {
                                     userbus = bus;
