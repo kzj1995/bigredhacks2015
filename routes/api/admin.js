@@ -1,16 +1,23 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
+var async = require('async');
+var mongoose = require('mongoose');
+var mandrill = require('mandrill-api/mandrill');
+
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
-var async = require('async');
-var mongoose = require('mongoose');
+var config = require('../../config.js');
+var helper = require('../util/routes_helper.js');
+var middle = require('../middleware');
+
+var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
 /**
- * @api PATCH /user/:pubid/setStatus Set status of a single user
+ * @api PATCH /user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
  * @apiname setstatus
  * @apigroup User
  *
@@ -25,11 +32,51 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
             return res.sendStatus(500);
         }
         else {
+            var oldStatus = user.internal.status;
             user.internal.status = req.body.status;
+            //send email and redirect to home page
+
             user.save(function (err) {
                 if (err) return res.sendStatus(500);
-                else return res.sendStatus(200);
+                else {
+                    //TODO consider moving this conditional to onsave in user model to support automated waitlist acceptance
+                    if (oldStatus == "Waitlisted" && newStatus == "Accepted" && middle.helper.isResultsReleased()) {
+                        //email sending should not block save
+                        var template_name = "bigredhackstemplate";
+                        //TODO Add email content
+                        var template_content = [{
+                            "name": "emailcontent",
+                            "content": ""
+                        }];
+
+                        var message = {
+                            //TODO ADD SUBJECT
+                            "subject": "",
+                            "from_email": "info@bigredhacks.com",
+                            "from_name": "BigRed//Hacks",
+                            "to": [{
+                                "email": user.email,
+                                "name": user.name.first + " " + user.name.last,
+                                "type": "to"
+                            }]
+                        };
+                        var async = false;
+                        mandrill_client.messages.sendTemplate({
+                            "template_name": template_name,
+                            "template_content": template_content,
+                            "message": message, "async": async
+                        }, function (result) {
+                            console.log(result);
+                            return res.sendStatus(200);
+                        }, function (e) {
+                            console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                            return res.sendStatus(500);
+                        });
+                        return res.sendStatus(200);
+                    }
+                }
             });
+
         }
     });
 });
@@ -208,18 +255,18 @@ router.post('/reimbursements/school', function (req, res) {
 });
 
 //todo documentation
-router.patch('/reimbursements/school', function(req, res) {
-    Reimbursements.findOne({"college.id": req.body.collegeid}, function(err, rem) {
+router.patch('/reimbursements/school', function (req, res) {
+    Reimbursements.findOne({"college.id": req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
         }
-        if (res ==  null) {
+        if (res == null) {
             return res.sendStatus(404);
         }
         rem.mode = req.body.travel;
         rem.amount = req.body.amount;
-        rem.save(function(err, rem) {
+        rem.save(function (err, rem) {
             if (err) {
                 console.error(err);
                 return res.sendStatus(500);
@@ -233,8 +280,8 @@ router.patch('/reimbursements/school', function(req, res) {
 });
 
 //todo documentation
-router.delete('/reimbursements/school', function(req, res) {
-    Reimbursements.remove({'college.id': req.body.collegeid}, function(err, rem){
+router.delete('/reimbursements/school', function (req, res) {
+    Reimbursements.remove({'college.id': req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
