@@ -394,6 +394,7 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
                             return res.redirect('/user/dashboard');
                         });
                     }
+                    return res.redirect('/user/dashboard');
                 })
             }
             else {

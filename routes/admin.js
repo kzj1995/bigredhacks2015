@@ -241,19 +241,18 @@ router.get('/review', function (req, res, next) {
     var query = {$or: [{'internal.status': "Pending"}, {'internal.status': {$exists: false}}]};
     query = {$and: [query, USER_FILTER]};
     User.count(query, function (err, count) {
-        console.log(count);
         if (err) {
             console.log(err);
         }
+        //redirect if no applicants left to review
+        if (count == 0) {
+            return res.redirect('/admin');
+        }
+
         else {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
-
-                //redirect if no applicants left to review
-                if (user == null) {
-                    return res.redirect('/admin');
-                }
                 
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
@@ -309,9 +308,13 @@ router.get('/businfo', function (req, res, next) {
 
 /* POST new bus to list of buses */
 router.post('/businfo', function (req, res, next) {
+    //todo clean this up so that college ids and names enter coupled
     var collegeidlist = req.body.collegeidlist.split(",");
     var collegenamelist = req.body.busstops.split(",");
     var stops = [];
+    if (collegeidlist.length != collegenamelist.length) {
+        console.error("Invariant error: Cannont create bus route when colleges do not match!")
+    }
     for (var i = 0; i < collegeidlist.length; i++) {
         stops.push({
             collegeid: collegeidlist[i],

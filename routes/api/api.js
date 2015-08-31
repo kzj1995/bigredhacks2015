@@ -16,7 +16,6 @@ router.get('/colleges', function (req, res, next) {
 //todo prevent access when registration is completely closed
 router.get('/validEmail', function (req, res, next) {
     User.findOne({email: req.query.email}, function (err, user) {
-        console.log(user);
         if (err) console.err(err);
         else res.send(!user);
     });
@@ -30,9 +29,9 @@ router.post('/rsvp/notinterested', function (req, res, next) {
         user.internal.not_interested = checked;
         user.save(function (err) {
             if (err) {
-                res.send(500);
+                res.sendStatus(500);
             }
-            else res.send(200);
+            else res.sendStatus(200);
         });
     }
 });

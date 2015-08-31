@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var Colleges = require('../../models/college.js');
+var Bus = require('../../models/bus.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
@@ -147,6 +148,10 @@ router.delete('/removeBus', function (req, res, next) {
 /* POST update bus in list of buses */
 router.put('/updateBus', function (req, res, next) {
     Bus.findOne({_id: req.body.busid}, function (err, bus) {
+        if (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
         var collegeidlist = req.body.collegeidlist.split(",");
         var collegenamelist = req.body.busstops.split(",");
         var stops = [];
