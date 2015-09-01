@@ -27,7 +27,6 @@ var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
  * @apiError (500)
  * */
 router.patch('/user/:pubid/setStatus', function (req, res, next) {
-    console.log('Hitting setStatus')
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
             console.log('Error: ' + err)
