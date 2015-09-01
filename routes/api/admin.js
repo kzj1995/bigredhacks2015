@@ -11,7 +11,7 @@ var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
 var config = require('../../config.js');
-var helper = require('../util/routes_helper.js');
+var helper = require('../../util/routes_helper.js');
 var middle = require('../middleware');
 
 var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
@@ -27,31 +27,38 @@ var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
  * @apiError (500)
  * */
 router.patch('/user/:pubid/setStatus', function (req, res, next) {
+    console.log('Hitting setStatus')
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
+            console.log('Error: ' + err)
             return res.sendStatus(500);
         }
         else {
             var oldStatus = user.internal.status;
-            user.internal.status = req.body.status;
+            var newStatus = req.body.status;
+            user.internal.status = newStatus;
             //send email and redirect to home page
 
             user.save(function (err) {
-                if (err) return res.sendStatus(500);
-                else {
-                    //TODO consider moving this conditional to onsave in user model to support automated waitlist acceptance
+                if (err) {
+                    console.log('Err'+ err)
+                    return res.sendStatus(500);
+                } else {
                     if (oldStatus == "Waitlisted" && newStatus == "Accepted" && middle.helper.isResultsReleased()) {
                         //email sending should not block save
+                        console.log('Sending an "off the waitlist" email')
                         var template_name = "bigredhackstemplate";
-                        //TODO Add email content
                         var template_content = [{
                             "name": "emailcontent",
-                            "content": ""
+                            "content": "<p>Hey " + first_name + ",</p><p>" +    
+        "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
+        "<p>Please take a few moments to <a href='http://www.bigredhacks.com/user/dashboard'>login to our website</a> and RSVP. If we offer a charter bus to your school, you can sign up for that too.  If you aren't going, we'd appreciate if you login and tell us that too!</p>" +
+        "<p>Don't wait long to RSVP, as our friend Shia Labeouf would say: <a href='https://media.giphy.com/media/Trh2LxGxp0CsM/giphy.gif'>JUST DO IT!</a></p>" +
+        "<p>BigRed//Hacks Team</p>" 
                         }];
 
                         var message = {
-                            //TODO ADD SUBJECT
-                            "subject": "",
+                            "subject": "You've been accepted to BigRed//Hacks 2015!",
                             "from_email": "info@bigredhacks.com",
                             "from_name": "BigRed//Hacks",
                             "to": [{
@@ -72,8 +79,8 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
                             console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
                             return res.sendStatus(500);
                         });
-                        return res.sendStatus(200);
                     }
+                    return res.sendStatus(200);
                 }
             });
 
