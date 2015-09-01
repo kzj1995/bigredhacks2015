@@ -41,20 +41,20 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
 
             user.save(function (err) {
                 if (err) {
-                    console.log('Err'+ err)
+                    console.log(err);
                     return res.sendStatus(500);
                 } else {
                     if (oldStatus == "Waitlisted" && newStatus == "Accepted" && middle.helper.isResultsReleased()) {
                         //email sending should not block save
-                        console.log('Sending an "off the waitlist" email')
+                        console.log('Sending an "off the waitlist" email');
                         var template_name = "bigredhackstemplate";
                         var template_content = [{
                             "name": "emailcontent",
-                            "content": "<p>Hey " + first_name + ",</p><p>" +    
-        "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
-        "<p>Please take a few moments to <a href='http://www.bigredhacks.com/user/dashboard'>login to our website</a> and RSVP. If we offer a charter bus to your school, you can sign up for that too.  If you aren't going, we'd appreciate if you login and tell us that too!</p>" +
-        "<p>Don't wait long to RSVP, as our friend Shia Labeouf would say: <a href='https://media.giphy.com/media/Trh2LxGxp0CsM/giphy.gif'>JUST DO IT!</a></p>" +
-        "<p>BigRed//Hacks Team</p>" 
+                            "content": "<p>Hey " + user.name.first + ",</p><p>" +
+                            "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
+                            "<p>Please take a few moments to <a href='http://www.bigredhacks.com/user/dashboard'>login to our website</a> and RSVP. If we offer a charter bus to your school, you can sign up for that too.  If you aren't going, we'd appreciate if you login and tell us that too!</p>" +
+                            "<p>Don't wait long to RSVP, as our friend Shia Labeouf would say: <a href='https://media.giphy.com/media/Trh2LxGxp0CsM/giphy.gif'>JUST DO IT!</a></p>" +
+                            "<p>BigRed//Hacks Team</p>"
                         }];
 
                         var message = {
@@ -80,7 +80,9 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
                             return res.sendStatus(500);
                         });
                     }
-                    return res.sendStatus(200);
+                    else {
+                        return res.sendStatus(200);
+                    }
                 }
             });
 

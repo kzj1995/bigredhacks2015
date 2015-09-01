@@ -313,7 +313,8 @@ router.post('/businfo', function (req, res, next) {
     var collegenamelist = req.body.busstops.split(",");
     var stops = [];
     if (collegeidlist.length != collegenamelist.length) {
-        console.error("Invariant error: Cannont create bus route when colleges do not match!")
+        console.error("Invariant error: Cannont create bus route when colleges do not match!");
+        return res.sendStatus(500);
     }
     for (var i = 0; i < collegeidlist.length; i++) {
         stops.push({
