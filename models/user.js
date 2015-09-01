@@ -56,7 +56,10 @@ var userSchema = new mongoose.Schema({
     created_at: {type: Date, default: Date.now},
     modified_at: {type: Date, default: Date.now},
     role: {type: String, enum: en.user.role, default: "user"},
-    team: Array //virtual property used to populate team members
+    team: Array, //virtual property used to populate team members,]
+    company: String,
+    skills: [String],
+    bio: String
 });
 
 //full name of user

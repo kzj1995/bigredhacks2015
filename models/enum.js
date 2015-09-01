@@ -6,13 +6,13 @@ var _ = require('underscore');
  */
 var en = {
     user: { //user params enforce database integrity
-        year: "Freshman/Sophomore/Junior/Senior/Graduate Student".split("/"),
+        year: "Freshman.Sophomore.Junior.Senior.Graduate Student.N/A".split("."),
         dietary: "None Vegetarian Gluten-free".split(" "),
         gender: "Female/Male/Other/Prefer Not to Disclose".split("/"),
-        tshirt: "XS S M L XL".split(" "),
+        tshirt: "XS.S.M.L.XL.N/A".split("."),
         status: "Pending Accepted Waitlisted Rejected".split(" "), //take care when changing
-        experience: "Yes No".split(" "), //store boolean state as string for simplicity
-        role: "user/admin/bus captain/test".split("/")
+        experience: "Yes.No.N/A".split("."), //store boolean state as string for simplicity
+        role: "user/admin/bus captain/test/mentor".split("/")
     },
     admin: {
         travel_mode: "Charter Bus/Other".split("/")
@@ -23,7 +23,7 @@ var en = {
             short: "A W R".split(" ") //shorthand array
         },
         role: {
-            long: "test/bus captain/admin".split("/")//remove "user item"
+            long: "test/bus captain/admin/mentor".split("/")//remove "user item"
         }
     },
     mentor: {

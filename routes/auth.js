@@ -8,11 +8,9 @@ var multiparty = require('multiparty');
 var helper = require('../util/routes_helper.js');
 var User = require('../models/user.js');
 var College = require('../models/college.js');
-var Mentor = require('../models/mentor.js')
 var enums = require('../models/enum.js');
 var validator = require('../library/validations.js');
 var middle = require('./middleware');
-
 var ALWAYS_OMIT = 'password confirmpassword'.split('');
 var MAX_FILE_SIZE = 1024 * 1024 * 5;
 
@@ -532,20 +530,48 @@ router.post('/mentorregistration', function (req, res) {
     for (var i = 0; i < skilllist.length; i++) {
         skilllist[i] = skilllist[i].trim();
     }
-    var newMentor = new Mentor({
+    var newMentor = new User({
         name: {
             first: req.body.firstname,
             last: req.body.lastname
         },
         email: req.body.email,
         password: req.body.password,
+        gender: "Prefer Not to Disclose",
+        phone: "N/A",
+        logistics: {
+            dietary: "None",
+            tshirt: "N/A",
+        },
+        school: {
+            id: "N/A",
+            name: "N/A",
+            year: "N/A",
+            major: "N/A"
+        },
+        app: {
+            experience: "N/A",
+        },
+        role: "mentor",
         company: req.body.companyDropdown,
         skills: skilllist,
         bio: req.body.bio
     });
     newMentor.save(function (err) {
-        if (err) console.log(err);
-        res.redirect('/');
+        if (err) {
+            // If it failed, return error
+            console.log(err);
+            req.flash("error", "An error occurred.");
+            res.render('register_mentor', {
+                title: 'Mentor Registration',
+                error: req.flash('error'),
+                input: req.body,
+                enums: enums,
+            });
+        }
+        else {
+            res.redirect('/'); //TODO - redirect to mentor dashboard
+        }
     });
 });
 

@@ -24,7 +24,13 @@ if (!String.prototype.format) {
  * @returns {string}
  */
 _export.generateOptions = function (arr, options) {
-    var array = arr.slice(); //clone the array
+    var array; //clone the array
+    if (arr[arr.length - 1] == "N/A") {
+        array = arr.slice(0, arr.length - 1);
+    }
+    else {
+        array = arr.slice();
+    }
     options = options || {};
     options.selected = options.selected || "";
 
