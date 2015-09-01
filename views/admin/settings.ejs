@@ -49,8 +49,7 @@ var input = params || {}; //persist fields
                             //start at 1: first user is hardcoded config email
                             for (var i = 1; i < users.length; i++) { %>
                             <tr class="user" data-pubid="<%= users[i].pubid %>">
-                                <td><a href="/admin/user/<%= users[i].pubid %>" target="_blank"><%= users[i].name.last %>
-                                        , <%= users[i].name.first %></a></td>
+                                <td><a href="/admin/user/<%= users[i].pubid %>" target="_blank"><%= users[i].name.first %> <%= users[i].name.last %></a></td>
                                 <td class="email"><%= users[i].email %></td>
                                 <td>
                                     <form class="form-inline">
