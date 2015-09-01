@@ -1,16 +1,23 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
+var async = require('async');
+var mongoose = require('mongoose');
+var mandrill = require('mandrill-api/mandrill');
+
 var Colleges = require('../../models/college.js');
 var Bus = require('../../models/bus.js');
 var Team = require('../../models/team.js');
 var User = require('../../models/user.js');
 var Reimbursements = require('../../models/reimbursements.js');
-var async = require('async');
-var mongoose = require('mongoose');
+var config = require('../../config.js');
+var helper = require('../../util/routes_helper.js');
+var middle = require('../middleware');
+
+var mandrill_client = new mandrill.Mandrill(config.setup.mandrill_api_key);
 
 /**
- * @api PATCH /user/:pubid/setStatus Set status of a single user
+ * @api PATCH /user/:pubid/setStatus Set status of a single user. Will also send an email to the user if their status changes from "Waitlisted" to "Accepted" and releaseDecisions is true
  * @apiname setstatus
  * @apigroup User
  *
@@ -22,14 +29,62 @@ var mongoose = require('mongoose');
 router.patch('/user/:pubid/setStatus', function (req, res, next) {
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
+            console.log('Error: ' + err)
             return res.sendStatus(500);
         }
         else {
-            user.internal.status = req.body.status;
+            var oldStatus = user.internal.status;
+            var newStatus = req.body.status;
+            user.internal.status = newStatus;
+            //send email and redirect to home page
+
             user.save(function (err) {
-                if (err) return res.sendStatus(500);
-                else return res.sendStatus(200);
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(500);
+                } else {
+                    if (oldStatus == "Waitlisted" && newStatus == "Accepted" && middle.helper.isResultsReleased()) {
+                        //email sending should not block save
+                        console.log('Sending an "off the waitlist" email');
+                        var template_name = "bigredhackstemplate";
+                        var template_content = [{
+                            "name": "emailcontent",
+                            "content": "<p>Hey " + user.name.first + ",</p><p>" +
+                            "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
+                            "<p>Please take a few moments to <a href='http://www.bigredhacks.com/user/dashboard'>login to our website</a> and RSVP. If we offer a charter bus to your school, you can sign up for that too.  If you aren't going, we'd appreciate if you login and tell us that too!</p>" +
+                            "<p>Don't wait long to RSVP, as our friend Shia Labeouf would say: <a href='https://media.giphy.com/media/Trh2LxGxp0CsM/giphy.gif'>JUST DO IT!</a></p>" +
+                            "<p>BigRed//Hacks Team</p>"
+                        }];
+
+                        var message = {
+                            "subject": "You've been accepted to BigRed//Hacks 2015!",
+                            "from_email": "info@bigredhacks.com",
+                            "from_name": "BigRed//Hacks",
+                            "to": [{
+                                "email": user.email,
+                                "name": user.name.first + " " + user.name.last,
+                                "type": "to"
+                            }]
+                        };
+                        var async = false;
+                        mandrill_client.messages.sendTemplate({
+                            "template_name": template_name,
+                            "template_content": template_content,
+                            "message": message, "async": async
+                        }, function (result) {
+                            console.log(result);
+                            return res.sendStatus(200);
+                        }, function (e) {
+                            console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                            return res.sendStatus(500);
+                        });
+                    }
+                    else {
+                        return res.sendStatus(200);
+                    }
+                }
             });
+
         }
     });
 });
@@ -208,18 +263,18 @@ router.post('/reimbursements/school', function (req, res) {
 });
 
 //todo documentation
-router.patch('/reimbursements/school', function(req, res) {
-    Reimbursements.findOne({"college.id": req.body.collegeid}, function(err, rem) {
+router.patch('/reimbursements/school', function (req, res) {
+    Reimbursements.findOne({"college.id": req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
         }
-        if (res ==  null) {
+        if (res == null) {
             return res.sendStatus(404);
         }
         rem.mode = req.body.travel;
         rem.amount = req.body.amount;
-        rem.save(function(err, rem) {
+        rem.save(function (err, rem) {
             if (err) {
                 console.error(err);
                 return res.sendStatus(500);
@@ -233,8 +288,8 @@ router.patch('/reimbursements/school', function(req, res) {
 });
 
 //todo documentation
-router.delete('/reimbursements/school', function(req, res) {
-    Reimbursements.remove({'college.id': req.body.collegeid}, function(err, rem){
+router.delete('/reimbursements/school', function (req, res) {
+    Reimbursements.remove({'college.id': req.body.collegeid}, function (err, rem) {
         if (err) {
             console.error(err);
             return res.sendStatus(500);
