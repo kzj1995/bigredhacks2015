@@ -428,6 +428,10 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
     })
 });
 
+router.get('/travel', middle.requireResultsReleased, function(req, res, next) {
+    res.render('dashboard/travel');
+});
+
 /* GET logout the current user */
 router.get('/logout', function (req, res) {
     req.logout();

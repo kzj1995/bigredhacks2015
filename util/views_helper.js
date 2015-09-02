@@ -84,6 +84,9 @@ _export.generateUrlList = function (listItems, active) {
         if (listItems[i].hasOwnProperty("reg_open") && listItems[i].reg_open && !middle.helper.isRegistrationOpen()) {
             continue;
         }
+        if (listItems[i].hasOwnProperty("results_released") && listItems[i].results_released && !middle.helper.isResultsReleased()) {
+            continue;
+        }
         var classes = "";
         if (active == listItems[i].url) {
             classes += "active";

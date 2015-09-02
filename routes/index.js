@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var validator = require('../library/validations.js');
 var helper = require('../util/routes_helper');
-
+var middle = require('./middleware.js');
 
 var config = require('../config.js');
 
