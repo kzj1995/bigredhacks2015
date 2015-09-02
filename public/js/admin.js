@@ -290,24 +290,22 @@ $('document').ready(function () {
 
     //edit bus from list of buses
     $('.editbus').on('click', function () {
+        //toggle display and edit components
+        $('.edit-group').toggle();
+        $('.display-group').toggle();
         var businfobox = $(this).parents(".businfobox");
+
         //Edit bus route name
         var currentBusName = businfobox.find(".busname").text().trim();
-        businfobox.find(".busname").replaceWith("<input type='text' id='newbusname' name='newbusname' value='" +
-        currentBusName + "' />");
-        //Allow for removal of current colleges (bus stops)
-        businfobox.find(".removecollege").show();
-        //Allow for addition of new colleges (bus stops) to the bus route
-        businfobox.find(".editbusstops").show();
+        businfobox.find(".newbusname").val(currentBusName);
+
         //Edit max capacity of bus
         var currentBusCapacity = businfobox.find(".maxcapacitynumber").text().trim();
-        businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity:</b> <input type='text'" +
-        "id = 'maxcapacitynumber' name='maxcapacitynumber' value='" + currentBusCapacity + "' /></li>");
+        businfobox.find(".maxcapacity").
         //Replace "edit" and "remove" buttons with "update" and "cancel"
         $(this).parent().find(".btn.removebus").replaceWith("<a href='/admin/businfo'><input " +
         "type='button' value='cancel' name='cancel' class='btn btn-primary cancel'></a>");
-        $(this).parent().find(".btn.editbus").replaceWith("<input type='button' value='update' " +
-        "name='update' class='btn btn-primary update'>");
+        $(this).parent().find(".btn.editbus").replaceWith("");
     });
 
     //remove bus from list of buses
@@ -340,8 +338,8 @@ $('document').ready(function () {
     //add new college to list of colleges
     $('#addnewcollege').on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        var newcollegeid = businfobox.find("#collegeid").val()
-        var newcollege = businfobox.find("#newcollege").val()
+        var newcollegeid = businfobox.find("#collegeid").val();
+        var newcollege = businfobox.find("#newcollege").val();
         businfobox.find(".busstops").append("<li data-collegeid='" + newcollegeid + "'>" +
         "<span class='collegename'>" + newcollege + "</span> &nbsp;&nbsp;&nbsp; <input type='button'" +
         "class='removecollege' name='busname' value='Remove' /></li>");
@@ -351,7 +349,7 @@ $('document').ready(function () {
 
     //update bus from list of buses
     $(".modifybus").on('click', '.btn.btn-primary.update', function () {
-        var businfobox = $(this).parents(".businfobox")
+        var businfobox = $(this).parents(".businfobox");
         var collegeidlist = "";
         var busstops = "";
         for (var i = 0; i < businfobox.find(".busstops li").length; i++) {
@@ -369,16 +367,9 @@ $('document').ready(function () {
                 buscapacity: businfobox.find("#maxcapacitynumber").val()
             },
             success: function (data) {
-                businfobox.find("#newbusname").replaceWith("<div class='busname'>" + businfobox.find("#newbusname").val() +
-                "</div>");
-                businfobox.find(".removecollege").hide();
-                businfobox.find(".editbusstops").hide();
-                businfobox.find(".maxcapacity").replaceWith("<li class='maxcapacity'> <b>Max Capacity: </b>" +
-                "<span class='maxcapacitynumber'>" + businfobox.find("#maxcapacitynumber").val() + "</span> </li>");
-                businfobox.find(".btn.btn-primary.cancel").replaceWith("<input type='button' value='remove'" +
-                "name='removebus' class='btn btn-danger removebus'>");
-                businfobox.find(".btn.btn-primary.update").replaceWith("<input type='button' value='edit'" +
-                "name='editbus' class='btn btn-success editbus'>");
+                //toggle display and edit components
+                $('.edit-group').hide();
+                $('.display-group').show();
 
             },
             error: function (e) {

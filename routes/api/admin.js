@@ -207,8 +207,14 @@ router.put('/updateBus', function (req, res, next) {
             console.error(err);
             return res.sendStatus(500);
         }
+        //todo couple these so that assembly doesn't need to happen
+        //fixme error prone implementation
         var collegeidlist = req.body.collegeidlist.split(",");
         var collegenamelist = req.body.busstops.split(",");
+        if (collegeidlist.length != collegenamelist) {
+            console.error("Invariant error: id and name list must be the same size!");
+            return;
+        }
         var stops = [];
         for (var i = 0; i < collegeidlist.length; i++) {
             stops.push({
@@ -243,6 +249,7 @@ router.post('/reimbursements/school', function (req, res) {
             return res.sendStatus(500);
         }
         else {
+            //todo couple these
             var newRem = new Reimbursements({
                 college: {
                     id: req.body.collegeid,
