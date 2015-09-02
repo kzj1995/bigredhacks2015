@@ -47,6 +47,7 @@ $('.typeahead').typeahead({
     displayKey: 'name', // if not set, will default to 'value',
     source: engine.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
+    $(this).data("collegeid",datum.id);
     $("#collegeid,#new-collegeid").val(datum.id);
 });
 

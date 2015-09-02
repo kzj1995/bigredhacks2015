@@ -30,26 +30,22 @@
                             <ul class="busstops">
                                 <% for (var j = 0; j < buses[i].stops.length; j = j + 1) { %>
                                 <li data-collegeid="<%= buses[i].stops[j].collegeid %>">
-                                    <span class="collegename"><%= buses[i].stops[j].collegename %></span>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button type="button" class="removecollege btn btn-danger edit-group">remove
-                                    </button>
+                                    <span class="collegename"><%= buses[i].stops[j].collegename %></span>&nbsp;&nbsp;<a
+                                            class="removecollege edit-group">(remove)</a>
                                 </li>
                                 <% } %>
                             </ul>
                             <div class="edit-group">
-                                <div class="form-group">
-                                    <label id="newcollegesearch" for="newcollegesearch">Search by College</label>
-                                    <input type="hidden" name="collegeid" class="form-control"
-                                           value="" required/>
-                                </div>
+                                <label class="newcollegesearch" for="newcollegesearch">Search by College</label>
+
                                 <div class="form-group">
                                     <input type="text" name="newcollege" class="newcollege form-control typeahead"
                                            placeholder="School Name" value=""/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="button" value="add college" name="addnewcollege"
-                                           class="btn btn-primary addnewcollege">
+                                    <button type="button" name="addnewcollege"
+                                            class="btn btn-primary addnewcollege">add college
+                                    </button>
                                 </div>
                             </div>
                         </li>
@@ -65,15 +61,13 @@
                                 <div class="form-group display-group">
                                     <span class="maxcapacitynumber"> <%= buses[i].capacity %> </span>
                                 </div>
-                                <!-- hidden form for edit in place -->
                                 <div class="form-group edit-group">
-                                    <input type="number" class="edit-maxcapactiynumber form-control"
+                                    <input type="number" class="edit-maxcapacity form-control"
                                            name="maxcapacitynumber"
                                            value=""
                                            placeholder="capacity"/>
                                 </div>
                             </div>
-                            <!-- /hidden form -->
                         </li>
                         <li class="buscaptain">
                             <b>Bus Captain:</b>
@@ -94,10 +88,8 @@
                         <button type="button" name="removebus" class="btn btn-danger removebus">remove</button>
                     </div>
                     <div class="modifybus edit-group">
-                        <button name='update' class='btn btn-success update'>update</button>
-                        <button type='button' class="btn btn-danger" name='cancel' class='btn btn-primary cancel'>
-                            cancel
-                        </button>
+                        <button type="button" class='btn btn-success update'>update</button>
+                        <button type='button' class="btn btn-danger cancel">cancel</button>
                     </div>
                 </form>
             </div>

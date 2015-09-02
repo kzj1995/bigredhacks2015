@@ -314,6 +314,7 @@ router.post('/businfo', function (req, res, next) {
     var stops = [];
     if (collegeidlist.length != collegenamelist.length) {
         console.error("Invariant error: Cannont create bus route when colleges do not match!");
+        console.log(collegeidlist, collegenamelist);
         return res.sendStatus(500);
     }
     for (var i = 0; i < collegeidlist.length; i++) {

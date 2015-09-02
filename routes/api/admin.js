@@ -207,23 +207,9 @@ router.put('/updateBus', function (req, res, next) {
             console.error(err);
             return res.sendStatus(500);
         }
-        //todo couple these so that assembly doesn't need to happen
-        //fixme error prone implementation
-        var collegeidlist = req.body.collegeidlist.split(",");
-        var collegenamelist = req.body.busstops.split(",");
-        if (collegeidlist.length != collegenamelist) {
-            console.error("Invariant error: id and name list must be the same size!");
-            return;
-        }
-        var stops = [];
-        for (var i = 0; i < collegeidlist.length; i++) {
-            stops.push({
-                collegeid: collegeidlist[i],
-                collegename: collegenamelist[i]
-            });
-        }
+
         bus.name = req.body.busname; //bus route name
-        bus.stops = stops;
+        bus.stops = req.body.stops;
         bus.capacity = parseInt(req.body.buscapacity);
         bus.save(function (err) {
             if (err) {

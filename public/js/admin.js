@@ -290,10 +290,12 @@ $('document').ready(function () {
 
     //edit bus from list of buses
     $('.editbus').on('click', function () {
-        //toggle display and edit components
-        $('.edit-group').toggle();
-        $('.display-group').toggle();
         var businfobox = $(this).parents(".businfobox");
+
+        //toggle display and edit components
+        businfobox.find('.edit-group').css('display', 'inline'); //.show() defaults to block
+        businfobox.find('.display-group').hide();
+        businfobox.find('.modifybus.edit-group').css('display','block'); //allow buttons to be centered
 
         //Edit bus route name
         var currentBusName = businfobox.find(".busname").text().trim();
@@ -301,11 +303,14 @@ $('document').ready(function () {
 
         //Edit max capacity of bus
         var currentBusCapacity = businfobox.find(".maxcapacitynumber").text().trim();
-        businfobox.find(".maxcapacity").
-        //Replace "edit" and "remove" buttons with "update" and "cancel"
-        $(this).parent().find(".btn.removebus").replaceWith("<a href='/admin/businfo'><input " +
-        "type='button' value='cancel' name='cancel' class='btn btn-primary cancel'></a>");
-        $(this).parent().find(".btn.editbus").replaceWith("");
+        businfobox.find(".edit-maxcapacity").val(currentBusCapacity);
+    });
+
+    $('.cancel').on('click', function () {
+        var businfobox = $(this).parents(".businfobox");
+        //toggle display and edit components
+        businfobox.find('.edit-group').hide();
+        businfobox.find('.display-group').show();
     });
 
     //remove bus from list of buses
@@ -321,7 +326,8 @@ $('document').ready(function () {
                 },
                 success: function (data) {
                     $(_this).parents(".businfobox").remove();
-                    $(".header-wrapper-leaf").after("<h3 id='nobuses'> No Buses Currently </h3>");
+                    if ($('.businfobox').length == 0)
+                        $(".header-wrapper-leaf").after("<h3 id='nobuses'> No Buses Currently </h3>");
                 },
                 error: function (e) {
                     console.log("Couldn't remove the bus!");
@@ -336,44 +342,44 @@ $('document').ready(function () {
     });
 
     //add new college to list of colleges
-    $('#addnewcollege').on('click', function () {
+    $('.addnewcollege').on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        var newcollegeid = businfobox.find("#collegeid").val();
-        var newcollege = businfobox.find("#newcollege").val();
+        var newcollegeid = businfobox.find(".newcollege.tt-input").data("collegeid");
+        var newcollege = businfobox.find(".newcollege.tt-input").val(); //tt-input contains the actual input in typeahead
         businfobox.find(".busstops").append("<li data-collegeid='" + newcollegeid + "'>" +
-        "<span class='collegename'>" + newcollege + "</span> &nbsp;&nbsp;&nbsp; <input type='button'" +
-        "class='removecollege' name='busname' value='Remove' /></li>");
-        businfobox.find(".removecollege").show();
-        businfobox.find("#newcollege").val("");
+        "<span class='collegename'>" + newcollege + '</span>&nbsp;&nbsp;<a class="removecollege edit-group" style="display:inline">(remove)</a></li>');
+        businfobox.find(".newcollege").val("");
     });
 
     //update bus from list of buses
-    $(".modifybus").on('click', '.btn.btn-primary.update', function () {
+    $(".update").on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        var collegeidlist = "";
-        var busstops = "";
+        var stops =[];
         for (var i = 0; i < businfobox.find(".busstops li").length; i++) {
-            collegeidlist = collegeidlist + businfobox.find(".busstops li").eq(i).data("collegeid") + ",";
-            busstops = busstops + businfobox.find(".collegename").eq(i).text() + ",";
+            stops.push({
+                collegeid: businfobox.find(".busstops li").eq(i).data("collegeid"),
+                collegename: businfobox.find(".collegename").eq(i).text()
+            })
         }
+
         $.ajax({
             type: "PUT",
             url: "/api/admin/updateBus",
-            data: {
+            contentType: 'application/json', // important
+            data: JSON.stringify({
                 busid: businfobox.data("busid"),
-                busname: businfobox.find("#newbusname").val(),
-                collegeidlist: collegeidlist.substring(0, collegeidlist.length - 1),
-                busstops: busstops.substring(0, busstops.length - 1),
-                buscapacity: businfobox.find("#maxcapacitynumber").val()
-            },
+                busname: businfobox.find(".newbusname").val(),
+                stops: stops,
+                buscapacity: businfobox.find(".edit-maxcapacity").val()
+            }),
             success: function (data) {
                 //toggle display and edit components
-                $('.edit-group').hide();
-                $('.display-group').show();
+                businfobox.find('.edit-group').hide();
+                businfobox.find('.display-group').show();
 
             },
             error: function (e) {
-                console.log("Couldn't remove the bus!");
+                console.log("Couldn't update the bus!", e);
             }
         });
     });
@@ -486,8 +492,6 @@ $('document').ready(function () {
     }, 500);
 
 
-
-    
     var _updateUrlParam = function _updateUrlParam(url, param, paramVal) {
         var newAdditionalURL = "";
         var tempArray = url.split("?");
