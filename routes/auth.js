@@ -537,25 +537,12 @@ router.post('/mentorregistration', function (req, res) {
         },
         email: req.body.email,
         password: req.body.password,
-        gender: "Prefer Not to Disclose",
-        phone: "N/A",
-        logistics: {
-            dietary: "None",
-            tshirt: "N/A",
-        },
-        school: {
-            id: "N/A",
-            name: "N/A",
-            year: "N/A",
-            major: "N/A"
-        },
-        app: {
-            experience: "N/A",
-        },
         role: "mentor",
-        company: req.body.companyDropdown,
-        skills: skilllist,
-        bio: req.body.bio
+        mentorinfo: {
+            company: req.body.companyDropdown,
+            skills: skilllist,
+            bio: req.body.bio
+        }
     });
     newMentor.save(function (err) {
         if (err) {
