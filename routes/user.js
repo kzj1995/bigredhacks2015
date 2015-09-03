@@ -429,7 +429,9 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
 });
 
 router.get('/travel', middle.requireResultsReleased, function(req, res, next) {
-    res.render('dashboard/travel');
+    res.render('dashboard/travel', {
+        title: "Travel Information"
+    });
 });
 
 /* GET logout the current user */
