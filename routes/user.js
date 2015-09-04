@@ -53,6 +53,7 @@ router.get('/dashboard', function (req, res, next) {
         reimbursement: function (done) {
             Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                 if (err || rem == null) {
+                    console.error(err);
                     var default_rem = {};
                     default_rem.amount = 150;
                     return done(err, default_rem);
@@ -482,9 +483,8 @@ function _findAssignedOrNearestBus(req, done) {
                             closestdistance = 0;
                         }
                         //The other case when the query returns two colleges because the college of the bus's
-                        //stop is not the same as the user's college. Additionally check to make sure the user's
-                        //school is not Cornell Tech (id = "x000001")
-                        else if (colleges.length == 2 && req.user.school.id != "x000001") {
+                        //stop is not the same as the user's college.
+                        else if (colleges.length == 2) {
                             //find the distance between two colleges
                             var distanceBetweenColleges = _distanceBetweenPointsInMiles(
                                 colleges[0].loc.coordinates, colleges[1].loc.coordinates);
