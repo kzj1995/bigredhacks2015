@@ -14,6 +14,7 @@ var middle = require('../routes/middleware.js');
 
 var Bus = require('../models/bus.js');
 var College = require('../models/college.js');
+var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
 
 var MAX_FILE_SIZE = 1024 * 1024 * 10;
@@ -427,6 +428,16 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
         });
     })
 });
+
+/* GET mentor request page */
+router.get('/dashboard/requestmentor', function (req,res) {
+    MentorRequest.find({'user.id': req.user.id}).exec(function(err, mentorRequests) {
+        res.render('dashboard/request_mentor', {
+            title: "Request Mentor",
+            mentorRequests: mentorRequests
+        });
+    });
+})
 
 /* GET logout the current user */
 router.get('/logout', function (req, res) {

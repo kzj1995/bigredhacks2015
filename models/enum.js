@@ -29,6 +29,9 @@ var en = {
     mentor: {
         companyname: "Capital One/Uber/Priceline.com/Bloomberg/Andreessen Horowitz/Goldman Sachs/MathWorks".split("/"),
         companyimage: "capitalone.png/uber.png/priceline.png/bloomberg.png/a16z.png/goldmansachs.png/mathworks.png".split("/")
+    },
+    mentorrequest: {
+        status: "Unclaimed Claimed Completed".split(" ")
     }
 };
 
