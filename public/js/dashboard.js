@@ -1,5 +1,42 @@
 $(document).ready(function () {
 
+    var socket = io(); //client-side Socket.IO object
+
+    //Submission of request mentor form through socket
+    $("#requestmentorform").submit(function(){
+        var mentorRequest = {
+            requestDescription: $("#requestdescription").val(),
+            requestSkills: $("#requestskills").val(),
+            requestLocation: $("#requestlocation").val()
+        }
+        socket.emit('new mentor request', mentorRequest);
+        $("#requestdescription").val('');
+        $("#requestskills").val('');
+        $("#requestlocation").val('');
+        return false;
+    });
+
+    //Update user's page with his/her new mentor request
+    socket.on("user " + $("#newrequest").data("userpubid"), function(mentorRequest){
+        var requestTitle = "<div class='mentorrequestbox' data-mentorrequestid='" + mentorRequest.id + "'>" +
+        "<div class='mentorrequestboxtitle'> Mentor Request Information </div><ul class='requestinfo'>";
+        var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
+        var description = "<li class='description'> <b>Description of Request: </b> <textarea class='form-control " +
+        "description' rows='5'>" + mentorRequest.description + "</textarea> </li>";
+        var skillsList = "";
+        for (var i = 0; i < mentorRequest.skills.length; i = i + 1) {
+            skillsList = "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
+        }
+        var desiredSkills = "<li class='desiredskills'> <b>Desired Skills: </b> <ul class='skillslist'>" + skillsList +
+        "</ul></li>";
+        var requestStatus = "<li class='requeststatus'> <b>Status of Request: </b>" + mentorRequest.requeststatus + "</li>";
+        var location = "<li class='location'> <b>Location of User: </b>" + mentorRequest.location + "</li>";
+        var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
+        var newMentorRequest = requestTitle + userName + description + desiredSkills + requestStatus + location +
+        mentor + "</ul></div>";
+        $('#usermentorrequests').append(newMentorRequest);
+    });
+
     //Update resume
     $("#resume-update").on('click', function (e) {
         e.preventDefault();

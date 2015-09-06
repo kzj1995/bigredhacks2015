@@ -437,14 +437,15 @@ module.exports = function (io) {
         MentorRequest.find({'user.id': req.user.id}).exec(function (err, mentorRequests) {
             res.render('dashboard/request_mentor', {
                 title: "Request Mentor",
-                mentorRequests: mentorRequests
+                mentorRequests: mentorRequests,
+                user: req.user
             });
         });
     });
 
     /* Handles a user's mentor request */
     io.on('connection', function (socket) {
-        socket.on('new mentor request', function (msg) {
+        socket.on('new mentor request', function (mentorRequest) {
 
         });
     });
