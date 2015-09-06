@@ -33,6 +33,12 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
+ * Bind socket to server
+ */
+var io = app.io;
+io.attach(server);
+
+/**
  * Normalize a port into a number, string, or false.
  */
 
