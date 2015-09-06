@@ -263,8 +263,8 @@ userSchema.methods.leaveTeam = function (callback) {
                     });
                 })
             }
-            catch(err) {
-                callback("userSchema.methods.leaveTeam: "+err);
+            catch (err) {
+                callback("userSchema.methods.leaveTeam: " + err);
             }
         })
     }

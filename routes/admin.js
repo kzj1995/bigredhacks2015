@@ -184,7 +184,7 @@ router.get('/team/:teamid', function (req, res, next) {
 router.get('/settings', function (req, res, next) {
 
     //todo change to {role: {$ne: "user"}} in 2016 deployment
-    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.last').exec(function (err, users) {
+    User.find({$and: [{role: {$ne: "user"}}, {role: {$exists: true}}]}).sort('name.first').exec(function (err, users) {
         if (err) console.log(err);
 
         //add config admin to beginning
@@ -204,7 +204,7 @@ router.get('/settings', function (req, res, next) {
 router.get('/search', function (req, res, next) {
     var queryKeys = Object.keys(req.query);
     if (queryKeys.length == 0 || (queryKeys.length == 1 && queryKeys[0] == "render")) {
-        User.find().limit(50).sort('name.last').exec(function (err, applicants) {
+        User.find().limit(50).sort('name.first').exec(function (err, applicants) {
             if (req.query.render == "table") //dont need to populate for tableview
                 endOfCall(err, applicants);
             else _fillTeamMembers(applicants, endOfCall);
@@ -313,7 +313,9 @@ router.post('/businfo', function (req, res, next) {
     var collegenamelist = req.body.busstops.split(",");
     var stops = [];
     if (collegeidlist.length != collegenamelist.length) {
-        console.error("Invariant error: Cannont create bus route when colleges do not match!")
+        console.error("Invariant error: Cannont create bus route when colleges do not match!");
+        console.log(collegeidlist, collegenamelist);
+        return res.sendStatus(500);
     }
     for (var i = 0; i < collegeidlist.length; i++) {
         stops.push({
@@ -334,9 +336,10 @@ router.post('/businfo', function (req, res, next) {
 });
 
 
+
 /* GET reimbursement page */
-router.get('/reimbursements', function (req, res, next) {
-    Reimbursements.find({}, function (err, reimbursements) {
+router.get('/reimbursements', function(req, res, next) {
+    Reimbursements.find({}, function(err, reimbursements) {
         if (err) {
             console.error(err);
         }
@@ -409,12 +412,12 @@ function _runQuery(queryString, callback) {
 
     if (_.size(query.project) > 0) {
         query.project.document = '$$ROOT'; //return the actual document
-        query.project.lastname = '$name.last'; //be able to sort by last name
-
+        //query.project.lastname = '$name.last'; //be able to sort by last name
+        query.project.firstname = '$name.first';
         User.aggregate()
             .project(query.project)
             .match(query.match)
-            .sort('lastname')
+            .sort('firstname')
             .exec(function (err, applicants) {
                 if (err) callback(err);
                 else {
@@ -427,7 +430,7 @@ function _runQuery(queryString, callback) {
     else {
         //run a simple query (because it's faster)
         User.find(query.match)
-            .sort('name.last')
+            .sort('name.first')
             .exec(callback);
     }
 

@@ -2,7 +2,7 @@
 <div class="applicant" data-pubid="<%= applicants[i].pubid %>">
     <a class="page" href="/admin/user/<%= applicants[i].pubid %>">
         <div class="name">
-            <%= applicants[i].name.last %>, <%= applicants[i].name.first %>
+            <%= applicants[i].name.first %> <%= applicants[i].name.last %>
         </div>
     </a>
     <ul class="info">
@@ -17,7 +17,7 @@
                 <% if (applicants[i].team[j].pubid != applicants[i].pubid) { %>
                 <li>
                     <a href="/admin/user/<%= applicants[i].team[j].pubid %>">
-                        <%= applicants[i].team[j].name.last %>, <%= applicants[i].team[j].name.first %>
+                        <%= applicants[i].team[j].name.first %> <%= applicants[i].team[j].name.last %>
                     </a>
                 </li>
                 <% } %>
