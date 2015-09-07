@@ -335,11 +335,9 @@ router.post('/businfo', function (req, res, next) {
     });
 });
 
-
-
 /* GET reimbursement page */
-router.get('/reimbursements', function(req, res, next) {
-    Reimbursements.find({}, function(err, reimbursements) {
+router.get('/reimbursements', function (req, res, next) {
+    Reimbursements.find({}, function (err, reimbursements) {
         if (err) {
             console.error(err);
         }

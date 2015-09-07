@@ -12,6 +12,7 @@ var validator = require('../library/validations.js');
 var middle = require('../routes/middleware.js');
 
 var Bus = require('../models/bus.js');
+var User = require('../models/user.js');
 var College = require('../models/college.js');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
@@ -446,7 +447,34 @@ module.exports = function (io) {
     /* Handles a user's mentor request */
     io.on('connection', function (socket) {
         socket.on('new mentor request', function (mentorRequest) {
-
+            User.findOne({pubid: mentorRequest.userpubid}, function (err, theUser) {
+                var skillList = mentorRequest.requestSkills.split(",");
+                for (var i = 0; i < skillList.length; i++) {
+                    skillList[i] = skillList[i].trim();
+                }
+                var newMentorRequest = new MentorRequest({
+                    user: { //user who makes the mentorship request
+                        name: theUser.name.first + " " + theUser.name.last,
+                        id: theUser.id
+                    },
+                    description: mentorRequest.requestDescription,
+                    skills: skillList,
+                    location: mentorRequest.requestLocation
+                });
+                newMentorRequest.save(function (err) {
+                    if (err) console.log(err);
+                    else {
+                        io.emit('user ' + mentorRequest.userpubid, newMentorRequest);
+                        User.find({role: 'mentor'}).exec(function (err, mentors) {
+                            for (var j = 0; j < mentors.length; j++) {
+                                if(_matchingSkills(mentors[j].mentorinfo.skills, newMentorRequest.skills)) {
+                                    io.emit('mentor ' + mentors[j].pubid, newMentorRequest);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
         });
     });
 
@@ -461,6 +489,24 @@ module.exports = function (io) {
         req.logout();
         res.redirect('/');
     });
+
+    /**
+     * Returns true if there is any intersection between a mentor's skills (mentorSkills) and the user's
+     * skills (userSkills), false otherwise
+     * @param mentorSkills string array representing mentor's skills
+     * @param userSkills string array representing user's skills
+     * @returns boolean whether or not there is an intersection between a mentor's skills and the user's skills
+     */
+    function _matchingSkills(mentorSkills, userSkills) {
+        for (var i = 0; i < mentorSkills.length; i++) {
+            for (var j = 0; j < userSkills.length; j++) {
+                if (mentorSkills[i].toLowerCase() == userSkills[j].toLowerCase()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Return distance in miles between two coordinates/points

@@ -7,7 +7,8 @@ $(document).ready(function () {
         var mentorRequest = {
             requestDescription: $("#requestdescription").val(),
             requestSkills: $("#requestskills").val(),
-            requestLocation: $("#requestlocation").val()
+            requestLocation: $("#requestlocation").val(),
+            userpubid: $("#newrequest").data("userpubid")
         }
         socket.emit('new mentor request', mentorRequest);
         $("#requestdescription").val('');
@@ -21,11 +22,11 @@ $(document).ready(function () {
         var requestTitle = "<div class='mentorrequestbox' data-mentorrequestid='" + mentorRequest.id + "'>" +
         "<div class='mentorrequestboxtitle'> Mentor Request Information </div><ul class='requestinfo'>";
         var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
-        var description = "<li class='description'> <b>Description of Request: </b> <textarea class='form-control " +
-        "description' rows='5'>" + mentorRequest.description + "</textarea> </li>";
+        var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
+        "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
         var skillsList = "";
         for (var i = 0; i < mentorRequest.skills.length; i = i + 1) {
-            skillsList = "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
+            skillsList = skillsList + "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
         }
         var desiredSkills = "<li class='desiredskills'> <b>Desired Skills: </b> <ul class='skillslist'>" + skillsList +
         "</ul></li>";
@@ -34,7 +35,12 @@ $(document).ready(function () {
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
         var newMentorRequest = requestTitle + userName + description + desiredSkills + requestStatus + location +
         mentor + "</ul></div>";
-        $('#usermentorrequests').append(newMentorRequest);
+        if ($('#usermentorrequests').length == 0) {
+            $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>" );
+        }
+        else {
+            $('#usermentorrequests').append(newMentorRequest);
+        }
     });
 
     //Update resume
