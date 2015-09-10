@@ -272,7 +272,7 @@ $('document').ready(function () {
      *** Bus Management****
      **********************/
 
-        //add college to list of bus stops
+    //add college to list of bus stops
     $('#addcollege').on('click', function () {
         //FIXME: highly error-prone implementation
         //college id is added in typeahead, modify both in this function instead

@@ -14,6 +14,7 @@ var middle = require('../routes/middleware.js');
 var Bus = require('../models/bus.js');
 var User = require('../models/user.js');
 var College = require('../models/college.js');
+var uid = require('uid2');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
 
@@ -57,7 +58,7 @@ module.exports = function (io) {
             reimbursement: function (done) {
                 Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                     if (err || rem == null) {
-                        console.error(err);
+                        console.log(err);
                         var default_rem = {};
                         default_rem.amount = 150;
                         return done(err, default_rem);
@@ -272,13 +273,13 @@ module.exports = function (io) {
                     });
                     bus.save(function (err) {
                         if (err) {
-                            console.error(err);
+                            console.log(err);
                             return res.sendStatus(500);
                         }
                         else {
                             user.save(function (err) {
                                 if (err) {
-                                    console.error(err);
+                                    console.log(err);
                                     return res.sendStatus(500);
                                 }
                                 else {
@@ -307,13 +308,13 @@ module.exports = function (io) {
                         bus.members = newmembers;
                         bus.save(function (err) {
                             if (err) {
-                                console.error(err);
+                                console.log(err);
                                 return res.sendStatus(500);
                             }
                             else {
                                 user.save(function (err) {
                                     if (err) {
-                                        console.error(err);
+                                        console.log(err);
                                         return res.sendStatus(500);
                                     }
                                     else {
@@ -446,6 +447,7 @@ module.exports = function (io) {
 
     /* Handles a user's mentor request */
     io.on('connection', function (socket) {
+        //receive event of a user sending a new mentor request
         socket.on('new mentor request', function (mentorRequest) {
             User.findOne({pubid: mentorRequest.userpubid}, function (err, theUser) {
                 var skillList = mentorRequest.requestSkills.split(",");
@@ -453,31 +455,74 @@ module.exports = function (io) {
                     skillList[i] = skillList[i].trim();
                 }
                 var newMentorRequest = new MentorRequest({
+                    pubid: uid(15),
                     user: { //user who makes the mentorship request
                         name: theUser.name.first + " " + theUser.name.last,
                         id: theUser.id
                     },
                     description: mentorRequest.requestDescription,
                     skills: skillList,
+                    requeststatus: "Unclaimed",
                     location: mentorRequest.requestLocation
                 });
-                newMentorRequest.save(function (err) {
-                    if (err) console.log(err);
-                    else {
-                        io.emit('user ' + mentorRequest.userpubid, newMentorRequest);
-                        User.find({role: 'mentor'}).exec(function (err, mentors) {
-                            for (var j = 0; j < mentors.length; j++) {
-                                if(_matchingSkills(mentors[j].mentorinfo.skills, newMentorRequest.skills)) {
-                                    io.emit('mentor ' + mentors[j].pubid, newMentorRequest);
+                User.find({role: 'mentor'}).exec(function (err, mentors) {
+                    var numPossibleMentors = 0;
+                    async.each(mentors, function(mentor, callback) {
+                        if(_matchingSkills(mentor.mentorinfo.skills, newMentorRequest.skills)) {
+                            numPossibleMentors = numPossibleMentors + 1;
+                            io.emit('mentor ' + mentor.pubid, newMentorRequest);
+                        }
+                        callback();
+                    }, function(err) {
+                        if (err) console.log(err);
+                        else {
+                            newMentorRequest.numpossiblementors = numPossibleMentors;
+                            newMentorRequest.save(function (err) {
+                                if (err) console.log(err);
+                                else {
+                                    io.emit('user ' + mentorRequest.userpubid, newMentorRequest);
                                 }
-                            }
-                        });
-                    }
+                            });
+                        }
+                    });
                 });
             });
         });
     });
 
+    /* POST cancel mentor request */
+    router.post('/cancelrequest', function (req, res) {
+        MentorRequest.remove({pubid: req.body.mentorRequestPubId}, function (err) {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            else return res.sendStatus(200);
+        });
+    });
+
+    /* POST set mentor request as completed */
+    router.post('/completerequest', function (req, res) {
+        MentorRequest.findOne({pubid: req.body.mentorRequestPubId}, function (err, mentorRequest) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(500);
+            }
+            else {
+                mentorRequest.requeststatus = "Completed";
+                mentorRequest.save(function (err) {
+                    if (err) {
+                        console.log(err);
+                        return res.sendStatus(500);
+                    }
+                    else return res.sendStatus(200);
+                })
+            }
+        });
+    });
+
+
+    /* GET static travel page information */
     router.get('/travel', middle.requireResultsReleased, function (req, res, next) {
         res.render('dashboard/travel', {
             title: "Travel Information"
@@ -500,7 +545,9 @@ module.exports = function (io) {
     function _matchingSkills(mentorSkills, userSkills) {
         for (var i = 0; i < mentorSkills.length; i++) {
             for (var j = 0; j < userSkills.length; j++) {
-                if (mentorSkills[i].toLowerCase() == userSkills[j].toLowerCase()) {
+                //Check equality of first five characters so there is a match between skills like "mobile app dev"
+                //and "mobile applications"
+                if (mentorSkills[i].toLowerCase().substring(0, 5) == userSkills[j].toLowerCase().substring(0,5)) {
                     return true;
                 }
             }

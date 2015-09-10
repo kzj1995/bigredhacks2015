@@ -1,9 +1,13 @@
 $(document).ready(function () {
 
+    /**********************
+     *** Request Mentor****
+     **********************/
+
     var socket = io(); //client-side Socket.IO object
 
     //Submission of request mentor form through socket
-    $("#requestmentorform").submit(function(){
+    $("#requestmentorform").submit(function () {
         var mentorRequest = {
             requestDescription: $("#requestdescription").val(),
             requestSkills: $("#requestskills").val(),
@@ -18,32 +22,85 @@ $(document).ready(function () {
     });
 
     //Update user's page with his/her new mentor request
-    socket.on("user " + $("#newrequest").data("userpubid"), function(mentorRequest){
-        var requestTitle = "<div class='mentorrequestbox' data-mentorrequestid='" + mentorRequest.id + "'>" +
-        "<div class='mentorrequestboxtitle'> Mentor Request Information </div><ul class='requestinfo'>";
+    socket.on("user " + $("#newrequest").data("userpubid"), function (mentorRequest) {
+        var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "'>" +
+            "<div class='mentorrequestboxtitle'> Mentor Request Information </div><div class='requeststatus'> " +
+            "<h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase() + "'>" +
+            mentorRequest.requeststatus + "</span> , # Possible Mentors: " + mentorRequest.numpossiblementors +
+            "</h3> </div><ul class='requestinfo'>";
         var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
         var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
-        "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
+            "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
         var skillsList = "";
         for (var i = 0; i < mentorRequest.skills.length; i = i + 1) {
             skillsList = skillsList + "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
         }
         var desiredSkills = "<li class='desiredskills'> <b>Desired Skills: </b> <ul class='skillslist'>" + skillsList +
-        "</ul></li>";
+            "</ul></li>";
         var requestStatus = "<li class='requeststatus'> <b>Status of Request: </b>" + mentorRequest.requeststatus + "</li>";
         var location = "<li class='location'> <b>Location of User: </b>" + mentorRequest.location + "</li>";
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
+        var cancelRequest = "<div class='changerequeststatus'><input type='button' value='cancel request' " +
+            "name='cancelrequest' class='cancelrequest btn btn-danger'></div>";
         var newMentorRequest = requestTitle + userName + description + desiredSkills + requestStatus + location +
-        mentor + "</ul></div>";
+            mentor + "</ul>" + cancelRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
-            $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>" );
+            $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>");
         }
         else {
             $('#usermentorrequests').append(newMentorRequest);
         }
     });
 
-    //Update resume
+    //delete existing mentor request
+    $(document).on('click', ".cancelrequest", function () {
+        var mentorrequestbox = $(this).parents(".mentorrequestbox");
+        $.ajax({
+            type: "POST",
+            url: "/user/cancelrequest",
+            data: {
+                mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+            },
+            success: function (data) {
+                mentorrequestbox.remove();
+                if ($('.mentorrequestbox').length == 0) {
+                    $("#usermentorrequests").replaceWith("<h3 id='norequests'>" +
+                        "You have not sent any mentor requests yet. </h3>");
+                }
+            },
+            error: function (e) {
+                console.log("Couldn't cancel mentor request.");
+                alert("Couldn't cancel mentor request. Try again in a bit.")
+            }
+        });
+    });
+
+    //set status of existing mentor request as complete
+    $(document).on('click', ".completerequest", function () {
+        var mentorrequestbox = $(this).parents(".mentorrequestbox");
+        $.ajax({
+            type: "POST",
+            url: "/user/completerequest",
+            data: {
+                mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+            },
+            success: function (data) {
+                mentorrequestbox.find(".requeststatus").replaceWith("<div class='requeststatus'>" +
+                    "<h3> Status of Request: <span class='completed'>Completed</span></h3></div>");
+                mentorrequestbox.find(".changerequeststatus").remove();
+            },
+            error: function (e) {
+                console.log("Couldn't set mentor request as complete.");
+                alert("Couldn't set mentor request as complete. Try again in a bit.")
+            }
+        });
+    });
+
+    /************************************
+     *** Dashboard Home Functionality****
+     ************************************/
+
+        //Update resume
     $("#resume-update").on('click', function (e) {
         e.preventDefault();
         $("#resume-form").toggle();
@@ -176,7 +233,7 @@ $("#notinterested").on("change", function () {
         }
     })
 });
-$("#rsvpDropdown").on('change', function() {
+$("#rsvpDropdown").on('change', function () {
     if ($(this).val() == "yes") {
         $("#coming-only").show();
     }

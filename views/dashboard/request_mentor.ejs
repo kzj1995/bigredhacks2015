@@ -15,9 +15,20 @@
             <% } else { %>
             <div id="usermentorrequests">
                 <% for (var i = 0; i < mentorRequests.length; i = i + 1) { %>
-                <div class="mentorrequestbox" data-mentorrequestid="<%= mentorRequests[i].id %>">
+                <div class="mentorrequestbox" data-mentorrequestpubid="<%= mentorRequests[i].pubid %>">
                     <div class="mentorrequestboxtitle">
                         Mentor Request Information
+                    </div>
+                    <div class="requeststatus">
+                        <h3>
+                             Status of Request:
+                             <span class="<%= mentorRequests[i].requeststatus.toLowerCase() %>">
+                                <%= mentorRequests[i].requeststatus %>
+                             </span>
+                             <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
+                             , # Possible Mentors: <%= mentorRequests[i].numpossiblementors %>
+                             <% } %>
+                        </h3>
                     </div>
                     <ul class="requestinfo">
                         <li class="userName">
@@ -38,9 +49,6 @@
                             <% } %>
                             </ul>
                         </li>
-                        <li class="requeststatus">
-                            <b>Status of Request: </b> <%= mentorRequests[i].requeststatus %>
-                        </li>
                         <li class="location">
                             <b>Location of User: </b> <%= mentorRequests[i].location %>
                         </li>
@@ -53,6 +61,17 @@
                             <% } %>
                         </li>
                     </ul>
+                    <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
+                    <div class="changerequeststatus">
+                        <input type="button" value="cancel request" name="cancelrequest"
+                            class="cancelrequest btn btn-danger">
+                    </div>
+                    <% } else if (mentorRequests[i].requeststatus == "Claimed") { %>
+                    <div class="changerequeststatus">
+                        <input type="button" value="set request as completed" name="completerequest"
+                            class="completerequest btn btn-success">
+                    </div>
+                    <% } %>
                 </div>
                 <% } %>
             </div>
