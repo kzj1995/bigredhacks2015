@@ -47,9 +47,47 @@ module.exports = function (io) {
     });
 
     /* GET see requests queue of mentor */
-    router.get('/requestsqueue', function (req, res) {
-
+    router.get('/dashboard/requestsqueue', function (req, res) {
+        var user = req.user;
+        MentorRequest.find({}).exec(function(err, mentorRequests) {
+            var matchingRequests = [];
+            async.each(mentorRequests, function(mentorRequest, callback) {
+                if(_matchingSkills(user.mentorinfo.skills, mentorRequest.skills)) {
+                    matchingRequests.push(mentorRequest);
+                }
+                callback();
+            }, function(err) {
+                if (err) console.error(err);
+                else {
+                    res.render('mentor/requests_queue', {
+                        user: user,
+                        mentorRequests: matchingRequests,
+                        title: "Requests Queue"
+                    });
+                }
+            });
+        });
     });
+
+    /**
+     * Returns true if there is any intersection between a mentor's skills (mentorSkills) and the user's
+     * skills (userSkills), false otherwise
+     * @param mentorSkills string array representing mentor's skills
+     * @param userSkills string array representing user's skills
+     * @returns boolean whether or not there is an intersection between a mentor's skills and the user's skills
+     */
+    function _matchingSkills(mentorSkills, userSkills) {
+        for (var i = 0; i < mentorSkills.length; i++) {
+            for (var j = 0; j < userSkills.length; j++) {
+                //Check equality of first five characters so there is a match between skills like "mobile app dev"
+                //and "mobile applications"
+                if (mentorSkills[i].toLowerCase().substring(0, 5) == userSkills[j].toLowerCase().substring(0,5)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /* Handles a mentor-triggered event */
     io.on('connection', function (socket) {

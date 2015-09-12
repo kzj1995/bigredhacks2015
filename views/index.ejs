@@ -54,12 +54,12 @@
         <br/>
 
         <% if (isUser) { %>
-        <% if (userRole == "user") { %>
-        <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
-        <% } else if (userRole == "admin") { %>
+        <% if (userRole == "admin") { %>
         <a href="/admin/dashboard" class="btn btn-red">my dashboard</a>
         <% } else if (userRole == "mentor") { %>
         <a href="/mentor/dashboard" class="btn btn-red">my dashboard</a>
+        <% } else { %>
+        <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
         <% } %>
         <% } else { %>
         <% if (middlehelp.isRegistrationOpen()) { %>
