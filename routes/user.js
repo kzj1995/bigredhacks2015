@@ -445,7 +445,7 @@ module.exports = function (io) {
         });
     });
 
-    /* Handles a user's mentor request */
+    /* Handles a user-triggered event */
     io.on('connection', function (socket) {
         //receive event of a user sending a new mentor request
         socket.on('new mentor request', function (mentorRequest) {

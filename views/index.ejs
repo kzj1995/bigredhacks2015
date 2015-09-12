@@ -54,9 +54,14 @@
         <br/>
 
         <% if (isUser) { %>
+        <% if (userRole == "user") { %>
         <a href="/user/dashboard" class="btn btn-red">my dashboard</a>
-        <% }
-        else { %>
+        <% } else if (userRole == "admin") { %>
+        <a href="/admin/dashboard" class="btn btn-red">my dashboard</a>
+        <% } else if (userRole == "mentor") { %>
+        <a href="/mentor/dashboard" class="btn btn-red">my dashboard</a>
+        <% } %>
+        <% } else { %>
         <% if (middlehelp.isRegistrationOpen()) { %>
         <button class="btn btn-red fixed-width" data-toggle="modal" data-target="#regModal">register</button>
         &nbsp;&nbsp;&nbsp;

@@ -512,8 +512,11 @@ router.post('/login',
             req.session.np = true; //enable no participation mode
             return res.redirect('/admin');
         }
+        else if (req.user.role === "mentor") {
+            return res.redirect('/mentor/dashboard');
+        }
         else {
-            return res.redirect('/user')
+            return res.redirect('/user');
         }
     }
 );
@@ -526,9 +529,9 @@ router.get('/mentorregistration', function (req, res) {
 
 /* POST mentor registration */
 router.post('/mentorregistration', function (req, res) {
-    var skilllist = req.body.skills.split(",");
-    for (var i = 0; i < skilllist.length; i++) {
-        skilllist[i] = skilllist[i].trim();
+    var skillList = req.body.skills.split(",");
+    for (var i = 0; i < skillList.length; i++) {
+        skillList[i] = skillList[i].trim();
     }
     var newMentor = new User({
         name: {
@@ -540,7 +543,7 @@ router.post('/mentorregistration', function (req, res) {
         role: "mentor",
         mentorinfo: {
             company: req.body.companyDropdown,
-            skills: skilllist,
+            skills: skillList,
             bio: req.body.bio
         }
     });
@@ -557,7 +560,7 @@ router.post('/mentorregistration', function (req, res) {
             });
         }
         else {
-            res.redirect('/'); //TODO - redirect to mentor dashboard
+            res.redirect('/mentor/dashboard');
         }
     });
 });
