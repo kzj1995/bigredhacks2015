@@ -79,9 +79,9 @@ module.exports = function (io) {
                     User.findOne({pubid: claimRequest.mentorPubid}, function (err, mentor) {
                         if (claimRequest.newStatus == "Claimed") {
                             mentorRequest.mentor = {
-                                name: {type: String, default: null},
-                                company: {type: String, default: null},
-                                id: {type: mongoose.Schema.Types.ObjectId, ref: "User", default: null}
+                                name: mentor.name.first + " " + mentor.name.last,
+                                company: mentor.mentorinfo.company,
+                                id: mentor.id
                             };
                         } else if (claimRequest.newStatus == "Unclaimed") {
                             mentorRequest.mentor = {
