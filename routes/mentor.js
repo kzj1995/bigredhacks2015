@@ -69,6 +69,65 @@ module.exports = function (io) {
         });
     });
 
+    /* Handles a mentor-triggered event */
+    io.on('connection', function (socket) {
+        //receive event of a mentor claiming or unclaiming a user request
+        socket.on('set request status', function (claimRequest) {
+            MentorRequest.findOne({pubid: claimRequest.mentorRequestPubid}, function (err, mentorRequest) {
+                if (err) console.error(err);
+                else {
+                    User.findOne({pubid: claimRequest.mentorPubid}, function (err, mentor) {
+                        if (claimRequest.newStatus == "Claimed") {
+                            mentorRequest.mentor = {
+                                name: {type: String, default: null},
+                                company: {type: String, default: null},
+                                id: {type: mongoose.Schema.Types.ObjectId, ref: "User", default: null}
+                            };
+                        } else if (claimRequest.newStatus == "Unclaimed") {
+                            mentorRequest.mentor = {
+                                name: null,
+                                company: null,
+                                id: null
+                            };
+                        }
+                        mentorRequest.save(function (err) {
+                            if (err) console.error(err);
+                            else {
+                                var requestStatus = {
+                                    mentorRequestPubid: claimRequest.mentorRequestPubid,
+                                    mentorPubid: claimRequest.mentorPubid,
+                                    newStatus: claimRequest.newStatus,
+                                    mentorInfo: {
+                                        name: mentorRequest.mentor.name,
+                                        company: mentorRequest.mentor.company
+                                    }
+                                }
+                                User.findOne({_id: mentorRequest.user.id}, function (err, user) {
+                                    if (err) console.error(err);
+                                    else {
+                                        User.find({role: 'mentor'}).exec(function (err, mentors) {
+                                            async.each(mentors, function(mentor, callback) {
+                                                if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                                    io.emit('new request status ' + mentor.pubid, requestStatus);
+                                                }
+                                                callback();
+                                            }, function(err) {
+                                                if (err) console.log(err);
+                                                else {
+                                                    io.emit('new request status ' + user.pubid, requestStatus);
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                        })
+                    });
+                }
+            })
+        });
+    });
+
     /**
      * Returns true if there is any intersection between a mentor's skills (mentorSkills) and the user's
      * skills (userSkills), false otherwise
@@ -88,14 +147,6 @@ module.exports = function (io) {
         }
         return false;
     }
-
-    /* Handles a mentor-triggered event */
-    io.on('connection', function (socket) {
-        //receive event of a mentor claiming a user request
-        socket.on('claim request', function (mentorRequest) {
-
-        });
-    });
 
     /* POST set mentor request as completed */
     router.post('/completerequest', function (req, res) {

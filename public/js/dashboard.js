@@ -52,6 +52,19 @@ $(document).ready(function () {
         }
     });
 
+    //Update existing user request with new status (Unclaimed, Claimed, Completed)
+    socket.on("new request status " + $("#newrequest").data("userpubid"), function (requestStatus) {
+
+        if (requestStatus == "Claimed") {
+            mentorrequestbox.find(".changeRequestStatus").replaceWith("<input type='button' value='unclaim' name='unclaim'" +
+                "class='unclaim btn btn-primary'>");
+        } else if (requestStatus == "Unclaimed") {
+            mentorrequestbox.find(".changeRequestStatus").replaceWith("<input type='button' value='claim' name='claim'" +
+                "class='claim btn btn-primary'>");
+        }
+
+    });
+
     //delete existing mentor request
     $(document).on('click', ".cancelrequest", function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
