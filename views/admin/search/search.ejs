@@ -47,7 +47,7 @@ var render = render || "box"; //default to box view
                     <div class="form-group category-input"></div>
                     <div class="decision-search">
                         <label>Narrow by Decision: </label><br/>
-                        <%- viewHelper.generateInlineRadio(["","Accepted","Waitlised","Rejected","Pending"],{
+                        <%- viewHelper.generateInlineRadio(["","Accepted","Waitlisted","Rejected","Pending"],{
                                 label: "None Accepted Waitlisted Rejected Pending".split(" "),
                                 checked: input.status || "",
                                 name: "status"})
