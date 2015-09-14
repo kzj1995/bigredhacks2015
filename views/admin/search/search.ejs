@@ -72,6 +72,24 @@ var render = render || "box"; //default to box view
                             </label>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="goingDropdown">Going:</label>
+                                <select class="form-control" id="going" name="going">
+                                    <option value="">select</option>
+                                    <%- viewHelper.generateOptions([true, false], {selected: (input.going || "")}); %>
+                                </select>
+                            </div>&nbsp;&nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="notgoingDropdown">No Longer Interested:</label>
+                                <select class="form-control" id="notgoing" name="notgoing">
+                                    <option value="">select</option>
+                                    <%- viewHelper.generateOptions([true, false], {selected: (input.notgoing || "")}); %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <fieldset>
                         <button type="submit" id="submit" class="btn btn-primary">search</button>
                     </fieldset>
