@@ -141,6 +141,27 @@ $('document').ready(function () {
         });
     });
 
+    //fixme #pubid will not work with teams because of duplicate ids
+    $("#setRSVP").on("change", function () {
+        var _this = $(this);
+        var pubid = $("#pubid").text();
+        $(this).attr("disabled", true);
+        var newGoing = $(this).val();
+        $.ajax({
+            type: "PATCH",
+            url: "/api/admin/user/" + pubid + "/setRSVP",
+            data: {
+                going: newGoing
+            },
+            success: function (data) {
+                _this.attr("disabled", false);
+            },
+            error: function (e) {
+                console.log("RSVP update failed", e);
+            }
+        });
+    });
+
 
     /******************
      * SEARCH PAGE ****

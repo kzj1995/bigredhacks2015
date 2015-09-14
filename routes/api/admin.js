@@ -291,5 +291,35 @@ router.delete('/reimbursements/school', function (req, res) {
     })
 });
 
+//todo documentation
+router.patch('/user/:pubid/setRSVP', function(req, res) {
+    var going = normalize_bool(req.body.going);
+    if (going === "") {
+        going = null;
+    }
+    User.findOne({pubid: req.params.pubid}, function (err, user) {
+        if (err || !user) {
+            return res.sendStatus(500);
+        }
+        else {
+            user.internal.going = going;
+            user.save(function (err) {
+                if (err) return res.sendStatus(500);
+                else return res.sendStatus(200);
+            });
+        }
+    });
+});
+
+//todo refactor
+function normalize_bool(string) {
+    if (string.toLowerCase() == "true") {
+        return true;
+    }
+    else if (string.toLowerCase() == "false") {
+        return false;
+    }
+    return string;
+}
 
 module.exports = router;

@@ -50,7 +50,7 @@ var render = render || "box"; //default to box view
                         <%- viewHelper.generateInlineRadio(["","Accepted","Waitlisted","Rejected","Pending"],{
                                 label: "None Accepted Waitlisted Rejected Pending".split(" "),
                                 checked: input.status || "",
-                                name: "status"})
+                                name: "status"});
                         %>
                     </div>
                     <div class="form-group">

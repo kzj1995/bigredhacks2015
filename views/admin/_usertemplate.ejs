@@ -110,6 +110,18 @@
 
         <br/>
 
+        <h4>Admin</h4>
+        <div class="form-inline">
+            <div class="form-group np-enabled">
+                <label for="rsvpDropdown">Going: </label>
+                <select class="form-control" id="setRSVP" name="setRSVP">
+                    <option value="">select</option>
+                    <%                     console.log(user.internal.going);%>
+                    <%- viewHelper.generateOptions("true false".split(" "), {selected: (user.internal.going+"")}); %>
+                </select>
+            </div>
+        </div>
+
         <div class="text-center">
             Update user application decision:
             <form class="decision-radio user np-enabled">
