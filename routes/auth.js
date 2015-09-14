@@ -265,16 +265,19 @@ router.get('/register/:name', middle.requireCornellRegistrationOpen, function (r
 function _findCollegeFromFilteredParam(name, callback) {
     var collegeName = "";
 
-    //todo cleanup with underscore
-    if (name == "cornelltech") {
-        collegeName = "Cornell Tech";
-    }
-    else if (name == "cornelluniversity") {
-        collegeName = "Cornell University";
-    }
-    else {
+    //todo refactor
+    var schools = {
+        cornelltech: "Cornell Tech",
+        cornelluniversity: "Cornell University",
+        temple: "Temple University"
+    };
+
+    if (schools.hasOwnProperty(name)) {
+        collegeName = schools[name];
+    } else {
         return callback(null, null);
     }
+
     College.findOne({name: collegeName}, callback);
 }
 
@@ -344,6 +347,10 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                     }
 
                     //console.log("https://s3.amazonaws.com/" + config.setup.AWS_S3_bucket + '/' + RESUME_DEST + fileName);
+                    var cornell_app = false;
+                    if (college.name == "Cornell University") {
+                        cornell_app = true;
+                    }
 
                     var newUser = new User({
                         name: {
@@ -366,7 +373,7 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                             major: req.body.major
                         },
                         internal: {
-                            cornell_applicant: true
+                            cornell_applicant: cornell_app
                         },
                         app: {
                             github: req.body.github,
@@ -377,7 +384,6 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                         role: "user"
                     });
 
-
                     //determine auto-acceptance or waitlist
                     User.count({'internal.cornell_applicant': true}, function (err, count) {
                         if (err) {
@@ -387,7 +393,8 @@ router.post('/register/:name', middle.requireCornellRegistrationOpen, function (
                         }
 
                         //auto accept applicants below a certain threshold
-                        if (count < config.admin.cornell_auto_accept) {
+                        //auto waitlist late registration
+                        if (count < config.admin.cornell_auto_accept && cornell_app) {
                             newUser.internal.status = "Accepted";
                         } else {
                             newUser.internal.status = "Waitlisted";
