@@ -29,46 +29,36 @@ var render = render || "box"; //default to box view
                     <div class="form-group">
                         <label for="college">Search by College</label>
                         <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                               value="" required/>
+                               value="<%= params.collegeid || "" %>" required/>
                         <input type="text" name="college" id="college" class="form-control typeahead"
                                placeholder="School Name"
-                               value="">
+                               value="<%= params.college || "" %>">
                     </div>
 
                     <div class="form-group">
                         <label for="categoryselection">Search by Category</label>
                         <select class="form-control" id="categoryselection">
-                            <option value="">Select Category</option>
-                            <option value="pubid">Public User Id</option>
-                            <option value="email">Email</option>
-                            <option value="name">Name</option>
+                            <option value="" data-persist="">Select Category</option>
+                            <option value="pubid" data-persist="<%= params.pubid || "" %>">Public User Id</option>
+                            <option value="email" data-persist="<%= params.email || "" %>">Email</option>
+                            <option value="name" data-persist="<%= params.name || "" %>">Name</option>
                         </select>
                     </div>
                     <div class="form-group category-input"></div>
                     <div class="decision-search">
                         <label>Narrow by Decision: </label><br/>
-                        <label class="radio-inline">
-                            <input type="radio" name="status" value="" checked="checked">None
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="status" value="Accepted">Accepted
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="status" value="Waitlisted">Waitlisted
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="status" value="Rejected">Rejected
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="status" value="Pending">Pending
-                        </label>
+                        <%- viewHelper.generateInlineRadio(["","Accepted","Waitlised","Rejected","Pending"],{
+                                label: "None Accepted Waitlisted Rejected Pending".split(" "),
+                                checked: input.status || "",
+                                name: "status"})
+                        %>
                     </div>
                     <div class="form-group">
 
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="teamwithcornell" name="teamwithcornell" value="true"
-                                       class="checkbox"> Team with Cornell students
+                                       class="checkbox" <%- params.teamwithcornell ? "checked" : "" %>> Team with Cornell students
                             </label>
                         </div>
                     </div>

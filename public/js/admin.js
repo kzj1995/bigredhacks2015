@@ -198,16 +198,25 @@ $('document').ready(function () {
             placeholder: "Name"
         }
     };
+
     $("#categoryselection").change(function () {
         var catString = $(this).val();
         var category = searchCategories[catString];
+        var persist = $(this).find(":selected").data("persist");
 
         if (typeof category === "undefined") {
             console.log(catString, "Is not a valid category!");
         }
         else {
-            var inputElem = '<input class="form-control" type="text" name="' + category.name + '" placeholder="' + category.placeholder + '" />';
+            var inputElem = '<input class="form-control" type="text" name="' + category.name + '" placeholder="' + category.placeholder + '" value="' + persist + '" />';
             $(".category-input").html(inputElem);
+        }
+    });
+
+    //select default
+    $("#categoryselection option").each(function (ind) {
+        if ($(this).data("persist") != "") {
+            $("#categoryselection").val($(this).val()).change();
         }
     });
 
@@ -295,7 +304,7 @@ $('document').ready(function () {
         //toggle display and edit components
         businfobox.find('.edit-group').css('display', 'inline'); //.show() defaults to block
         businfobox.find('.display-group').hide();
-        businfobox.find('.modifybus.edit-group').css('display','block'); //allow buttons to be centered
+        businfobox.find('.modifybus.edit-group').css('display', 'block'); //allow buttons to be centered
 
         //Edit bus route name
         var currentBusName = businfobox.find(".busname").text().trim();
@@ -354,7 +363,7 @@ $('document').ready(function () {
     //update bus from list of buses
     $(".update").on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        var stops =[];
+        var stops = [];
         for (var i = 0; i < businfobox.find(".busstops li").length; i++) {
             stops.push({
                 collegeid: businfobox.find(".busstops li").eq(i).data("collegeid"),
