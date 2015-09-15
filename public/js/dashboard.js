@@ -133,6 +133,24 @@ $("#notinterested").on("change", function () {
         }
     })
 });
+
+//rsvp for cornell students
+$("#cornell-rsvp").on("change", function () {
+    var _this = this;
+    $(".checkbox", this).addClass("disabled");
+    $(_this).prop("disabled", true);
+    var checked = this.checked;
+    $.ajax({
+        url: "/api/rsvp/cornellstudent",
+        type: "PATCH",
+        data: {checked: checked},
+        success: function (d) {
+            $(".checkbox").removeClass("disabled");
+            $(_this).prop("disabled", false);
+        }
+    })
+});
+
 $("#rsvpDropdown").on('change', function() {
     if ($(this).val() == "yes") {
         $("#coming-only").show();

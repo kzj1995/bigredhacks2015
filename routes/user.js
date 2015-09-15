@@ -53,7 +53,9 @@ router.get('/dashboard', function (req, res, next) {
         reimbursement: function (done) {
             Reimbursement.findOne({"college.id": req.user.school.id}, function (err, rem) {
                 if (err || rem == null) {
-                    console.error(err);
+                    if (err) {
+                        console.error(err);
+                    }
                     var default_rem = {};
                     default_rem.amount = 150;
                     return done(err, default_rem);
@@ -400,36 +402,36 @@ router.post('/rsvp', middle.requireResultsReleased, function (req, res) {
             }
             else {
                 /*
-                //remove user from bus
-                //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
-                _.omit(bus, 'message');
-                /*bus.save(function (err, res) {
+                 //remove user from bus
+                 //bus.members = _.without(bus.members, _.findWhere(bus.members, {id: req.user.id}));
+                 _.omit(bus, 'message');
+                 /*bus.save(function (err, res) {
+                 if (err) {
+                 console.log(err);
+                 }
+
+                 req.flash('success', 'We have received your response!');
+                 req.user.save(function (err) {
+                 if (err) {
+                 console.log(err);
+                 }
+                 return res.redirect('/user/dashboard');
+                 });
+                 }) */
+
+                req.flash('success', 'We have received your response!');
+                req.user.save(function (err) {
                     if (err) {
                         console.log(err);
                     }
-                
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
-                }) */
-
-                    req.flash('success', 'We have received your response!');
-                    req.user.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        return res.redirect('/user/dashboard');
-                    });
+                    return res.redirect('/user/dashboard');
+                });
             }
         });
     })
 });
 
-router.get('/travel', middle.requireResultsReleased, function(req, res, next) {
+router.get('/travel', middle.requireResultsReleased, function (req, res, next) {
     res.render('dashboard/travel', {
         title: "Travel Information"
     });
