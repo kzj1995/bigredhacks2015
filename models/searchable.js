@@ -55,7 +55,7 @@ searchable.user = [
     },
     {
         alias: "notgoing",
-        path: "internal.not_going" //waitlisted - if true, they forfeit their spot
+        path: "internal.not_interested" //waitlisted - if true, they forfeit their spot
     }
 ];
 

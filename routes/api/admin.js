@@ -297,6 +297,8 @@ router.patch('/user/:pubid/setRSVP', function(req, res) {
     if (going === "") {
         going = null;
     }
+
+    //todo only allow changing if user is accepted
     User.findOne({pubid: req.params.pubid}, function (err, user) {
         if (err || !user) {
             return res.sendStatus(500);
