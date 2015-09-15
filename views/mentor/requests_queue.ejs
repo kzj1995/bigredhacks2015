@@ -81,11 +81,11 @@
                         </li>
                     </ul>
                     <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
-                    <div class="changeRequestStatus">
+                    <div class="changerequeststatus">
                         <input type="button" value="claim" name="claim" class="claim btn btn-primary">
                     </div>
                     <% } else if(mentorRequests[i].requeststatus == "Claimed" && mentorRequests[i].mentor.id == user.id ) { %>
-                    <div class="changeRequestStatus">
+                    <div class="changerequeststatus">
                         <input type="button" value="unclaim" name="unclaim" class="unclaim btn btn-primary">
                     </div>
                     <% } %>

@@ -54,59 +54,53 @@ $(document).ready(function () {
 
     //Update existing user request with new status (Unclaimed, Claimed, Completed)
     socket.on("new request status " + $("#newrequest").data("userpubid"), function (requestStatus) {
-
-        if (requestStatus == "Claimed") {
-            mentorrequestbox.find(".changeRequestStatus").replaceWith("<input type='button' value='unclaim' name='unclaim'" +
-                "class='unclaim btn btn-primary'>");
-        } else if (requestStatus == "Unclaimed") {
-            mentorrequestbox.find(".changeRequestStatus").replaceWith("<input type='button' value='claim' name='claim'" +
-                "class='claim btn btn-primary'>");
+        var allUserRequests = $(".mentorrequestbox");
+        for (var i = 0; i < allUserRequests.length; i++) {
+            if (allUserRequests[i].data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
+                if (requestStatus.newStatus == "Claimed") {
+                    allUserRequests[i].find(".requeststatus").html("<h3> Status of Request: <span class='claimed'> " +
+                        "Claimed </span></h3>");
+                    allUserRequests[i].find(".mentor").html("<b>Mentor: </b>" + requestStatus.mentorInfo.name + " (" +
+                        requestStatus.mentorInfo.company + ")");
+                    allUserRequests[i].find(".changerequeststatus").html("<input type='button' value=" +
+                        "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
+                } else if (requestStatus.newStatus == "Unclaimed") {
+                    allUserRequests[i].find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
+                        "UnClaimed </span>, # Possible Mentors: " + requestStatus.numpossiblementors + "</h3>");
+                    allUserRequests[i].find(".mentor").html("<b>Mentor: </b>" + "None");
+                    allUserRequests[i].find(".changerequeststatus").html("<input type='button' value=" +
+                        "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
+                }
+            }
         }
-
     });
 
     //delete existing mentor request
     $(document).on('click', ".cancelrequest", function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
-        $.ajax({
-            type: "POST",
-            url: "/user/cancelrequest",
-            data: {
-                mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
-            },
-            success: function (data) {
-                mentorrequestbox.remove();
-                if ($('.mentorrequestbox').length == 0) {
-                    $("#usermentorrequests").replaceWith("<h3 id='norequests'>" +
-                        "You have not sent any mentor requests yet. </h3>");
-                }
-            },
-            error: function (e) {
-                console.log("Couldn't cancel mentor request.");
-                alert("Couldn't cancel mentor request. Try again in a bit.")
-            }
-        });
+        var cancelRequest = {
+            mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+        }
+        socket.emit('cancel mentor request', cancelRequest);
+        mentorrequestbox.remove();
+        if ($('.mentorrequestbox').length == 0) {
+            $("#usermentorrequests").replaceWith("<h3 id='norequests'>" +
+                "You have not sent any mentor requests yet. </h3>");
+        }
+        return false;
     });
 
     //set status of existing mentor request as complete
     $(document).on('click', ".completerequest", function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
-        $.ajax({
-            type: "POST",
-            url: "/user/completerequest",
-            data: {
-                mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
-            },
-            success: function (data) {
-                mentorrequestbox.find(".requeststatus").replaceWith("<div class='requeststatus'>" +
-                    "<h3> Status of Request: <span class='completed'>Completed</span></h3></div>");
-                mentorrequestbox.find(".changerequeststatus").remove();
-            },
-            error: function (e) {
-                console.log("Couldn't set mentor request as complete.");
-                alert("Couldn't set mentor request as complete. Try again in a bit.")
-            }
-        });
+        var completeRequest = {
+            mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+        }
+        socket.emit('complete mentor request', completeRequest);
+        mentorrequestbox.find(".requeststatus").html("<h3> Status of Request: <span class='completed'>" +
+            "Completed</span></h3>");
+        mentorrequestbox.find(".changerequeststatus").remove();
+        return false;
     });
 
     /************************************

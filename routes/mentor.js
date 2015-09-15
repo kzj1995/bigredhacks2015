@@ -97,6 +97,7 @@ module.exports = function (io) {
                                     mentorRequestPubid: claimRequest.mentorRequestPubid,
                                     mentorPubid: claimRequest.mentorPubid,
                                     newStatus: claimRequest.newStatus,
+                                    numpossiblementors: mentorRequest.numpossiblementors,
                                     mentorInfo: {
                                         name: mentorRequest.mentor.name,
                                         company: mentorRequest.mentor.company

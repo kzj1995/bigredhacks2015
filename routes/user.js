@@ -488,39 +488,58 @@ module.exports = function (io) {
                 });
             });
         });
-    });
 
-    /* POST cancel mentor request */
-    router.post('/cancelrequest', function (req, res) {
-        MentorRequest.remove({pubid: req.body.mentorRequestPubId}, function (err) {
-            if (err) {
-                console.error(err);
-                return res.sendStatus(500);
-            }
-            else return res.sendStatus(200);
+        //receive event of a user canceling a mentor request
+        socket.on('cancel mentor request', function (cancelRequest) {
+            MentorRequest.findOne({pubid: cancelRequest.mentorRequestPubId}, function (err, mentorRequest) {
+                if (err) console.error(err);
+                else {
+                    User.find({role: 'mentor'}).exec(function (err, mentors) {
+                        async.each(mentors, function(mentor, callback) {
+                            if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                io.emit('cancel request ' + mentor.pubid, cancelRequest);
+                            }
+                            callback();
+                        }, function(err) {
+                            if (err) console.log(err);
+                            else {
+                                MentorRequest.remove({pubid: cancelRequest.mentorRequestPubId}, function (err) {
+                                    if (err) console.log(err);
+                                });
+                            }
+                        });
+                    });
+                }
+            });
         });
-    });
 
-    /* POST set mentor request as completed */
-    router.post('/completerequest', function (req, res) {
-        MentorRequest.findOne({pubid: req.body.mentorRequestPubId}, function (err, mentorRequest) {
-            if (err) {
-                console.log(err);
-                return res.sendStatus(500);
-            }
-            else {
-                mentorRequest.requeststatus = "Completed";
-                mentorRequest.save(function (err) {
-                    if (err) {
-                        console.log(err);
-                        return res.sendStatus(500);
-                    }
-                    else return res.sendStatus(200);
-                })
-            }
+        //receive event of a user sending a mentor request to completion
+        socket.on('complete mentor request', function (completeRequest) {
+            MentorRequest.findOne({pubid: completeRequest.mentorRequestPubId}, function (err, mentorRequest) {
+                if (err) console.error(err);
+                else {
+                    mentorRequest.requeststatus = "Completed";
+                    mentorRequest.save(function (err) {
+                        if (err) console.error(err);
+                        else {
+                            User.find({role: 'mentor'}).exec(function (err, mentors) {
+                                async.each(mentors, function(mentor, callback) {
+                                    if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                        io.emit('complete request ' + mentor.pubid, completeRequest);
+                                    }
+                                    callback();
+                                }, function(err) {
+                                    if (err) console.log(err);
+                                });
+                            });
+                        }
+                    })
+                }
+            });
         });
-    });
 
+
+    });
 
     /* GET static travel page information */
     router.get('/travel', middle.requireResultsReleased, function (req, res, next) {
