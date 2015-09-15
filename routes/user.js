@@ -491,7 +491,7 @@ module.exports = function (io) {
 
         //receive event of a user canceling a mentor request
         socket.on('cancel mentor request', function (cancelRequest) {
-            MentorRequest.findOne({pubid: cancelRequest.mentorRequestPubId}, function (err, mentorRequest) {
+            MentorRequest.findOne({pubid: cancelRequest.mentorRequestPubid}, function (err, mentorRequest) {
                 if (err) console.error(err);
                 else {
                     User.find({role: 'mentor'}).exec(function (err, mentors) {
@@ -503,7 +503,7 @@ module.exports = function (io) {
                         }, function(err) {
                             if (err) console.log(err);
                             else {
-                                MentorRequest.remove({pubid: cancelRequest.mentorRequestPubId}, function (err) {
+                                MentorRequest.remove({pubid: cancelRequest.mentorRequestPubid}, function (err) {
                                     if (err) console.log(err);
                                 });
                             }
@@ -515,7 +515,7 @@ module.exports = function (io) {
 
         //receive event of a user sending a mentor request to completion
         socket.on('complete mentor request', function (completeRequest) {
-            MentorRequest.findOne({pubid: completeRequest.mentorRequestPubId}, function (err, mentorRequest) {
+            MentorRequest.findOne({pubid: completeRequest.mentorRequestPubid}, function (err, mentorRequest) {
                 if (err) console.error(err);
                 else {
                     mentorRequest.requeststatus = "Completed";

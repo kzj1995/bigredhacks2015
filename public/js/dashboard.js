@@ -56,19 +56,19 @@ $(document).ready(function () {
     socket.on("new request status " + $("#newrequest").data("userpubid"), function (requestStatus) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
-            if (allUserRequests[i].data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
+            if (allUserRequests.eq(i).data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
                 if (requestStatus.newStatus == "Claimed") {
-                    allUserRequests[i].find(".requeststatus").html("<h3> Status of Request: <span class='claimed'> " +
+                    allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='claimed'> " +
                         "Claimed </span></h3>");
-                    allUserRequests[i].find(".mentor").html("<b>Mentor: </b>" + requestStatus.mentorInfo.name + " (" +
+                    allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + requestStatus.mentorInfo.name + " (" +
                         requestStatus.mentorInfo.company + ")");
-                    allUserRequests[i].find(".changerequeststatus").html("<input type='button' value=" +
+                    allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
                 } else if (requestStatus.newStatus == "Unclaimed") {
-                    allUserRequests[i].find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
+                    allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
                         "UnClaimed </span>, # Possible Mentors: " + requestStatus.numpossiblementors + "</h3>");
-                    allUserRequests[i].find(".mentor").html("<b>Mentor: </b>" + "None");
-                    allUserRequests[i].find(".changerequeststatus").html("<input type='button' value=" +
+                    allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
+                    allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
                 }
             }
@@ -79,7 +79,7 @@ $(document).ready(function () {
     $(document).on('click', ".cancelrequest", function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
         var cancelRequest = {
-            mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+            mentorRequestPubid: mentorrequestbox.data("mentorrequestpubid")
         }
         socket.emit('cancel mentor request', cancelRequest);
         mentorrequestbox.remove();
@@ -94,7 +94,7 @@ $(document).ready(function () {
     $(document).on('click', ".completerequest", function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
         var completeRequest = {
-            mentorRequestPubId: mentorrequestbox.data("mentorrequestpubid")
+            mentorRequestPubid: mentorrequestbox.data("mentorrequestpubid")
         }
         socket.emit('complete mentor request', completeRequest);
         mentorrequestbox.find(".requeststatus").html("<h3> Status of Request: <span class='completed'>" +
