@@ -42,8 +42,44 @@ module.exports = function (io) {
                 //redirect to dashboard home
                 req.flash("success", "Information updated successfully.");
             }
-            res.redirect('/mentor/dashboard');
-        })
+            MentorRequest.find({}).exec(function (err, mentorRequests) {
+                User.find({role: "mentor"}).exec(function (err, mentors) {
+                    async.each(mentorRequests, function (mentorRequest, callback) {
+                        var numPossibleMentors = 0;
+                        async.each(mentors, function (mentor, callback2) {
+                            if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                numPossibleMentors = numPossibleMentors + 1;
+                            }
+                            callback2();
+                        }, function (err) {
+                            if (err) console.error(err);
+                            else {
+                                mentorRequest.numpossiblementors = numPossibleMentors;
+                                mentorRequest.save(function (err) {
+                                    if (err) console.error(err);
+                                    else {
+                                        User.findOne({_id: mentorRequest.user.id}, function (err, user) {
+                                            if (err) console.error(err);
+                                            else {
+                                                var currentMentorRequest = {
+                                                    mentorRequestPubid: mentorRequest.pubid,
+                                                    numpossiblementors: numPossibleMentors
+                                                };
+                                                io.sockets.emit("new number of mentors " + user.pubid, currentMentorRequest);
+                                                callback();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }, function (err) {
+                        if (err) console.error(err);
+                        res.redirect('/mentor/dashboard');
+                    });
+                });
+            });
+        });
     });
 
     /* GET see requests queue of mentor */
@@ -149,26 +185,6 @@ module.exports = function (io) {
         }
         return false;
     }
-
-    /* POST set mentor request as completed */
-    router.post('/completerequest', function (req, res) {
-        MentorRequest.findOne({pubid: req.body.mentorRequestPubId}, function (err, mentorRequest) {
-            if (err) {
-                console.log(err);
-                return res.sendStatus(500);
-            }
-            else {
-                mentorRequest.requeststatus = "Completed";
-                mentorRequest.save(function (err) {
-                    if (err) {
-                        console.log(err);
-                        return res.sendStatus(500);
-                    }
-                    else return res.sendStatus(200);
-                })
-            }
-        });
-    });
 
     /* GET logout the current mentor */
     router.get('/logout', function (req, res) {

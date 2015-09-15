@@ -447,6 +447,7 @@ module.exports = function (io) {
 
     /* Handles a user-triggered event */
     io.on('connection', function (socket) {
+
         //receive event of a user sending a new mentor request
         socket.on('new mentor request', function (mentorRequest) {
             User.findOne({pubid: mentorRequest.userpubid}, function (err, theUser) {
@@ -478,7 +479,7 @@ module.exports = function (io) {
                         else {
                             newMentorRequest.numpossiblementors = numPossibleMentors;
                             newMentorRequest.save(function (err) {
-                                if (err) console.log(err);
+                                if (err) console.error(err);
                                 else {
                                     io.emit('user ' + mentorRequest.userpubid, newMentorRequest);
                                 }
@@ -537,7 +538,6 @@ module.exports = function (io) {
                 }
             });
         });
-
 
     });
 

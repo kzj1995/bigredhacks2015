@@ -26,8 +26,8 @@ $(document).ready(function () {
         var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "'>" +
             "<div class='mentorrequestboxtitle'> Mentor Request Information </div><div class='requeststatus'> " +
             "<h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase() + "'>" +
-            mentorRequest.requeststatus + "</span> , # Possible Mentors: " + mentorRequest.numpossiblementors +
-            "</h3> </div><ul class='requestinfo'>";
+            mentorRequest.requeststatus + "</span> , # Possible Mentors: <span class='numpossiblementors'>" +
+            mentorRequest.numpossiblementors + "</span></h3></div><ul class='requestinfo'>";
         var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
         var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
             "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
@@ -65,11 +65,22 @@ $(document).ready(function () {
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
-                        "Unclaimed </span>, # Possible Mentors: " + requestStatus.numpossiblementors + "</h3>");
+                        "Unclaimed </span>, # Possible Mentors: <span class='numpossiblementors'>" +
+                         requestStatus.numpossiblementors + "</span></h3>");
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
                 }
+            }
+        }
+    });
+
+    //Update number of mentors for a given user request
+    socket.on("new number of mentors "+ $("#newrequest").data("userpubid"), function (givenRequest) {
+        var allUserRequests = $(".mentorrequestbox");
+        for (var i = 0; i < allUserRequests.length; i++) {
+            if (allUserRequests.eq(i).data("mentorrequestpubid") == givenRequest.mentorRequestPubid) {
+                allUserRequests.eq(i).find(".numpossiblementors").text(givenRequest.numpossiblementors);
             }
         }
     });

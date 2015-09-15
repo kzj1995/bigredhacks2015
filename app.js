@@ -24,7 +24,7 @@ var mentor = require('./routes/mentor')(app.io);
 var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');
-var authRoute = require('./routes/auth');
+var authRoute = require('./routes/auth')(app.io);
 var middle = require('./routes/middleware');
 
 var passport = require("passport");

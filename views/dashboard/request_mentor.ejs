@@ -26,7 +26,8 @@
                                 <%= mentorRequests[i].requeststatus %>
                              </span>
                              <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
-                             , # Possible Mentors: <%= mentorRequests[i].numpossiblementors %>
+                             , # Possible Mentors:
+                             <span class="numpossiblementors"><%= mentorRequests[i].numpossiblementors %></span>
                              <% } %>
                         </h3>
                     </div>

@@ -25,7 +25,7 @@ $(document).ready(function () {
             mentor + "</ul>" + claimRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
             $("#norequests").replaceWith("<div id='usermentorrequests'><h5><input type='checkbox' id='onlyunclaimed'" +
-            " name='onlyunclaimed' value='onlyunclaimed'> show only unclaimed </h5>" + newMentorRequest + "</div>");
+            " name='onlyunclaimed'> show only unclaimed </h5>" + newMentorRequest + "</div>");
         }
         else {
             $('#usermentorrequests').append(newMentorRequest);
@@ -104,6 +104,18 @@ $(document).ready(function () {
         }
         socket.emit('set request status', unclaimRequest);
         return false;
+    });
+
+    //Consider only unclaimed mentor requests or all mentor requests
+    $(document).on('change', "#onlyunclaimed", function () {
+         if (this.checked) {
+             $(".claimed").parents(".mentorrequestbox").hide();
+             $(".completed").parents(".mentorrequestbox").hide();
+         }
+         else {
+             $(".claimed").parents(".mentorrequestbox").show();
+             $(".completed").parents(".mentorrequestbox").show();
+         }
     });
 
 });
