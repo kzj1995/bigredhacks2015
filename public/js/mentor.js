@@ -17,15 +17,15 @@ $(document).ready(function () {
         }
         var desiredSkills = "<li class='desiredskills'> <b>Desired Skills: </b> <ul class='skillslist'>" + skillsList +
             "</ul></li>";
-        var requestStatus = "<li class='requeststatus'> <b>Status of Request: </b>" + mentorRequest.requeststatus + "</li>";
         var location = "<li class='location'> <b>Location of User: </b>" + mentorRequest.location + "</li>";
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
-        var claimRequest = "<div class='changeRequestStatus'> <input type='button' value='claim' name='claim' " +
-            "class='btn btn-primary'> </div>";
-        var newMentorRequest = requestTitle + userName + description + desiredSkills + requestStatus + location +
+        var claimRequest = "<div class='changerequeststatus'> <input type='button' value='claim' name='claim' " +
+            "class='claim btn btn-primary'> </div>";
+        var newMentorRequest = requestTitle + userName + description + desiredSkills + location +
             mentor + "</ul>" + claimRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
-            $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>");
+            $("#norequests").replaceWith("<div id='usermentorrequests'><h5><input type='checkbox' id='onlyunclaimed'" +
+            " name='onlyunclaimed' value='onlyunclaimed'> show only unclaimed </h5>" + newMentorRequest + "</div>");
         }
         else {
             $('#usermentorrequests').append(newMentorRequest);
@@ -46,7 +46,7 @@ $(document).ready(function () {
                         "name='unclaim' class='unclaim btn btn-primary'>");
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
-                        "UnClaimed </span>");
+                        "Unclaimed </span>");
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value='claim' " +
                         "name='claim' class='claim btn btn-primary'>");

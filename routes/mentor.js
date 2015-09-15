@@ -72,60 +72,61 @@ module.exports = function (io) {
     /* Handles a mentor-triggered event */
     io.on('connection', function (socket) {
         //receive event of a mentor claiming or unclaiming a user request
-        socket.on('set request status', function (claimRequest) {
-            MentorRequest.findOne({pubid: claimRequest.mentorRequestPubid}, function (err, mentorRequest) {
+        socket.on('set request status', function (setRequestStatus) {
+            MentorRequest.findOne({pubid: setRequestStatus.mentorRequestPubid}, function (err, mentorRequest) {
                 if (err) console.error(err);
                 else {
-                    User.findOne({pubid: claimRequest.mentorPubid}, function (err, mentor) {
-                        if (claimRequest.newStatus == "Claimed") {
-                            mentorRequest.mentor = {
-                                name: mentor.name.first + " " + mentor.name.last,
-                                company: mentor.mentorinfo.company,
-                                id: mentor.id
-                            };
-                        } else if (claimRequest.newStatus == "Unclaimed") {
-                            mentorRequest.mentor = {
-                                name: null,
-                                company: null,
-                                id: null
-                            };
+                    User.findOne({pubid: setRequestStatus.mentorPubid}, function (err, mentorOfRequest) {
+                        if (setRequestStatus.newStatus == "Claimed") {
+                            mentorRequest.mentor.name = mentorOfRequest.name.first + " " + mentorOfRequest.name.last;
+                            mentorRequest.mentor.company = mentorOfRequest.mentorinfo.company;
+                            mentorRequest.mentor.id = mentorOfRequest.id;
+                            mentorRequest.requeststatus = "Claimed";
+                        } else if (setRequestStatus.newStatus == "Unclaimed") {
+                            mentorRequest.mentor.name = null;
+                            mentorRequest.mentor.company = null;
+                            mentorRequest.mentor.id = null;
+                            mentorRequest.requeststatus = "Unclaimed";
                         }
                         mentorRequest.save(function (err) {
                             if (err) console.error(err);
                             else {
                                 var requestStatus = {
-                                    mentorRequestPubid: claimRequest.mentorRequestPubid,
-                                    mentorPubid: claimRequest.mentorPubid,
-                                    newStatus: claimRequest.newStatus,
+                                    mentorRequestPubid: setRequestStatus.mentorRequestPubid,
+                                    mentorPubid: setRequestStatus.mentorPubid,
+                                    newStatus: setRequestStatus.newStatus,
                                     numpossiblementors: mentorRequest.numpossiblementors,
                                     mentorInfo: {
                                         name: mentorRequest.mentor.name,
                                         company: mentorRequest.mentor.company
                                     }
-                                }
+                                };
                                 User.findOne({_id: mentorRequest.user.id}, function (err, user) {
                                     if (err) console.error(err);
                                     else {
                                         User.find({role: 'mentor'}).exec(function (err, mentors) {
-                                            async.each(mentors, function(mentor, callback) {
-                                                if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
-                                                    io.emit('new request status ' + mentor.pubid, requestStatus);
-                                                }
-                                                callback();
-                                            }, function(err) {
-                                                if (err) console.log(err);
-                                                else {
-                                                    io.emit('new request status ' + user.pubid, requestStatus);
-                                                }
-                                            });
+                                            if (err) console.error(err);
+                                            else {
+                                                async.each(mentors, function (mentor, callback) {
+                                                    if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                                        io.emit('new request status ' + mentor.pubid, requestStatus);
+                                                    }
+                                                    callback();
+                                                }, function (err) {
+                                                    if (err) console.error(err);
+                                                    else {
+                                                        io.emit('new request status ' + user.pubid, requestStatus);
+                                                    }
+                                                });
+                                            }
                                         });
                                     }
                                 });
                             }
-                        })
+                        });
                     });
                 }
-            })
+            });
         });
     });
 

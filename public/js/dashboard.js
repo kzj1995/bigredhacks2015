@@ -37,12 +37,11 @@ $(document).ready(function () {
         }
         var desiredSkills = "<li class='desiredskills'> <b>Desired Skills: </b> <ul class='skillslist'>" + skillsList +
             "</ul></li>";
-        var requestStatus = "<li class='requeststatus'> <b>Status of Request: </b>" + mentorRequest.requeststatus + "</li>";
         var location = "<li class='location'> <b>Location of User: </b>" + mentorRequest.location + "</li>";
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
         var cancelRequest = "<div class='changerequeststatus'><input type='button' value='cancel request' " +
             "name='cancelrequest' class='cancelrequest btn btn-danger'></div>";
-        var newMentorRequest = requestTitle + userName + description + desiredSkills + requestStatus + location +
+        var newMentorRequest = requestTitle + userName + description + desiredSkills + location +
             mentor + "</ul>" + cancelRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
             $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>");
@@ -66,7 +65,7 @@ $(document).ready(function () {
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
-                        "UnClaimed </span>, # Possible Mentors: " + requestStatus.numpossiblementors + "</h3>");
+                        "Unclaimed </span>, # Possible Mentors: " + requestStatus.numpossiblementors + "</h3>");
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
