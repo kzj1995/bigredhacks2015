@@ -13,7 +13,7 @@ var mentorRequestSchema = new mongoose.Schema({
     skills: [String], //list of skills the project involves/desired in mentor
     requeststatus: {type: String, enum: en.mentorrequest.status, default: "Unclaimed"},
     location: {type: String, required: true}, //location of user who made the request (ex: seat number, area number, etc.)
-    numpossiblementors: {type: Number, default: 0},
+    nummatchingmentors: {type: Number, default: 0}, //number of mentors who have at least one matching skill with the request
     mentor: { //mentor who claims request
         name: {type: String, default: null},
         company: {type: String, default: null},

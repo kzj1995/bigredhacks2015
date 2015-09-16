@@ -17,7 +17,7 @@
                 <% for (var i = 0; i < mentorRequests.length; i = i + 1) { %>
                 <div class="mentorrequestbox" data-mentorrequestpubid="<%= mentorRequests[i].pubid %>">
                     <div class="mentorrequestboxtitle">
-                        Mentor Request Information
+                        Request from <%= mentorRequests[i].user.name %>
                     </div>
                     <div class="requeststatus">
                         <h3>
@@ -26,15 +26,12 @@
                                 <%= mentorRequests[i].requeststatus %>
                              </span>
                              <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
-                             , # Possible Mentors:
-                             <span class="numpossiblementors"><%= mentorRequests[i].numpossiblementors %></span>
+                             , # Matching Mentors:
+                             <span class="nummatchingmentors"><%= mentorRequests[i].nummatchingmentors %></span>
                              <% } %>
                         </h3>
                     </div>
                     <ul class="requestinfo">
-                        <li class="userName">
-                            <b>User: </b> <%= mentorRequests[i].user.name %>
-                        </li>
                         <li class="description">
                             <b>Description of Request: </b>
                             <textarea class="form-control description" rows="5"

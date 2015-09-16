@@ -24,11 +24,10 @@ $(document).ready(function () {
     //Update user's page with his/her new mentor request
     socket.on("user " + $("#newrequest").data("userpubid"), function (mentorRequest) {
         var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "'>" +
-            "<div class='mentorrequestboxtitle'> Mentor Request Information </div><div class='requeststatus'> " +
-            "<h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase() + "'>" +
-            mentorRequest.requeststatus + "</span> , # Possible Mentors: <span class='numpossiblementors'>" +
-            mentorRequest.numpossiblementors + "</span></h3></div><ul class='requestinfo'>";
-        var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
+            "<div class='mentorrequestboxtitle'> Request from " + mentorRequest.user.name + " </div>" +
+            "<div class='requeststatus'><h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase()
+            + "'>" + mentorRequest.requeststatus + "</span> , # Matching Mentors: <span class='nummatchingmentors'>" +
+            mentorRequest.nummatchingmentors + "</span></h3></div><ul class='requestinfo'>";
         var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
             "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
         var skillsList = "";
@@ -41,7 +40,7 @@ $(document).ready(function () {
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
         var cancelRequest = "<div class='changerequeststatus'><input type='button' value='cancel request' " +
             "name='cancelrequest' class='cancelrequest btn btn-danger'></div>";
-        var newMentorRequest = requestTitle + userName + description + desiredSkills + location +
+        var newMentorRequest = requestTitle + description + desiredSkills + location +
             mentor + "</ul>" + cancelRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
             $("#norequests").replaceWith("<div id='usermentorrequests'>" + newMentorRequest + "</div>");
@@ -65,8 +64,8 @@ $(document).ready(function () {
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
-                        "Unclaimed </span>, # Possible Mentors: <span class='numpossiblementors'>" +
-                         requestStatus.numpossiblementors + "</span></h3>");
+                        "Unclaimed </span>, # Matching Mentors: <span class='nummatchingmentors'>" +
+                         requestStatus.nummatchingmentors + "</span></h3>");
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
@@ -80,7 +79,7 @@ $(document).ready(function () {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == givenRequest.mentorRequestPubid) {
-                allUserRequests.eq(i).find(".numpossiblementors").text(givenRequest.numpossiblementors);
+                allUserRequests.eq(i).find(".nummatchingmentors").text(givenRequest.nummatchingmentors);
             }
         }
     });

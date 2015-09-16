@@ -36,11 +36,14 @@
             <% } else { %>
             <div id="usermentorrequests">
                 <h5><input type="checkbox" id="onlyunclaimed" name="onlyunclaimed"> show only
-                unclaimed </h5>
+                unclaimed requests</h5>
+                <h5><input type="checkbox" id="onlymatching" name="onlymatching"> show only
+                matching requests</h5>
                 <% for (var i = 0; i < mentorRequests.length; i = i + 1) { %>
-                <div class="mentorrequestbox" data-mentorrequestpubid="<%= mentorRequests[i].pubid %>">
+                <div class="mentorrequestbox" data-mentorrequestpubid="<%= mentorRequests[i].pubid %>"
+                data-match="<%= mentorRequests[i].match %>">
                     <div class="mentorrequestboxtitle">
-                        Mentor Request Information
+                        Request from <%= mentorRequests[i].user.name %>
                     </div>
                     <div class="requeststatus">
                         <h3>
@@ -51,9 +54,6 @@
                         </h3>
                     </div>
                     <ul class="requestinfo">
-                        <li class="userName">
-                            <b>User: </b> <%= mentorRequests[i].user.name %>
-                        </li>
                         <li class="description">
                             <b>Description of Request: </b>
                             <textarea class="form-control description" rows="5"

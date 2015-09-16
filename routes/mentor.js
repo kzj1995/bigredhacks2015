@@ -27,9 +27,12 @@ module.exports = function (io) {
     router.post('/updateinformation', function (req, res) {
         var user = req.user;
 
-        var skillList = req.body.skills.split(",");
-        for (var i = 0; i < skillList.length; i++) {
-            skillList[i] = skillList[i].trim();
+        var splitSkills = req.body.skills.split(",");
+        var skillList = [];
+        for (var i = 0; i < splitSkills.length; i++) {
+            if (splitSkills[i].trim() != "") {
+                skillList.push(splitSkills[i].trim());
+            }
         }
         user.mentorinfo.skills = skillList;
         user.mentorinfo.bio = req.body.bio;
@@ -45,16 +48,16 @@ module.exports = function (io) {
             MentorRequest.find({}).exec(function (err, mentorRequests) {
                 User.find({role: "mentor"}).exec(function (err, mentors) {
                     async.each(mentorRequests, function (mentorRequest, callback) {
-                        var numPossibleMentors = 0;
+                        var numMatchingMentors = 0;
                         async.each(mentors, function (mentor, callback2) {
                             if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
-                                numPossibleMentors = numPossibleMentors + 1;
+                                numMatchingMentors = numMatchingMentors + 1;
                             }
                             callback2();
                         }, function (err) {
                             if (err) console.error(err);
                             else {
-                                mentorRequest.numpossiblementors = numPossibleMentors;
+                                mentorRequest.nummatchingmentors = numMatchingMentors;
                                 mentorRequest.save(function (err) {
                                     if (err) console.error(err);
                                     else {
@@ -63,7 +66,7 @@ module.exports = function (io) {
                                             else {
                                                 var currentMentorRequest = {
                                                     mentorRequestPubid: mentorRequest.pubid,
-                                                    numpossiblementors: numPossibleMentors
+                                                    nummatchingmentors: numMatchingMentors
                                                 };
                                                 io.sockets.emit("new number of mentors " + user.pubid, currentMentorRequest);
                                                 callback();
@@ -86,18 +89,20 @@ module.exports = function (io) {
     router.get('/dashboard/requestsqueue', function (req, res) {
         var user = req.user;
         MentorRequest.find({}).exec(function(err, mentorRequests) {
-            var matchingRequests = [];
+            var allRequests = [];
             async.each(mentorRequests, function(mentorRequest, callback) {
+                mentorRequest.match = "no";
                 if(_matchingSkills(user.mentorinfo.skills, mentorRequest.skills)) {
-                    matchingRequests.push(mentorRequest);
+                    mentorRequest.match = "yes";
                 }
+                allRequests.push(mentorRequest);
                 callback();
             }, function(err) {
                 if (err) console.error(err);
                 else {
                     res.render('mentor/requests_queue', {
                         user: user,
-                        mentorRequests: matchingRequests,
+                        mentorRequests: allRequests,
                         title: "Requests Queue"
                     });
                 }
@@ -131,7 +136,7 @@ module.exports = function (io) {
                                     mentorRequestPubid: setRequestStatus.mentorRequestPubid,
                                     mentorPubid: setRequestStatus.mentorPubid,
                                     newStatus: setRequestStatus.newStatus,
-                                    numpossiblementors: mentorRequest.numpossiblementors,
+                                    nummatchingmentors: mentorRequest.nummatchingmentors,
                                     mentorInfo: {
                                         name: mentorRequest.mentor.name,
                                         company: mentorRequest.mentor.company
@@ -144,9 +149,7 @@ module.exports = function (io) {
                                             if (err) console.error(err);
                                             else {
                                                 async.each(mentors, function (mentor, callback) {
-                                                    if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
-                                                        io.emit('new request status ' + mentor.pubid, requestStatus);
-                                                    }
+                                                    io.emit('new request status ' + mentor.pubid, requestStatus);
                                                     callback();
                                                 }, function (err) {
                                                     if (err) console.error(err);

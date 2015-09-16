@@ -451,9 +451,12 @@ module.exports = function (io) {
         //receive event of a user sending a new mentor request
         socket.on('new mentor request', function (mentorRequest) {
             User.findOne({pubid: mentorRequest.userpubid}, function (err, theUser) {
-                var skillList = mentorRequest.requestSkills.split(",");
-                for (var i = 0; i < skillList.length; i++) {
-                    skillList[i] = skillList[i].trim();
+                var splitSkills = mentorRequest.requestSkills.split(",");
+                var skillList = [];
+                for (var i = 0; i < splitSkills.length; i++) {
+                    if (splitSkills[i].trim() != "") {
+                        skillList.push(splitSkills[i].trim());
+                    }
                 }
                 var newMentorRequest = new MentorRequest({
                     pubid: uid(15),
@@ -467,17 +470,20 @@ module.exports = function (io) {
                     location: mentorRequest.requestLocation
                 });
                 User.find({role: 'mentor'}).exec(function (err, mentors) {
-                    var numPossibleMentors = 0;
+                    var numMatchingMentors = 0;
                     async.each(mentors, function(mentor, callback) {
-                        if(_matchingSkills(mentor.mentorinfo.skills, newMentorRequest.skills)) {
-                            numPossibleMentors = numPossibleMentors + 1;
-                            io.emit('mentor ' + mentor.pubid, newMentorRequest);
+                        var currentRequest = newMentorRequest.toObject();
+                        currentRequest.match = "no";
+                        if(_matchingSkills(mentor.mentorinfo.skills, currentRequest.skills)) {
+                            numMatchingMentors = numMatchingMentors + 1;
+                            currentRequest.match = "yes";
                         }
+                        io.emit('mentor ' + mentor.pubid, currentRequest);
                         callback();
                     }, function(err) {
                         if (err) console.log(err);
                         else {
-                            newMentorRequest.numpossiblementors = numPossibleMentors;
+                            newMentorRequest.nummatchingmentors = numMatchingMentors;
                             newMentorRequest.save(function (err) {
                                 if (err) console.error(err);
                                 else {

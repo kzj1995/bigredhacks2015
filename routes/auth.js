@@ -567,16 +567,16 @@ module.exports = function (io) {
                 MentorRequest.find({}).exec(function (err, mentorRequests) {
                     User.find({role: "mentor"}).exec(function (err, mentors) {
                         async.each(mentorRequests, function (mentorRequest, callback) {
-                            var numPossibleMentors = 0;
+                            var numMatchingMentors = 0;
                             async.each(mentors, function (mentor, callback2) {
                                 if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
-                                    numPossibleMentors = numPossibleMentors + 1;
+                                    numMatchingMentors = numMatchingMentors + 1;
                                 }
                                 callback2();
                             }, function (err) {
                                 if (err) console.error(err);
                                 else {
-                                    mentorRequest.numpossiblementors = numPossibleMentors;
+                                    mentorRequest.nummatchingmentors = numMatchingMentors;
                                     mentorRequest.save(function (err) {
                                         if (err) console.error(err);
                                         else {
@@ -585,7 +585,7 @@ module.exports = function (io) {
                                                 else {
                                                     var currentMentorRequest = {
                                                         mentorRequestPubid: mentorRequest.pubid,
-                                                        numpossiblementors: numPossibleMentors
+                                                        nummatchingmentors: numMatchingMentors
                                                     };
                                                     io.sockets.emit("new number of mentors " + user.pubid,
                                                         currentMentorRequest);

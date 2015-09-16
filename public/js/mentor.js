@@ -4,11 +4,11 @@ $(document).ready(function () {
 
     //Update mentor's requests queue with new request
     socket.on("mentor " + $("#mentorname").data("mentorpubid"), function (mentorRequest) {
-        var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "'>" +
-            "<div class='mentorrequestboxtitle'> Mentor Request Information </div><div class='requeststatus'> " +
-            "<h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase() + "'>" +
-            mentorRequest.requeststatus + "</span></h3> </div><ul class='requestinfo'>";
-        var userName = "<li class='userName'> <b>User: </b>" + mentorRequest.user.name + "</li>";
+        var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "' " +
+            "data-match='" + mentorRequest.match + "'><div class='mentorrequestboxtitle'> Request from "
+            + mentorRequest.user.name + " </div><div class='requeststatus'><h3> Status of Request: <span class='" +
+            mentorRequest.requeststatus.toLowerCase() + "'>" + mentorRequest.requeststatus + "</span></h3> </div>" +
+            "<ul class='requestinfo'>";
         var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
             "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
         var skillsList = "";
@@ -21,15 +21,17 @@ $(document).ready(function () {
         var mentor = "<li class='mentor'> <b>Mentor: </b>None</li>";
         var claimRequest = "<div class='changerequeststatus'> <input type='button' value='claim' name='claim' " +
             "class='claim btn btn-primary'> </div>";
-        var newMentorRequest = requestTitle + userName + description + desiredSkills + location +
+        var newMentorRequest = requestTitle + description + desiredSkills + location +
             mentor + "</ul>" + claimRequest + "</div>";
         if ($('#usermentorrequests').length == 0) {
-            $("#norequests").replaceWith("<div id='usermentorrequests'><h5><input type='checkbox' id='onlyunclaimed'" +
-            " name='onlyunclaimed'> show only unclaimed </h5>" + newMentorRequest + "</div>");
+            $("#norequests").replaceWith("<div id='usermentorrequests'><h5><input type='checkbox' id='onlyunclaimed' " +
+            "name='onlyunclaimed'> show only unclaimed </h5><h5><input type='checkbox' id='onlymatching' " +
+            "name='onlymatching'> show only matching requests</h5>" + newMentorRequest + "</div>");
         }
         else {
             $('#usermentorrequests').append(newMentorRequest);
         }
+        considerMatching();
     });
 
     //Update existing user request with new status (Unclaimed, Claimed, Completed)
@@ -117,6 +119,27 @@ $(document).ready(function () {
              $(".completed").parents(".mentorrequestbox").show();
          }
     });
+
+    //Consider only mentor requests with at least one matching skill or all mentor requests
+    $(document).on('change', "#onlymatching", function () {
+        considerMatching();
+    });
+
+    var considerMatching = function considerMatching() {
+        var allUserRequests = $(".mentorrequestbox");
+        for (var i = 0; i < allUserRequests.length; i++) {
+            if($("#onlymatching").is(':checked')) {
+                if (allUserRequests.eq(i).data("match") == "no") {
+                    allUserRequests.eq(i).hide();
+                }
+            }
+            else {
+                if (allUserRequests.eq(i).data("match") == "no") {
+                    allUserRequests.eq(i).show();
+                }
+            }
+        }
+    }
 
 });
 
