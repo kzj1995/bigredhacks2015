@@ -138,8 +138,9 @@ module.exports = function (io) {
                                     newStatus: setRequestStatus.newStatus,
                                     nummatchingmentors: mentorRequest.nummatchingmentors,
                                     mentorInfo: {
-                                        name: mentorRequest.mentor.name,
-                                        company: mentorRequest.mentor.company
+                                        name: mentorOfRequest.name.first + " " + mentorOfRequest.name.last,
+                                        company: mentorOfRequest.mentorinfo.company,
+                                        companyImage: _getCompanyImage(mentorOfRequest.mentorinfo.company)
                                     }
                                 };
                                 User.findOne({_id: mentorRequest.user.id}, function (err, user) {
@@ -187,6 +188,21 @@ module.exports = function (io) {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the string representing the image url of a company (ex: img/logos/uber.png for Uber) given a company name
+     * @param mentorCompany string representing company of a mentor
+     * @returns string representing image url of company
+     */
+    function _getCompanyImage(mentorCompany) {
+        var companyNameList = enums.mentor.companyname;
+        var companyImageList = enums.mentor.companyimage;
+        for (var i = 0; i < companyNameList.length; i++) {
+            if (companyNameList[i] == mentorCompany) {
+                return "/img/logos/" + companyImageList[i];
+            }
+        }
     }
 
     /* GET logout the current mentor */

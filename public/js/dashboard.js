@@ -53,6 +53,8 @@ $(document).ready(function () {
     //Update existing user request with new status (Unclaimed, Claimed, Completed)
     socket.on("new request status " + $("#newrequest").data("userpubid"), function (requestStatus) {
         var allUserRequests = $(".mentorrequestbox");
+        var notificationTitle = ""; //title of HTML5 notification
+        var notificationBody = ""; //text body of HTML5 notification
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
                 if (requestStatus.newStatus == "Claimed") {
@@ -62,20 +64,49 @@ $(document).ready(function () {
                         requestStatus.mentorInfo.company + ")");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
+                    notificationTitle = "Request Claimed";
+                    notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
+                        " has claimed your request."
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
                         "Unclaimed </span>, # Matching Mentors: <span class='nummatchingmentors'>" +
-                         requestStatus.nummatchingmentors + "</span></h3>");
+                        requestStatus.nummatchingmentors + "</span></h3>");
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
+                    notificationTitle = "Request Unclaimed";
+                    notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
+                        " has unclaimed your request."
+                }
+                if ("Notification" in window) {
+                    if (Notification.permission === "granted") {
+                        var options = {
+                            body: notificationBody,
+                            icon: window.location.protocol + "//" + window.location.host +
+                            requestStatus.mentorInfo.companyImage
+                        };
+                        var notification = new Notification(notificationTitle, options);
+                    }
+                    else if (Notification.permission !== 'denied') {
+                        Notification.requestPermission(function (permission) {
+                            if (permission === "granted") {
+                                var options = {
+                                    body: notificationBody,
+                                    icon: window.location.protocol + "//" + window.location.host +
+                                    requestStatus.mentorInfo.companyImage
+                                };
+                                var notification = new Notification(notificationTitle, options);
+                            }
+                        });
+                    }
+
                 }
             }
         }
     });
 
     //Update number of mentors for a given user request
-    socket.on("new number of mentors "+ $("#newrequest").data("userpubid"), function (givenRequest) {
+    socket.on("new number of mentors " + $("#newrequest").data("userpubid"), function (givenRequest) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == givenRequest.mentorRequestPubid) {
