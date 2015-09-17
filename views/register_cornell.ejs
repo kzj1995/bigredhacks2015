@@ -5,7 +5,6 @@ var errors = errors || []; //form errors
 var error = error || []; //misc errors flash
 var input = input || {}; //persist fields
 var helper = viewHelper;
-var cornell_reg = (college.name == "Cornell University");
 %>
 <%
 //form validation errors
@@ -29,8 +28,6 @@ if (messages.error) {
 <div class="container" style="overflow-x:hidden;">
     <%- error %>
     <%- errors.join(""); %>
-
-    <% if (cornell_reg) {%>
     <h1>Cornell Registration</h1>
 
     <p>Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the
@@ -42,11 +39,6 @@ if (messages.error) {
     <p>Don't miss this amazing event, sign up now!</p>
 
     <p><strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong></p>
-    <% } else {%>
-    <h1><%= college.name %> Registration</h1>
-
-    <p>This is a special case late reigistration form. Registration is by permission only. After registering, you will be automatically waitlisted. If we have given you permission to attend, please leave us some time to unwaitlist you. </p>
-    <% } %>
 
     <form id="registrationForm" action="/register/<%= urlparam %>" name='registrationForm' method="POST"
           autocomplete="on"

@@ -410,8 +410,6 @@ function _runQuery(queryString, callback) {
     //for a mapping of searchable fields, look at searchable.ejs
     var query = queryBuilder(queryString, "user");
 
-
-    //console.log(query);
     if (_.size(query.project) > 0) {
         query.project.document = '$$ROOT'; //return the actual document
         //query.project.lastname = '$name.last'; //be able to sort by last name

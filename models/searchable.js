@@ -48,14 +48,6 @@ searchable.user = [
     {
         alias: "teamwithcornell",
         path: "internal.teamwithcornell"
-    },
-    {
-        alias: "going",
-        path: "internal.going"
-    },
-    {
-        alias: "notgoing",
-        path: "internal.not_interested" //waitlisted - if true, they forfeit their spot
     }
 ];
 

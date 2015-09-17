@@ -141,27 +141,6 @@ $('document').ready(function () {
         });
     });
 
-    //fixme #pubid will not work with teams because of duplicate ids
-    $("#setRSVP").on("change", function () {
-        var _this = $(this);
-        var pubid = $("#pubid").text();
-        $(this).attr("disabled", true);
-        var newGoing = $(this).val();
-        $.ajax({
-            type: "PATCH",
-            url: "/api/admin/user/" + pubid + "/setRSVP",
-            data: {
-                going: newGoing
-            },
-            success: function (data) {
-                _this.attr("disabled", false);
-            },
-            error: function (e) {
-                console.log("RSVP update failed", e);
-            }
-        });
-    });
-
 
     /******************
      * SEARCH PAGE ****
@@ -219,25 +198,16 @@ $('document').ready(function () {
             placeholder: "Name"
         }
     };
-
     $("#categoryselection").change(function () {
         var catString = $(this).val();
         var category = searchCategories[catString];
-        var persist = $(this).find(":selected").data("persist");
 
         if (typeof category === "undefined") {
             console.log(catString, "Is not a valid category!");
         }
         else {
-            var inputElem = '<input class="form-control" type="text" name="' + category.name + '" placeholder="' + category.placeholder + '" value="' + persist + '" />';
+            var inputElem = '<input class="form-control" type="text" name="' + category.name + '" placeholder="' + category.placeholder + '" />';
             $(".category-input").html(inputElem);
-        }
-    });
-
-    //select default
-    $("#categoryselection option").each(function (ind) {
-        if ($(this).data("persist") != "") {
-            $("#categoryselection").val($(this).val()).change();
         }
     });
 
@@ -325,7 +295,7 @@ $('document').ready(function () {
         //toggle display and edit components
         businfobox.find('.edit-group').css('display', 'inline'); //.show() defaults to block
         businfobox.find('.display-group').hide();
-        businfobox.find('.modifybus.edit-group').css('display', 'block'); //allow buttons to be centered
+        businfobox.find('.modifybus.edit-group').css('display','block'); //allow buttons to be centered
 
         //Edit bus route name
         var currentBusName = businfobox.find(".busname").text().trim();
@@ -384,7 +354,7 @@ $('document').ready(function () {
     //update bus from list of buses
     $(".update").on('click', function () {
         var businfobox = $(this).parents(".businfobox");
-        var stops = [];
+        var stops =[];
         for (var i = 0; i < businfobox.find(".busstops li").length; i++) {
             stops.push({
                 collegeid: businfobox.find(".busstops li").eq(i).data("collegeid"),
