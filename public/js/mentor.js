@@ -2,8 +2,18 @@ $(document).ready(function () {
 
     var socket = io(); //client-side Socket.IO object
 
+    requestPermission(); //request permission for HTML5 Notifications
+
+    function requestPermission() {
+        if ("Notification" in window) {
+            if (Notification.permission !== "granted" && Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {});
+            }
+        }
+    }
+
     //Update mentor's requests queue with new request
-    socket.on("mentor " + $("#mentorname").data("mentorpubid"), function (mentorRequest) {
+    socket.on("mentor " + $(".row").data("mentorpubid"), function (mentorRequest) {
         var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "' " +
             "data-match='" + mentorRequest.match + "'><div class='mentorrequestboxtitle'> Request from "
             + mentorRequest.user.name + " </div><div class='requeststatus'><h3> Status of Request: <span class='" +
@@ -31,11 +41,14 @@ $(document).ready(function () {
         else {
             $('#usermentorrequests').append(newMentorRequest);
         }
+        if (mentorRequest.match == "yes") {
+            showRequestNotification();
+        }
         considerMatching();
     });
 
     //Update existing user request with new status (Unclaimed, Claimed, Completed)
-    socket.on("new request status " + $("#mentorname").data("mentorpubid"), function (requestStatus) {
+    socket.on("new request status " + $(".row").data("mentorpubid"), function (requestStatus) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
@@ -58,7 +71,7 @@ $(document).ready(function () {
     });
 
     //Cancel existing user request
-    socket.on("cancel request " + $("#mentorname").data("mentorpubid"), function (cancelRequest) {
+    socket.on("cancel request " + $(".row").data("mentorpubid"), function (cancelRequest) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == cancelRequest.mentorRequestPubid) {
@@ -73,7 +86,7 @@ $(document).ready(function () {
     });
 
     //Send existing user request to completion
-    socket.on("complete request " + $("#mentorname").data("mentorpubid"), function (completeRequest) {
+    socket.on("complete request " + $(".row").data("mentorpubid"), function (completeRequest) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == completeRequest.mentorRequestPubid) {
@@ -89,7 +102,7 @@ $(document).ready(function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
         var claimRequest = {
             mentorRequestPubid: mentorrequestbox.data("mentorrequestpubid"),
-            mentorPubid: $("#mentorname").data("mentorpubid"),
+            mentorPubid: $(".row").data("mentorpubid"),
             newStatus: "Claimed"
         }
         socket.emit('set request status', claimRequest);
@@ -101,7 +114,7 @@ $(document).ready(function () {
         var mentorrequestbox = $(this).parents(".mentorrequestbox");
         var unclaimRequest = {
             mentorRequestPubid: mentorrequestbox.data("mentorrequestpubid"),
-            mentorPubid: $("#mentorname").data("mentorpubid"),
+            mentorPubid: $(".row").data("mentorpubid"),
             newStatus: "Unclaimed"
         }
         socket.emit('set request status', unclaimRequest);
@@ -137,6 +150,36 @@ $(document).ready(function () {
                 if (allUserRequests.eq(i).data("match") == "no") {
                     allUserRequests.eq(i).show();
                 }
+            }
+        }
+    }
+
+    /**
+     * triggers an HTML5 Notification letting mentor know that a matching mentor request has been submitted
+     */
+    function showRequestNotification() {
+        var notificationTitle = "Matching Request"; //title of HTML5 notification
+        var notificationBody = "A request that matches your skills has arrived."; //text body of HTML5 notification
+        if ("Notification" in window) {
+            if (Notification.permission === "granted") {
+                var options = {
+                    body: notificationBody,
+                    icon: window.location.protocol + "//" + window.location.host +
+                    "/img/icon/brh-icon-152.png"
+                };
+                var notification = new Notification(notificationTitle, options);
+            }
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+                    if (permission === "granted") {
+                        var options = {
+                            body: notificationBody,
+                            icon: window.location.protocol + "//" + window.location.host +
+                            "/img/icon/brh-icon-152.png"
+                        };
+                        var notification = new Notification(notificationTitle, options);
+                    }
+                });
             }
         }
     }

@@ -550,6 +550,7 @@ module.exports = function (io) {
     /* GET static travel page information */
     router.get('/travel', middle.requireResultsReleased, function (req, res, next) {
         res.render('dashboard/travel', {
+            user: req.user,
             title: "Travel Information"
         });
     });

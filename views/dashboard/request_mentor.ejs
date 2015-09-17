@@ -1,7 +1,7 @@
 <% include ../_header %>
 <body>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" data-userpubid="<%= user.pubid %>">
         <% include _dashboardside.ejs %>
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
             <div class="header-wrapper-leaf">
@@ -78,7 +78,7 @@
                 <legend class="page-title">send new request</legend>
             </div>
             <form id="requestmentorform" action="" autocomplete="off">
-                <div id="newrequest" data-userpubid="<%= user.pubid %>">
+                <div id="newrequest">
                     <div class="form-group">
                         <label for="requestdescription" class="newrequestlabel"><h4>Description of Request</h4></label>
                         <textarea id="requestdescription" name="requestdescription" class="form-control" rows="5"

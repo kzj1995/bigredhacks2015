@@ -6,13 +6,23 @@ $(document).ready(function () {
 
     var socket = io(); //client-side Socket.IO object
 
+    requestPermission(); //request permission for HTML5 Notifications
+
+    function requestPermission() {
+        if ("Notification" in window) {
+            if (Notification.permission !== "granted" && Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {});
+            }
+        }
+    }
+
     //Submission of request mentor form through socket
     $("#requestmentorform").submit(function () {
         var mentorRequest = {
             requestDescription: $("#requestdescription").val(),
             requestSkills: $("#requestskills").val(),
             requestLocation: $("#requestlocation").val(),
-            userpubid: $("#newrequest").data("userpubid")
+            userpubid: $(".row").data("userpubid")
         }
         socket.emit('new mentor request', mentorRequest);
         $("#requestdescription").val('');
@@ -22,7 +32,7 @@ $(document).ready(function () {
     });
 
     //Update user's page with his/her new mentor request
-    socket.on("user " + $("#newrequest").data("userpubid"), function (mentorRequest) {
+    socket.on("user " + $(".row").data("userpubid"), function (mentorRequest) {
         var requestTitle = "<div class='mentorrequestbox' data-mentorrequestpubid='" + mentorRequest.pubid + "'>" +
             "<div class='mentorrequestboxtitle'> Request from " + mentorRequest.user.name + " </div>" +
             "<div class='requeststatus'><h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase()
@@ -51,10 +61,9 @@ $(document).ready(function () {
     });
 
     //Update existing user request with new status (Unclaimed, Claimed, Completed)
-    socket.on("new request status " + $("#newrequest").data("userpubid"), function (requestStatus) {
+    socket.on("new request status " + $(".row").data("userpubid"), function (requestStatus) {
+        showRequestNotification(requestStatus);
         var allUserRequests = $(".mentorrequestbox");
-        var notificationTitle = ""; //title of HTML5 notification
-        var notificationBody = ""; //text body of HTML5 notification
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == requestStatus.mentorRequestPubid) {
                 if (requestStatus.newStatus == "Claimed") {
@@ -64,9 +73,6 @@ $(document).ready(function () {
                         requestStatus.mentorInfo.company + ")");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'set request as completed' name='completerequest' class='completerequest btn btn-success'>");
-                    notificationTitle = "Request Claimed";
-                    notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
-                        " has claimed your request."
                 } else if (requestStatus.newStatus == "Unclaimed") {
                     allUserRequests.eq(i).find(".requeststatus").html("<h3> Status of Request: <span class='unclaimed'> " +
                         "Unclaimed </span>, # Matching Mentors: <span class='nummatchingmentors'>" +
@@ -74,39 +80,13 @@ $(document).ready(function () {
                     allUserRequests.eq(i).find(".mentor").html("<b>Mentor: </b>" + "None");
                     allUserRequests.eq(i).find(".changerequeststatus").html("<input type='button' value=" +
                         "'cancel request' name='cancelrequest' class='cancelrequest btn btn-danger'>");
-                    notificationTitle = "Request Unclaimed";
-                    notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
-                        " has unclaimed your request."
-                }
-                if ("Notification" in window) {
-                    if (Notification.permission === "granted") {
-                        var options = {
-                            body: notificationBody,
-                            icon: window.location.protocol + "//" + window.location.host +
-                            requestStatus.mentorInfo.companyImage
-                        };
-                        var notification = new Notification(notificationTitle, options);
-                    }
-                    else if (Notification.permission !== 'denied') {
-                        Notification.requestPermission(function (permission) {
-                            if (permission === "granted") {
-                                var options = {
-                                    body: notificationBody,
-                                    icon: window.location.protocol + "//" + window.location.host +
-                                    requestStatus.mentorInfo.companyImage
-                                };
-                                var notification = new Notification(notificationTitle, options);
-                            }
-                        });
-                    }
-
                 }
             }
         }
     });
 
     //Update number of mentors for a given user request
-    socket.on("new number of mentors " + $("#newrequest").data("userpubid"), function (givenRequest) {
+    socket.on("new number of mentors " + $(".row").data("userpubid"), function (givenRequest) {
         var allUserRequests = $(".mentorrequestbox");
         for (var i = 0; i < allUserRequests.length; i++) {
             if (allUserRequests.eq(i).data("mentorrequestpubid") == givenRequest.mentorRequestPubid) {
@@ -206,6 +186,48 @@ $(document).ready(function () {
             }
         });
     };
+
+    /**
+     * triggers an HTML5 Notification with content based on the requestStatus object
+     * @param requestStatus JSON object representing the new status of a user's mentor request
+     */
+    function showRequestNotification(requestStatus) {
+        var notificationTitle = ""; //title of HTML5 notification
+        var notificationBody = ""; //text body of HTML5 notification
+        if (requestStatus.newStatus == "Claimed") {
+            notificationTitle = "Request Claimed";
+            notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
+                " has claimed your request."
+        }
+        else if (requestStatus.newStatus == "Unclaimed") {
+            notificationTitle = "Request Unclaimed";
+            notificationBody = requestStatus.mentorInfo.name + " from " + requestStatus.mentorInfo.company +
+                " has unclaimed your request."
+        }
+        if ("Notification" in window) {
+            if (Notification.permission === "granted") {
+                var options = {
+                    body: notificationBody,
+                    icon: window.location.protocol + "//" + window.location.host +
+                    requestStatus.mentorInfo.companyImage
+                };
+                var notification = new Notification(notificationTitle, options);
+            }
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+                    if (permission === "granted") {
+                        var options = {
+                            body: notificationBody,
+                            icon: window.location.protocol + "//" + window.location.host +
+                            requestStatus.mentorInfo.companyImage
+                        };
+                        var notification = new Notification(notificationTitle, options);
+                    }
+                });
+            }
+        }
+    }
+
 
     //Sign up for bus
     $("#signup").on('click', function () {
