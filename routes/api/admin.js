@@ -313,6 +313,22 @@ router.patch('/user/:pubid/setRSVP', function(req, res) {
     });
 });
 
+//todo documentation
+router.patch('/user/:pubid/checkin', function (req, res, next) {
+    User.findOne({pubid: req.params.pubid}, function (err, user) {
+        if (err || !user) {
+            return res.sendStatus(500);
+        }
+        else {
+            user.checkedin = normalize_bool(req.body.checkedin);
+            user.save(function (err) {
+                if (err) return res.sendStatus(500);
+                else return res.sendStatus(200);
+            });
+        }
+    });
+});
+
 //todo refactor
 function normalize_bool(string) {
     if (string.toLowerCase() == "true") {
