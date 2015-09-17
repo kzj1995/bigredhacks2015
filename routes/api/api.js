@@ -22,7 +22,7 @@ router.get('/validEmail', function (req, res, next) {
 });
 
 /* POST toggle interested in attending for waitlisted */
-router.post('/rsvp/notinterested', function (req, res, next) {
+router.post('/rsvp/notinterested', middle.requireResultsReleased, function (req, res, next) {
     var checked = (req.body.checked === "true");
     var user = req.user;
     if (user.internal.status == "Waitlisted") {
@@ -34,6 +34,22 @@ router.post('/rsvp/notinterested', function (req, res, next) {
             else res.sendStatus(200);
         });
     }
+});
+
+/* PATCH toggle rsvp for cornell students */
+router.patch('/rsvp/cornellstudent', middle.requireResultsReleased, function (req, res, next) {
+    var checked = (req.body.checked === "true");
+    var user = req.user;
+    if (user.internal.cornell_applicant) {
+        user.internal.going = checked;
+        user.save(function (err) {
+            if (err) {
+                res.sendStatus(500);
+            }
+            else res.sendStatus(200);
+        });
+    }
+    else res.sendStatus(500);
 });
 
 module.exports = router;

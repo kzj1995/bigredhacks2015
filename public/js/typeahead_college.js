@@ -47,7 +47,7 @@ $('.typeahead').typeahead({
     displayKey: 'name', // if not set, will default to 'value',
     source: engine.ttAdapter()
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
-    $(this).data("collegeid",datum.id);
+    $(this).data("collegeid", datum.id);
     $("#collegeid,#new-collegeid").val(datum.id);
 });
 
@@ -63,9 +63,19 @@ $('.typeaheadlist').typeahead({
 }).on('typeahead:selected typeahead:autocomplete', function (obj, datum, name) {
     var currentidlist = $("#collegeidlist").val();
     if (currentidlist != "") {
-        $("#collegeidlist").val(currentidlist+","+datum.id);
+        $("#collegeidlist").val(currentidlist + "," + datum.id);
     }
-    else{
+    else {
         $("#collegeidlist").val(datum.id);
     }
+});
+
+//clear if empty on focusout
+$("document").ready(function () {
+    $("#college,#new-college").on("focusout", function () {
+        if ($(this).val().length == 0) {
+            $(this).data("collegeid", "");
+            $("#collegeid,#new-collegeid").val("");
+        }
+    });
 });

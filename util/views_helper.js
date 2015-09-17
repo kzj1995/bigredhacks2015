@@ -30,7 +30,7 @@ _export.generateOptions = function (arr, options) {
 
     for (var i = 0; i < array.length; i++) {
         var params = "";
-        if (options.selected === array[i] + "") {
+        if (options.selected + "" === array[i] + "") {
             params += 'selected="selected" '
         }
         var tag = '<option ' + params + ' value="{0}">{0}</option>';
