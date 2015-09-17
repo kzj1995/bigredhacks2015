@@ -555,11 +555,69 @@ module.exports = function (io) {
         });
     });
 
+    /* GET mentor list page */
+    router.get('/dashboard/mentorlist', function (req, res) {
+        User.find({role: "mentor"}).sort("mentorinfo.company").exec(function(err, mentors) {
+            _getSortedCompanyImages(req, function (sortedCompanyList, sortedCompanyImageList) {
+                var companyCount = []; //will contain the number of mentors for each company
+                async.eachSeries(sortedCompanyList, function (company, callback) {
+                    User.aggregate([
+                        {$match: {'mentorinfo.company': company}},
+                        {$group: {_id: null, count: {$sum: 1}}}
+                    ], function (err, result) {
+                        if (err) {
+                            console.error(err);
+                        }
+                        if (result.length == 0) {
+                            companyCount.push(0);
+                        } else {
+                            companyCount.push(result[0].count);
+                        }
+                        callback(null);
+                    });
+                }, function (err) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    res.render('dashboard/mentor_list', {
+                        title: "Mentor List",
+                        mentors: mentors,
+                        companyCount: companyCount,
+                        companyList: sortedCompanyList,
+                        companyImages: sortedCompanyImageList,
+                        user: req.user
+                    });
+                });
+            });
+        });
+    });
+
     /* GET logout the current user */
     router.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
     });
+
+    /**
+     * Sorts the company list alphabetically, and then sorts the image list based on that order
+     * @param callback passed in to function which takes in as parameters the sorted company list and sorted image list
+     */
+    function _getSortedCompanyImages(req, callback) {
+        var companyImages = enums.mentor.companyimage.slice(0);
+        var companyList = enums.mentor.companyname.slice(0);
+        var companyToImage = {}; //dictionary with mappings from each company's name to their image
+        for (var i = 0; i < companyList.length; i++) {
+            companyToImage[companyList[i]] = req.protocol + '://' + req.get('host') + "/img/logos/" + companyImages[i];
+        }
+        var sortedCompanyList = companyList.sort();
+        var sortedCompanyImages = [];
+        //Create sorted company images list using dictionary of mappings from a company's name to their image
+        for (var j = 0; j < sortedCompanyList.length; j++) {
+            sortedCompanyImages.push(companyToImage[sortedCompanyList[j]]);
+
+        }
+        callback(sortedCompanyList, sortedCompanyImages);
+    }
 
     /**
      * Returns true if there is any intersection between a mentor's skills (mentorSkills) and the user's
