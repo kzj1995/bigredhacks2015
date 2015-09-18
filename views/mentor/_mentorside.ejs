@@ -1,0 +1,26 @@
+<link href="/css/dashboard.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/mentor.css">
+<div class="col-sm-3 col-md-3 col-lg-2 sidebar">
+    <a href="/" class="brand">
+        <img id="brand-img" src="/img/logo/brh-logo-beige-full.svg">
+    </a>
+    <ul class="nav nav-sidebar">
+        <%
+         var urlItems = [
+             {
+                 name: "dashboard home",
+                 url: "/mentor/dashboard"
+             },
+             {
+                 name: "requests queue",
+                 url: "/mentor/dashboard/requestsqueue"
+             },
+             {
+                 name: "logout",
+                 url: "/mentor/logout"
+             }
+         ];
+        %>
+        <%-viewHelper.generateUrlList(urlItems, currentUrl);%>
+    </ul>
+</div>

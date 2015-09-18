@@ -1,0 +1,88 @@
+@mred: #c0392b;
+@mblue: #2980b9;
+@mgreen: #27ae60;
+
+.unclaimed {
+  color: @mred;
+}
+
+.claimed {
+  color: @mblue;
+}
+
+.completed {
+  color: @mgreen;
+}
+
+.mentorrequestbox {
+
+  .changeRequestStatus {
+    text-align: center;
+  }
+
+}
+
+.mentor-company-logo {
+  width: auto;
+  max-height: 40px;
+  line-height: 40px;
+  position: relative;
+  top: -5px;
+}
+
+#norequests {
+  text-align: center;
+  color: @mred;
+}
+
+.mentorrequestbox {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  .mentorrequestboxtitle {
+    font-family: "Blogger Sans Light", Arial, sans-serif;
+    font-size: 25px;
+    margin-bottom: 0px;
+    color: rgb(51, 122, 183)
+  }
+
+  .requeststatus {
+    .unclaimed {
+      color: @mred;
+    }
+    .claimed {
+      color: @mblue;
+    }
+    .completed {
+      color: @mgreen;
+    }
+  }
+
+  .changerequeststatus {
+    text-align: center;
+  }
+}
+
+#newrequest {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 15px;
+
+  #createrequest {
+    text-align: center;
+  }
+}
+
+.mentorinfo {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.currentevent {
+  font-weight: bold;
+  color: black;
+}

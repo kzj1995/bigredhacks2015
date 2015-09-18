@@ -20,17 +20,17 @@ var userSchema = new mongoose.Schema({
     gender: {type: String, enum: en.user.gender},
     email: {type: String, required: true, lowercase: true, trim: true, index: {unique: true}},
     password: {type: String, required: true},
-    phone: {type: String, required: true},
+    phone: String,
     logistics: {
         dietary: {type: String, enum: en.user.dietary},
         tshirt: {type: String, enum: en.user.tshirt},
         anythingelse: String
     },
     school: {
-        id: {type: String, ref: "College", required: true, index: true},
-        name: {type: String, required: true},
-        year: {type: String, enum: en.user.year, required: true},
-        major: {type: String, required: true}
+        id: {type: String, ref: "College", index: true},
+        name: String,
+        year: {type: String, enum: en.user.year},
+        major: String
     },
     app: {
         github: String,
@@ -40,7 +40,7 @@ var userSchema = new mongoose.Schema({
             q1: String,//@todo fill out with identifiers for questions
             q2: String
         },
-        experience: {type: String, enum: en.user.experience, required: true}
+        experience: {type: String, enum: en.user.experience}
     },
     internal: {
         teamid: {type: mongoose.Schema.Types.ObjectId, ref: "Team", default: null},
@@ -50,13 +50,19 @@ var userSchema = new mongoose.Schema({
         going: {type: Boolean, default: null},
         travel_receipt: {type: String, default: null},
         not_interested: {type: Boolean, default: null}, //waitlisted - if true, they forfeit their spot
-        cornell_applicant: {type: Boolean, default: false}
+        cornell_applicant: {type: Boolean, default: false},
+        checkedin: {type: Boolean, default: false}
     },
     passwordtoken: String,
     created_at: {type: Date, default: Date.now},
     modified_at: {type: Date, default: Date.now},
     role: {type: String, enum: en.user.role, default: "user"},
-    team: Array //virtual property used to populate team members
+    team: Array, //virtual property used to populate team members,]
+    mentorinfo: {
+        company: String,
+        skills: [String],
+        bio: String
+    }
 });
 
 //full name of user

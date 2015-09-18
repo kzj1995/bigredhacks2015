@@ -291,7 +291,7 @@ router.delete('/reimbursements/school', function (req, res) {
 });
 
 //todo documentation
-router.patch('/user/:pubid/setRSVP', function(req, res) {
+router.patch('/user/:pubid/setRSVP', function (req, res) {
     var going = normalize_bool(req.body.going);
     if (going === "") {
         going = null;
@@ -312,8 +312,39 @@ router.patch('/user/:pubid/setRSVP', function(req, res) {
     });
 });
 
+//todo documentation
+router.patch('/user/:pubid/checkin', function (req, res, next) {
+    User.findOne({pubid: req.params.pubid}, function (err, user) {
+        if (err || !user) {
+            return res.sendStatus(500);
+        }
+        else {
+            user.internal.checkedin = normalize_bool(req.body.checkedin);
+            console.log(user.internal.checkedin);
+            user.save(function (err) {
+                if (err) return res.sendStatus(500);
+                else return res.sendStatus(200);
+            });
+        }
+    });
+});
+
+//todo documentation
+router.get('/users/checkin', function (req, res, next) {
+    var project = "name pubid email school internal.checkedin";
+    User.find({"internal.going": true}).select(project).exec(function (err, users) {
+        if (err) {
+            res.status(500).send(null);
+        }
+        else {
+            res.send(users);
+        }
+    })
+});
+
 //todo refactor
 function normalize_bool(string) {
+    if (typeof string === "boolean") return string;
     if (string.toLowerCase() == "true") {
         return true;
     }

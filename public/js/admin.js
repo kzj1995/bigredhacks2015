@@ -103,7 +103,7 @@ $('document').ready(function () {
     //disable non-participation enabled items
     var toggleNp = function (state) {
         $(".np-enabled").children().prop("disabled", state);
-        $(".np-enabled input[type=radio]").prop("disabled", state);
+        $(".np-enabled input[type=radio],input[type=checkbox]").prop("disabled", state);
     };
 
     npCheckbox.on('switchChange.bootstrapSwitch', function (event, state) {
@@ -302,7 +302,7 @@ $('document').ready(function () {
      *** Bus Management****
      **********************/
 
-        //add college to list of bus stops
+    //add college to list of bus stops
     $('#addcollege').on('click', function () {
         //FIXME: highly error-prone implementation
         //college id is added in typeahead, modify both in this function instead
@@ -377,7 +377,7 @@ $('document').ready(function () {
         var newcollegeid = businfobox.find(".newcollege.tt-input").data("collegeid");
         var newcollege = businfobox.find(".newcollege.tt-input").val(); //tt-input contains the actual input in typeahead
         businfobox.find(".busstops").append("<li data-collegeid='" + newcollegeid + "'>" +
-        "<span class='collegename'>" + newcollege + '</span>&nbsp;&nbsp;<a class="removecollege edit-group" style="display:inline">(remove)</a></li>');
+            "<span class='collegename'>" + newcollege + '</span>&nbsp;&nbsp;<a class="removecollege edit-group" style="display:inline">(remove)</a></li>');
         businfobox.find(".newcollege").val("");
     });
 
@@ -541,7 +541,3 @@ $('document').ready(function () {
         return baseURL + "?" + newAdditionalURL + rows_txt;
     };
 });
-
-
-
-

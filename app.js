@@ -1,5 +1,6 @@
 "use strict";
 var express = require('express');
+var socket_io = require('socket.io');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,16 +14,18 @@ var compression = require('compression');
 
 var config = require('./config.js');
 
+var app = express();
+var io = socket_io();
+app.io = io;
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
-var user = require('./routes/user');
+var user = require('./routes/user')(app.io);
+var mentor = require('./routes/mentor')(app.io);
 var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');
-var authRoute = require('./routes/auth');
+var authRoute = require('./routes/auth')(app.io);
 var middle = require('./routes/middleware');
-
-var app = express();
 
 var passport = require("passport");
 
@@ -94,6 +97,7 @@ app.use('/api', apiRoute);
 
 app.use('/admin', middle.requireAdmin, admin);
 app.use('/user', middle.requireAuthentication, user);
+app.use('/mentor', middle.requireMentor, mentor);
 app.use('/', authRoute); //todo mount on separate route to allow use of noAuth without disabling 404 pages
 
 
