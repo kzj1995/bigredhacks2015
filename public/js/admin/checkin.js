@@ -6,25 +6,18 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
     $scope.users = [];
     $scope.inputSearch = "";
 
-    $scope.filterSearch = function(user) {
+    $scope.filterSearch = function (user) {
         var input = $scope.inputSearch.toLowerCase();
         var name = (user.name.first + " " + user.name.last).toLowerCase();
         return (input == "" || name.indexOf(input) != -1);
     };
 
-    $scope.filterCheckedIn = function(user) {
+    $scope.filterCheckedIn = function (user) {
         return !user.internal.checkedin;
     };
 
-
-
-
-    $scope.confirmation = false;
-
-    $scope.derpToken = "";
-
     $scope.loadUsers = function () {
-        $http.get('/api/admin/users/signin')
+        $http.get('/api/admin/users/checkin')
             .success(function (data, status, headers, config) {
                 $scope.users = data;
                 console.log("Got users", data);
@@ -34,33 +27,23 @@ app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
             });
     };
 
-    $scope.checkinUser = function(pubid) {
+    $scope.checkinUser = function (pubid) {
         $http({
             method: 'PATCH',
-            url: '/api/admin/user/' + pubid +'/checkin',
+            url: '/api/admin/user/' + pubid + '/checkin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             data: {
                 checkedin: true
             }
+        }).success(function (data) {
+            $scope.loadUsers();
+        }).error(function () {
+            console.log("Error checking user in");
         });
     };
 
     $scope.loadUsers();
 
-/*
-    $scope.add = function () {
-        $http({
-            method: 'POST',
-            url: Backand.getApiUrl() + '/1/objects/joinResults?returnObject=true',
-            headers: {
-                'Authorization': $scope.derpToken
-            },
-            data: {
-                "first": $scope.first,
-                "last": $scope.last,
-                "cid": $scope.id,
-                "skill": $scope.skill
-            }
-        });
-    };
-*/
 }]);

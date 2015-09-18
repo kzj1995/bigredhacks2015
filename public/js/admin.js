@@ -103,7 +103,7 @@ $('document').ready(function () {
     //disable non-participation enabled items
     var toggleNp = function (state) {
         $(".np-enabled").children().prop("disabled", state);
-        $(".np-enabled input[type=radio]").prop("disabled", state);
+        $(".np-enabled input[type=radio],input[type=checkbox]").prop("disabled", state);
     };
 
     npCheckbox.on('switchChange.bootstrapSwitch', function (event, state) {
