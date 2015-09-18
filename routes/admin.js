@@ -253,7 +253,7 @@ router.get('/review', function (req, res, next) {
             var rand = Math.floor(Math.random() * count);
             User.findOne(query).skip(rand).exec(function (err, user) {
                 if (err) console.error(err);
-                
+
                 async.parallel({
                     overall: aggregate.applicants.byMatch(USER_FILTER),
                     school: aggregate.applicants.byMatch(_.extend(_.clone(USER_FILTER), {"school.id": user.school.id})),
@@ -335,18 +335,16 @@ router.post('/businfo', function (req, res, next) {
     });
 });
 
-
-
 /* GET reimbursement page */
-router.get('/reimbursements', function(req, res, next) {
-   Reimbursements.find({}, function(err, reimbursements) {
+router.get('/reimbursements', function (req, res, next) {
+    Reimbursements.find({}, function (err, reimbursements) {
         if (err) {
             console.error(err);
         }
         res.render('admin/reimbursements', {
             reimbursements: reimbursements
         });
-   })
+    })
 });
 
 /**

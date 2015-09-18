@@ -43,8 +43,21 @@ middle.requireAdmin = function (req, res, next) {
     }
 };
 
+middle.requireMentor = function (req, res, next) {
+    if (req.user && req.user.role === "mentor") {
+        return next();
+    }
+    else {
+        req.flash('error', 'Please login first.');
+        return res.redirect('/login');
+    }
+}
+
 middle.allRequests = function (req, res, next) {
     res.locals.isUser = !!req.user;
+    if (res.locals.isUser) {
+        res.locals.userRole = req.user.role;
+    }
     res.locals.currentUrl = req.url;
     next();
 };

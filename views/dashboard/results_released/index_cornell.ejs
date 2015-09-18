@@ -7,7 +7,7 @@ var helper = viewHelper;
 %>
 <body>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" data-userpubid="<%= user.pubid %>">
         <% include ../_dashboardside.ejs %>
         <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
 
@@ -66,6 +66,7 @@ var helper = viewHelper;
                 all across the U.S. coming together to hack, build, and learn.</p>
 
 
+            <p>Please join our <a href="https://www.facebook.com/groups/397005627168999/">BigRed//Hacks 2015 Hackers</a> Facebook group to meet other attendees and find partners.</p>
             <p class="long-text">We'll be sending lots more information as we get closer to the event, so stay
                 tuned!</p>
 
@@ -112,5 +113,6 @@ var helper = viewHelper;
 <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"></script>
 <script src="/js/jquery.validate.options.js"></script>
 <script src="/js/vendor/jquery.filepicker.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="/js/dashboard.js"></script>
 <% include ../../_footer %>
