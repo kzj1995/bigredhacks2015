@@ -350,8 +350,8 @@ router.get('/reimbursements', function(req, res, next) {
 });
 
 /* GET signin page */
-router.get('/signin', function(req, res, next) {
-    res.render('admin/signin');
+router.get('/checkin', function(req, res, next) {
+    res.render('admin/checkin');
 });
 
 /**

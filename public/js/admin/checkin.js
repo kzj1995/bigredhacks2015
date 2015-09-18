@@ -2,21 +2,18 @@
 var app = angular.module('brh.controllers', []);
 
 
-app.controller('signin.ctrl', ['$scope', '$http', function ($scope, $http) {
+app.controller('checkin.ctrl', ['$scope', '$http', function ($scope, $http) {
     $scope.users = [];
     $scope.inputSearch = "";
 
     $scope.filterSearch = function(user) {
         var input = $scope.inputSearch.toLowerCase();
         var name = (user.name.first + " " + user.name.last).toLowerCase();
-        if (input == "" || name.indexOf(input) != -1) {
-            return true;
-        }
-        return false;
+        return (input == "" || name.indexOf(input) != -1);
     };
 
-    $scope.filterSignedIn = function(user) {
-        return !user.internal.signedin;
+    $scope.filterCheckedIn = function(user) {
+        return !user.internal.checkedin;
     };
 
 
@@ -37,8 +34,14 @@ app.controller('signin.ctrl', ['$scope', '$http', function ($scope, $http) {
             });
     };
 
-    $scope.checkinUser = function(user) {
-
+    $scope.checkinUser = function(pubid) {
+        $http({
+            method: 'PATCH',
+            url: '/api/admin/user/' + pubid +'/checkin',
+            data: {
+                checkedin: true
+            }
+        });
     };
 
     $scope.loadUsers();
@@ -58,14 +61,6 @@ app.controller('signin.ctrl', ['$scope', '$http', function ($scope, $http) {
                 "skill": $scope.skill
             }
         });
-
-        $scope.confirmation = true;
-
-        //Clear the fields
-        $scope.first= "";
-        $scope.last = "";
-        $scope.id = "";
-        $scope.skill = false;
     };
 */
 }]);
