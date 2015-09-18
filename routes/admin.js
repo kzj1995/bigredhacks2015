@@ -347,6 +347,11 @@ router.get('/reimbursements', function (req, res, next) {
     })
 });
 
+/* GET signin page */
+router.get('/checkin', function(req, res, next) {
+    res.render('admin/checkin');
+});
+
 /**
  * Helper function to fill team members in teammember prop
  * @param applicants Array|Object of applicants to obtain team members of

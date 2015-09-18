@@ -1,0 +1,68 @@
+<% include ../_header %>
+
+<body data-ng-app="brh.controllers">
+<div class="container-fluid">
+    <div class="row">
+        <% include _adminside %>
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2"
+             data-ng-controller="checkin.ctrl">
+            <div class="header-wrapper-leaf">
+                <h1 class="leaf">participant checkin</h1>
+            </div>
+
+            <div id="searchparameters" class="col-md-12">
+
+                <form>
+
+                    <div class="form-group">
+                        <label for="college">Filter by Name</label>
+                        <input type="text" name="search" id="search" ng-model="inputSearch" class="form-control"
+                               placeholder="Name"
+                               value="">
+                    </div>
+
+
+                </form>
+            </div>
+            <div id="searchresults" class="col-md-12">
+                <p id="result-count" class="text-right"> {{filtered.length}} results found.</p>
+
+                <table class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>School</th>
+                        <th>Checked In</th>
+                    </tr>
+                    <tr><td colspan="3" ng-if="filtered.length == 0"><p>No results found.</p></td></tr>
+                    <tr class="user" ng-repeat="user in filtered =(users | filter:filterSearch | filter:filterCheckedIn)">
+                        <td><a target="_blank" href="/admin/user/{{user.pubid}}">{{user.name.first + " " +
+                                user.name.last}}</a></td>
+                        <td>{{user.school.name}}</td>
+                        <td>
+                            <div class="form-inline">
+                                <div class="checkbox np-enabled">
+                                    <label>
+                                        <input type="checkbox" value="true"
+                                               class="checkbox" ng-change="checkinUser(user.pubid)" ng-model="checkin">
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-messages.min.js"></script>
+<script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script>
+
+<script src="/js/admin.js"></script>
+<script src="/js/admin/checkin.js"></script>
+<% include ../_footer %>

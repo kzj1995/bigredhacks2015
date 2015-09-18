@@ -116,7 +116,6 @@
                 <label for="rsvpDropdown">Going: </label>
                 <select class="form-control" id="setRSVP" name="setRSVP">
                     <option value="">select</option>
-                    <%                     console.log(user.internal.going);%>
                     <%- viewHelper.generateOptions("true false".split(" "), {selected: (user.internal.going+"")}); %>
                 </select>
             </div>
