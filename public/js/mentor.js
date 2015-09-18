@@ -19,7 +19,8 @@ $(document).ready(function () {
             + mentorRequest.user.name + " </div><div class='requeststatus'><h3> Status of Request: <span class='" +
             mentorRequest.requeststatus.toLowerCase() + "'>" + mentorRequest.requeststatus + "</span></h3> </div>" +
             "<ul class='requestinfo'>";
-        var description = "<li class='description'> <b>Description of Request: </b><span class='long-text description' " + mentorRequest.description + "</span></li>";
+        var description = "<li class='description'> <b>Description of Request: </b><span class='long-text description'> " +
+            mentorRequest.description + "</span></li>";
         var skillsList = "";
         for (var i = 0; i < mentorRequest.skills.length; i = i + 1) {
             skillsList = skillsList + "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
@@ -147,7 +148,10 @@ $(document).ready(function () {
             }
             else {
                 if (allUserRequests.eq(i).data("match") == "no") {
-                    allUserRequests.eq(i).show();
+                    if(!($("#onlyunclaimed").is(':checked')) || ($("#onlyunclaimed").is(':checked') &&
+                    allUserRequests.eq(i).find(".unclaimed").length > 0)) {
+                        allUserRequests.eq(i).show();
+                    }
                 }
             }
         }
