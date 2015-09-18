@@ -292,7 +292,7 @@ router.delete('/reimbursements/school', function (req, res) {
 });
 
 //todo documentation
-router.patch('/user/:pubid/setRSVP', function(req, res) {
+router.patch('/user/:pubid/setRSVP', function (req, res) {
     var going = normalize_bool(req.body.going);
     if (going === "") {
         going = null;
@@ -327,6 +327,19 @@ router.patch('/user/:pubid/checkin', function (req, res, next) {
             });
         }
     });
+});
+
+//todo documentation
+router.get('/users/signin', function (req, res, next) {
+    var project = "name pubid email school internal.checkedin";
+    User.find({"internal.going": true}).select(project).exec(function (err, users) {
+        if (err) {
+            res.send(null).status(500);
+        }
+        else {
+            res.send(users);
+        }
+    })
 });
 
 //todo refactor

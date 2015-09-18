@@ -1,29 +1,21 @@
-<% include ../../_header %>
+<% include ../_header %>
 <%
-var input = params || {}; //persist fields
-var render = render || "box"; //default to box view
+
 %>
 
-<body>
+<body data-ng-app="brh.controllers">
 <div class="container-fluid">
     <div class="row">
         <% include _adminside %>
-        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2" data-ng-controller="signin.ctrl">
             <div class="header-wrapper-leaf">
                 <h1 class="leaf">participant signin</h1>
             </div>
-            <form class="render-option form-inline">
-                <div class="form-group hidden-xs">
-                    <label for="render">Render: </label>
-                    <select name="render" id="render" class="form-control">
-                        <%- viewHelper.generateOptions("box table".split(" "), {selected: render}); %>
-                    </select>
-                </div>
-            </form>
+
             <div id="searchparameters" class="col-md-12">
                 <p>All fields are optional.</p>
 
-                <form action="/admin/search" method="GET">
+                <form>
 
                     <div class="form-group">
                         <label for="college">Filter by Name</label>
@@ -37,7 +29,7 @@ var render = render || "box"; //default to box view
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="teamwithcornell" name="teamwithcornell" value="true"
-                                       class="checkbox" <%- params.teamwithcornell ? "checked" : "" %>> Team with
+                                       class="checkbox" <%- false ? "checked" : "" %>> Team with
                                 Cornell students
                             </label>
                         </div>
@@ -47,24 +39,27 @@ var render = render || "box"; //default to box view
                 </form>
             </div>
             <div id="searchresults" class="col-md-12">
-                <p id="result-count" class="text-right"><%= applicants.length %> results found.</p>
+                <p id="result-count" class="text-right"> results found.</p>
 
                 <table class="table table-striped">
                     <tr>
                         <th>Name</th>
                         <th>School</th>
-                        <th>Status</th>
+                        <th>Checked In</th>
                     </tr>
                     <tr class="user" ng-repeat="user in users | filter:search | filter:checked">
-                        <td>{{user.name.first}}</td>
+                        <td><a target="_blank" href="/admin/user/{{user.pubid}}">{{user.name.first + " " + user.name.last}}</a></td>
                         <td>{{user.school.name}}</td>
+                        <td>                        <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="true"
+                                           class="checkbox" <%- false ? "checked" : "" %>>
+                                </label>
+                            </div></td>
                     </tr>
                 </table>
-                <% if (applicants.length == 0) {
-                %>
 
                 <p>No results found.</p>
-                <% } %>
 
             </div>
         </div>
@@ -79,4 +74,4 @@ var render = render || "box"; //default to box view
 <script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script>
 
 <script src="/js/admin/signin.js"></script>
-<% include ../../_footer %>
+<% include ../_footer %>
