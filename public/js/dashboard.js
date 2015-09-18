@@ -36,7 +36,7 @@ $(document).ready(function () {
      */
     function getEventsAndNotifications() {
         $.getJSON( "/user/allevents", function(schedule) {
-            var scheduleHTML = '<table class="table">'; //will contain actual HTML to fill the schedule page;
+            var scheduleHTML = ""; //will contain actual HTML to fill the schedule page;
             var eventIndex = 0; //contains index of current event being processed
             for (var i = 0; i < schedule.dayCount.length; i++ ) {
                 scheduleHTML = scheduleHTML + "<div class='eventsofday'>";

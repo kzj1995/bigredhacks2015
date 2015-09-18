@@ -2,9 +2,9 @@
   "name": "BigRedHacks",
   "version": "0.0.0",
   "private": true,
-  "main": "./app.js",
+  "main": "./bin/www.js",
   "scripts": {
-    "start": "node ./app.js"
+    "start": "node ./bin/www.js"
   },
   "engines": {
     "node": "latest",
