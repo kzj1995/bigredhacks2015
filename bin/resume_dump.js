@@ -8,20 +8,21 @@ var async = require('async');
 var mongoose = require('mongoose');
 mongoose.connect(process.env.COMPOSE_URI || process.env.MONGOLAB_URI || 'mongodb://localhost/bigredhacks');
 //mongoose.connect('mongodb://localhost/bigredhacks');
-var config = require('../config');
-var User = require('../models/user');
+var config = require('../config.js');
+var User = require('../models/user.js');
 
 var RESUME_DEST = 'resume/';
 var RECEIPT_DEST = 'travel/';
 
-var LOCAL_DEST = 'C:/resumes/';
+var LOCAL_DEST = '/home/leon/resumes/';
 
 var s3 = new AWS.S3({
     accessKeyId: config.setup.AWS_access_key,
     secretAccessKey: config.setup.AWS_secret_key
 });
 
-var query = {
+var query = { "internal.going": true}
+/*
     "$or": [
         {"internal.going": true},
         {
@@ -32,6 +33,7 @@ var query = {
         }
     ]
 };
+*/
 
 User.find(query, function (err, users) {
     if (err) {
