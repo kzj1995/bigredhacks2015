@@ -45,13 +45,13 @@ $(document).ready(function () {
                     scheduleHTML = scheduleHTML + "<p>" + schedule.events[eventIndex].starttime + "&nbsp;&nbsp;&nbsp;" +
                         "-&nbsp;&nbsp;&nbsp;" + schedule.events[eventIndex].description + " (" +
                         schedule.events[eventIndex].location + ")";
-                    if (isCurrentEvent(schedule, eventIndex)) {
-                        scheduleHTML = scheduleHTML + "  <span class='currentevent'>- Current Event</span></p>"
-                    }
-                    else {
+                    //if (isCurrentEvent(schedule, eventIndex)) {
+                      //  scheduleHTML = scheduleHTML + "  <span class='currentevent'>- Current Event</span></p>"
+                    //}
+                    //else {
                         scheduleHTML = scheduleHTML + "</p>"
-                    }
-                    checkForNotification(schedule, eventIndex); //check to see if a notification is necessary
+                    //}
+                    //checkForNotification(schedule, eventIndex); //check to see if a notification is necessary
                     eventIndex = eventIndex + 1;
                 }
                 scheduleHTML = scheduleHTML + "</div>";
