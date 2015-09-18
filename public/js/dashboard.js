@@ -8,12 +8,173 @@ $(document).ready(function () {
 
     requestPermission(); //request permission for HTML5 Notifications
 
+    showSchedule(); //show events on the schedule page
+
+    /**
+     * Requests permission to use HTML5 Notications
+     */
     function requestPermission() {
         if ("Notification" in window) {
             if (Notification.permission !== "granted" && Notification.permission !== 'denied') {
                 Notification.requestPermission(function (permission) {});
             }
         }
+    }
+
+    /**
+     * Show events on the schedule page. Check every 30 seconds for new events or notifications and then update the page
+     */
+    function showSchedule() {
+        getEventsAndNotifications();
+        setTimeout(function () {
+            showSchedule();
+        }, 30000);
+    }
+
+    /**
+     * Ask server for any new events and potential notifications
+     */
+    function getEventsAndNotifications() {
+        $.getJSON( "/user/allevents", function(schedule) {
+            var scheduleHTML = ""; //will contain actual HTML to fill the schedule page;
+            var eventIndex = 0; //contains index of current event being processed
+            for (var i = 0; i < schedule.dayCount.length; i++ ) {
+                scheduleHTML = scheduleHTML + "<div class='eventsofday'>";
+                scheduleHTML = scheduleHTML + "<div class='day'><h3>" + schedule.days[i] + "</h3></div>";
+                for (var j = 0; j < schedule.dayCount[i]; j++) {
+                    scheduleHTML = scheduleHTML + "<p>" + schedule.events[eventIndex].starttime + "&nbsp;&nbsp;&nbsp;" +
+                        "-&nbsp;&nbsp;&nbsp;" + schedule.events[eventIndex].description + " (" +
+                        schedule.events[eventIndex].location + ")";
+                    if (isCurrentEvent(schedule, eventIndex)) {
+                        scheduleHTML = scheduleHTML + "  <span class='currentevent'>- Current Event</span></p>"
+                    }
+                    else {
+                        scheduleHTML = scheduleHTML + "</p>"
+                    }
+                    checkForNotification(schedule, eventIndex); //check to see if a notification is necessary
+                    eventIndex = eventIndex + 1;
+                }
+                scheduleHTML = scheduleHTML + "</div>";
+            }
+            $("#events").html(scheduleHTML);
+        });
+    }
+
+    /**
+     * Check to see if an event is the current event
+     * @param schedule JSON object contains all event information
+     * @param eventIndex int represents the index of the given event
+     */
+    function isCurrentEvent(schedule, eventIndex) {
+        var eventStart = getTimeString(schedule.events[eventIndex].startday, schedule.events[eventIndex].starttime);
+        var eventEnd = getTimeString(schedule.events[eventIndex].endday, schedule.events[eventIndex].endtime);
+        var currentDate = new Date();
+        var currentTime = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + " " + currentDate.getHours() + ":"
+            + currentDate.getMinutes();
+        if (currentTime.localeCompare(eventStart) >= 0 && currentTime.localeCompare(eventEnd) < 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    /**
+     * Check to see if a notification for the given event is necessary. If so, trigger it.
+     * @param schedule JSON object contains all event information
+     * @param eventIndex int represents the index of the given event
+     */
+    function checkForNotification(schedule, eventIndex) {
+        var eventStart = getTimeString(schedule.events[eventIndex].startday, schedule.events[eventIndex].starttime);
+        var currentDate = new Date();
+        var currentTime = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + " " + currentDate.getHours() + ":"
+            + currentDate.getMinutes();
+        if (currentTime.localeCompare(eventStart) >= 0 && schedule.events[eventIndex].notificationShown == false) {
+            triggerNewEventNotification(schedule, eventIndex);
+        }
+    }
+
+    /**
+     * Given a day and a time in hour and minutes, returns a string with the day and time in military time
+     * @param givenDay String representing a month and day (ex: 9/18)
+     * @param givenHourAndMin String representing hour and minutes of form 9:00 AM
+     * @return String with the day and time in military time (ex: "9/18 23:12")
+     */
+    function getTimeString(givenDay, givenHourAndMin) {
+        givenHourAndMin = givenHourAndMin.trim();
+        var eventHour = parseInt(givenHourAndMin);
+        var eventHourAndMin = ""; //will contain military time representation of givenHourAndMin
+        if (givenHourAndMin.indexOf("AM")) {
+            eventHourAndMin = eventHour + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
+                    givenHourAndMin.indexOf(":") + 3);
+        }
+        else{
+            if (eventHour == 12) {
+                eventHourAndMin = eventHour + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
+                        givenHourAndMin.indexOf(":") + 3);
+            }
+            else {
+                eventHourAndMin = (eventHour + 12) + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
+                        givenHourAndMin.indexOf(":") + 3);
+            }
+        }
+        var eventTime = givenDay + " " + eventHourAndMin;
+        return eventTime;
+    }
+
+    /**
+     * Trigger HTML5 notification for new event
+     * @param schedule JSON object contains all event information
+     * @param eventIndex int represents the index of the given event
+     */
+    function triggerNewEventNotification(schedule, eventIndex) {
+        var notificationTitle = "New Event"; //title of HTML5 notification
+        var notificationBody = schedule.events[eventIndex].description + " (" +
+            schedule.events[eventIndex].location + ")"; //text body of HTML5 notification
+        if ("Notification" in window) {
+            if (Notification.permission === "granted") {
+                var options = {
+                    body: notificationBody,
+                    icon: window.location.protocol + "//" + window.location.host +
+                    "/img/icon/brh-icon-152.png"
+                };
+                var notification = new Notification(notificationTitle, options);
+                eventNotificationShown(schedule, eventIndex);
+            }
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+                    if (permission === "granted") {
+                        var options = {
+                            body: notificationBody,
+                            icon: window.location.protocol + "//" + window.location.host +
+                            "/img/icon/brh-icon-152.png"
+                        };
+                        var notification = new Notification(notificationTitle, options);
+                        eventNotificationShown(schedule, eventIndex);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * POST to server indicating the given event's notification has been shown
+     * @param schedule JSON object contains all event information
+     * @param eventIndex int represents the index of the given event
+     */
+    function eventNotificationShown(schedule, eventIndex) {
+        $.ajax({
+            type: "POST",
+            url: "/user/notificationshown",
+            data: {
+                eventId: schedule.events[eventIndex]._id
+            },
+            success: function (data) {},
+            error: function (e) {
+                console.log(e);
+            }
+        });
     }
 
     //Submission of request mentor form through socket

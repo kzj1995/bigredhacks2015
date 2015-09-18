@@ -14,6 +14,7 @@ var middle = require('../routes/middleware.js');
 var Bus = require('../models/bus.js');
 var User = require('../models/user.js');
 var College = require('../models/college.js');
+var Event = require('../models/event.js');
 var uid = require('uid2');
 var MentorRequest = require('../models/mentor_request');
 var Reimbursement = require('../models/reimbursements.js');
@@ -591,6 +592,62 @@ module.exports = function (io) {
             });
         });
     });
+
+    /* GET schedule page */
+    router.get('/dashboard/schedule', function (req, res) {
+        res.render('dashboard/schedule', {
+            title: "Schedule",
+            user: req.user
+        });
+    });
+
+    /* GET all events on the schedule */
+    router.get('/allevents', function (req, res) {
+        Event.find({}).sort({ startday: 1, starttime: 1 }).exec(function(err, events) {
+            var dayCount = []; //will contain the number of events for each day
+            async.eachSeries(enums.schedule.days, function (currentDay, callback) {
+                Event.aggregate([
+                    {$match: {startday: currentDay}},
+                    {$group: {_id: null, count: {$sum: 1}}}
+                ], function (err, result) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    if (result.length == 0) {
+                        dayCount.push(0);
+                    } else {
+                        dayCount.push(result[0].count);
+                    }
+                    callback(null);
+                });
+            }, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                var schedule = {
+                    events: events,
+                    dayCount: dayCount,
+                    days: enums.schedule.days
+                }
+                res.json(schedule);
+            });
+        });
+    });
+
+    /* POST that an event's notification has been shown */
+    router.post('/notificationshown', function (req, res) {
+        Event.findOne({_id: req.body.eventId}, function(err, event) {
+            event.notificationShown = true;
+            event.save(function (err) {
+                if (err) {
+                    return res.sendStatus(500);
+                }
+                else {
+                    return res.sendStatus(200);
+                }
+            })
+        })
+    })
 
     /* GET logout the current user */
     router.get('/logout', function (req, res) {
