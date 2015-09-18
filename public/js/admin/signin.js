@@ -1,10 +1,25 @@
 "use strict";
 var app = angular.module('brh.controllers', []);
 
+
 app.controller('signin.ctrl', ['$scope', '$http', function ($scope, $http) {
-
-
     $scope.users = [];
+    $scope.inputSearch = "";
+
+    $scope.filterSearch = function(user) {
+        var input = $scope.inputSearch.toLowerCase();
+        var name = (user.name.first + " " + user.name.last).toLowerCase();
+        if (input == "" || name.indexOf(input) != -1) {
+            return true;
+        }
+        return false;
+    };
+
+    $scope.filterSignedIn = function(user) {
+        return !user.internal.signedin;
+    };
+
+
 
 
     $scope.confirmation = false;

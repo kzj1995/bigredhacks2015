@@ -1,45 +1,34 @@
 <% include ../_header %>
 <%
 
-%>
+   %>
 
 <body data-ng-app="brh.controllers">
 <div class="container-fluid">
     <div class="row">
         <% include _adminside %>
-        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2" data-ng-controller="signin.ctrl">
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2"
+             data-ng-controller="signin.ctrl">
             <div class="header-wrapper-leaf">
                 <h1 class="leaf">participant signin</h1>
             </div>
 
             <div id="searchparameters" class="col-md-12">
-                <p>All fields are optional.</p>
 
                 <form>
 
                     <div class="form-group">
                         <label for="college">Filter by Name</label>
-                        <input type="text" name="college" id="college" class="form-control"
+                        <input type="text" name="search" id="search" ng-model="inputSearch" class="form-control"
                                placeholder="Name"
                                value="">
-                    </div>
-
-                    <div class="form-group">
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="teamwithcornell" name="teamwithcornell" value="true"
-                                       class="checkbox" <%- false ? "checked" : "" %>> Team with
-                                Cornell students
-                            </label>
-                        </div>
                     </div>
 
 
                 </form>
             </div>
             <div id="searchresults" class="col-md-12">
-                <p id="result-count" class="text-right"> results found.</p>
+                <p id="result-count" class="text-right"> {{users.length}} results found.</p>
 
                 <table class="table table-striped">
                     <tr>
@@ -47,15 +36,20 @@
                         <th>School</th>
                         <th>Checked In</th>
                     </tr>
-                    <tr class="user" ng-repeat="user in users | filter:search | filter:checked">
-                        <td><a target="_blank" href="/admin/user/{{user.pubid}}">{{user.name.first + " " + user.name.last}}</a></td>
+                    <tr class="user" ng-repeat="user in users | filter:filterSearch | filter:filterSignedIn">
+                        <td><a target="_blank" href="/admin/user/{{user.pubid}}">{{user.name.first + " " +
+                                user.name.last}}</a></td>
                         <td>{{user.school.name}}</td>
-                        <td>                        <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="true"
-                                           class="checkbox" <%- false ? "checked" : "" %>>
-                                </label>
-                            </div></td>
+                        <td>
+                            <div class="form-inline">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="true"
+                                               class="checkbox" <%- false ? "checked" : "" %>>
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </table>
 
