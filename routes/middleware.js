@@ -14,6 +14,10 @@ function _isResultsReleased() {
     return config.admin.results_released;
 }
 
+function _isDayof() {
+    return config.admin.dayof;
+}
+
 middle.requireNoAuthentication = function (req, res, next) {
     if (req.user) {
         return res.redirect('/user/dashboard')
@@ -51,7 +55,7 @@ middle.requireMentor = function (req, res, next) {
         req.flash('error', 'Please login first.');
         return res.redirect('/login');
     }
-}
+};
 
 middle.allRequests = function (req, res, next) {
     res.locals.isUser = !!req.user;
@@ -89,10 +93,20 @@ middle.requireResultsReleased = function (req, res, next) {
     }
 };
 
+middle.requireDayof = function (req, res, next) {
+    if (_isDayof()) {
+        return next();
+    }
+    else {
+        return res.redirect('/')
+    }
+};
+
 middle.helper = {
     isRegistrationOpen: _isRegistrationOpen,
     isCornellRegistrationOpen: _isCornellRegistrationOpen,
-    isResultsReleased: _isResultsReleased
+    isResultsReleased: _isResultsReleased,
+    isDayof: _isDayof
 };
 
 module.exports = middle;
