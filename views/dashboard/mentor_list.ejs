@@ -12,12 +12,13 @@
                 <% for (var i = 0; i < companyCount.length; i++) { %>
                 <div class="company">
                     <div class="companyname">
-                        <h2><%= companyList[i] %> <img src="<%= companyImages[i] %>" alt="<%= companyList[i] %>"
-                        height="65" width="80" id="<%= companyList[i].toLowerCase() %>image"></h2>
+                        <h2><%= companyList[i] %> <img class="mentor-company-logo" src="<%= companyImages[i] %>"
+                                                       alt="<%= companyList[i] %>"
+                                                       id="<%= companyList[i].toLowerCase() %>image"></h2>
                     </div>
                     <% if (companyCount[i] == 0) { %>
                     <div class="nomentors">
-                        <h3>There are currently no registered mentors for this organization.</h3>
+                        <p>There are currently no registered mentors for this organization.</p>
                     </div>
                     <% } else { %>
                     <% for (var j = 0; j < companyCount[i]; j++) { %>
@@ -36,13 +37,14 @@
                             </li>
                             <li class="bio">
                                 <b>Bio: </b>
+
                                 <p><%= mentors[currentMentor].mentorinfo.bio %></p>
                             </li>
                         </ul>
                     </div>
                     <% currentMentor = currentMentor + 1; %>
-                <% } %>
-                <% } %>
+                    <% } %>
+                    <% } %>
                 </div>
                 <% } %>
             </div>

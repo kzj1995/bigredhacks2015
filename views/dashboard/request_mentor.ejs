@@ -14,7 +14,7 @@
             <h3 id="norequests"> You have not sent any mentor requests yet. </h3>
             <% } else { %>
             <div id="usermentorrequests">
-                <% for (var i = 0; i < mentorRequests.length; i = i + 1) { %>
+                <% for (var i = 0; i < mentorRequests.length; i++) { %>
                 <div class="mentorrequestbox" data-mentorrequestpubid="<%= mentorRequests[i].pubid %>">
                     <div class="mentorrequestboxtitle">
                         Request from <%= mentorRequests[i].user.name %>
@@ -22,11 +22,7 @@
                     <div class="requeststatus">
                         <h3>
                              Status of Request:
-                             <span class="<%= mentorRequests[i].requeststatus.toLowerCase() %>">
-                                <%= mentorRequests[i].requeststatus %>
-                             </span>
-                             <% if (mentorRequests[i].requeststatus == "Unclaimed") { %>
-                             , # Matching Mentors:
+                             <span class="<%= mentorRequests[i].requeststatus.toLowerCase() %>"><%= mentorRequests[i].requeststatus %></span><% if (mentorRequests[i].requeststatus == "Unclaimed") { %>, # Matching Mentors:
                              <span class="nummatchingmentors"><%= mentorRequests[i].nummatchingmentors %></span>
                              <% } %>
                         </h3>
@@ -34,13 +30,12 @@
                     <ul class="requestinfo">
                         <li class="description">
                             <b>Description of Request: </b>
-                            <textarea class="form-control description" rows="5"
-                                readonly><%= mentorRequests[i].description %></textarea>
+                            <span class="long-text description"><%= mentorRequests[i].description %></span>
                         </li>
                         <li class="desiredskills">
                             <b>Desired Skills: </b>
                             <ul class="skillslist">
-                            <% for (var j = 0; j < mentorRequests[i].skills.length; j = j + 1) { %>
+                            <% for (var j = 0; j < mentorRequests[i].skills.length; j++) { %>
                             <li class="skill">
                                 <%= mentorRequests[i].skills[j] %>
                             </li>

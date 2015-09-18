@@ -199,8 +199,8 @@ $(document).ready(function () {
             "<div class='requeststatus'><h3> Status of Request: <span class='" + mentorRequest.requeststatus.toLowerCase()
             + "'>" + mentorRequest.requeststatus + "</span> , # Matching Mentors: <span class='nummatchingmentors'>" +
             mentorRequest.nummatchingmentors + "</span></h3></div><ul class='requestinfo'>";
-        var description = "<li class='description'> <b>Description of Request: </b><textarea class='form-control " +
-            "description' rows='5' readonly>" + mentorRequest.description + "</textarea></li>";
+        var description = "<li class='description'> <b>Description of Request: </b><span class='description'> "
+             + mentorRequest.description + "</span></li>";
         var skillsList = "";
         for (var i = 0; i < mentorRequest.skills.length; i = i + 1) {
             skillsList = skillsList + "<li class='skill'>" + mentorRequest.skills[i] + "</li>"
