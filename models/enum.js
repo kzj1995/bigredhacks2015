@@ -32,6 +32,9 @@ var en = {
     },
     mentorrequest: {
         status: "Unclaimed Claimed Completed".split(" ")
+    },
+    schedule: {
+        days: "9/18 9/19 9/20".split(" ")
     }
 };
 
