@@ -320,6 +320,7 @@ router.patch('/user/:pubid/checkin', function (req, res, next) {
         }
         else {
             user.internal.checkedin = normalize_bool(req.body.checkedin);
+            user.internal.going = true;
             console.log(user.internal.checkedin);
             user.save(function (err) {
                 if (err) return res.sendStatus(500);
@@ -332,7 +333,7 @@ router.patch('/user/:pubid/checkin', function (req, res, next) {
 //todo documentation
 router.get('/users/checkin', function (req, res, next) {
     var project = "name pubid email school internal.checkedin";
-    User.find({"internal.going": true}).select(project).exec(function (err, users) {
+    User.find({$or: [{"internal.going": true}, {"internal.cornell_applicant": true}]}).select(project).exec(function (err, users) {
         if (err) {
             res.status(500).send(null);
         }
