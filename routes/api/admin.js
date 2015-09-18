@@ -51,8 +51,7 @@ router.patch('/user/:pubid/setStatus', function (req, res, next) {
                             "name": "emailcontent",
                             "content": "<p>Hey " + user.name.first + ",</p><p>" +
                             "<p>Congratulations, you've survived the wait list and have been accepted to BigRed//Hacks 2015! Take a deep breath, all of your hard work has finally paid off.  We know the suspense was killing you.</p>" +
-                            "<p>Please take a few moments to <a href='http://www.bigredhacks.com/user/dashboard'>login to our website</a> and RSVP. If we offer a charter bus to your school, you can sign up for that too.  If you aren't going, we'd appreciate if you login and tell us that too!</p>" +
-                            "<p>Don't wait long to RSVP, as our friend Shia Labeouf would say: <a href='https://media.giphy.com/media/Trh2LxGxp0CsM/giphy.gif'>JUST DO IT!</a></p>" +
+                            "<p>Please be at Call Auditorium in Kennedy Hall at 5pm to sign in.  The opening ceremony starts at 6pm, with hacking starting at 8pm.  A more updated schedule will be posted soon.  We hope to see you there!</p>" +
                             "<p>BigRed//Hacks Team</p>"
                         }];
 
