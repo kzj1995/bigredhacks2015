@@ -24,77 +24,42 @@ var render = render || "box"; //default to box view
                 <p>All fields are optional.</p>
 
                 <form action="/admin/search" method="GET">
-                    <input type="hidden" name="render" value="<%= render %>"/>
 
                     <div class="form-group">
-                        <label for="college">Search by College</label>
-                        <input type="hidden" id="collegeid" name="collegeid" class="form-control"
-                               value="<%= params.collegeid || "" %>" required/>
-                        <input type="text" name="college" id="college" class="form-control typeahead"
-                               placeholder="School Name"
-                               value="<%= params.college || "" %>">
+                        <label for="college">Filter by Name</label>
+                        <input type="text" name="college" id="college" class="form-control"
+                               placeholder="Name"
+                               value="">
                     </div>
 
-                    <div class="form-group">
-                        <label for="categoryselection">Search by Category</label>
-                        <select class="form-control" id="categoryselection">
-                            <option value="" data-persist="">Select Category</option>
-                            <option value="pubid" data-persist="<%= params.pubid || "" %>">Public User Id</option>
-                            <option value="email" data-persist="<%= params.email || "" %>">Email</option>
-                            <option value="name" data-persist="<%= params.name || "" %>">Name</option>
-                        </select>
-                    </div>
-                    <div class="form-group category-input"></div>
-                    <div class="decision-search">
-                        <label>Narrow by Decision: </label><br/>
-                        <%- viewHelper.generateInlineRadio(["","Accepted","Waitlisted","Rejected","Pending"],{
-                                label: "None Accepted Waitlisted Rejected Pending".split(" "),
-                                checked: input.status || "",
-                                name: "status"});
-                        %>
-                    </div>
                     <div class="form-group">
 
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="teamwithcornell" name="teamwithcornell" value="true"
-                                       class="checkbox" <%- params.teamwithcornell ? "checked" : "" %>> Team with Cornell students
+                                       class="checkbox" <%- params.teamwithcornell ? "checked" : "" %>> Team with
+                                Cornell students
                             </label>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label for="goingDropdown">Going:</label>
-                                <select class="form-control" id="going" name="going">
-                                    <option value="">select</option>
-                                    <%- viewHelper.generateOptions([true, false], {selected: (input.going || "")}); %>
-                                </select>
-                            </div>&nbsp;&nbsp;&nbsp;
-                            <div class="form-group">
-                                <label for="notgoingDropdown">No Longer Interested:</label>
-                                <select class="form-control" id="notgoing" name="notgoing">
-                                    <option value="">select</option>
-                                    <%- viewHelper.generateOptions([true, false], {selected: (input.notgoing || "")}); %>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <fieldset>
-                        <button type="submit" id="submit" class="btn btn-primary">search</button>
-                    </fieldset>
+
 
                 </form>
             </div>
             <div id="searchresults" class="col-md-12">
                 <p id="result-count" class="text-right"><%= applicants.length %> results found.</p>
 
-                <% if (render == 'box') { %>
-                <% include _boxview %>
-                <% } else if (render == 'table') { %>
-                <% include _tableview %>
-                <% } %>
-
+                <table class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>School</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr class="user" ng-repeat="user in users | filter:search | filter:checked">
+                        <td>{{user.name.first}}</td>
+                        <td>{{user.school.name}}</td>
+                    </tr>
+                </table>
                 <% if (applicants.length == 0) {
                 %>
 
@@ -106,7 +71,12 @@ var render = render || "box"; //default to box view
     </div>
 </div>
 
-<script src="/js/vendor/typeahead.bundle.min.js"></script>
-<script src="/js/typeahead_college.js"></script>
-<script src="/js/admin.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-messages.min.js"></script>
+<script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/assets-cache.js"></script>
+
+<script src="/js/admin/signin.js"></script>
 <% include ../../_footer %>
