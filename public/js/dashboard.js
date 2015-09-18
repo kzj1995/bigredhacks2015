@@ -69,9 +69,10 @@ $(document).ready(function () {
         var currentDate = new Date();
         var currentTimeMinutes = currentDate.getHours() * 60 + currentDate.getMinutes();
         var currentDay = (currentDate.getMonth() + 1) + "/" + currentDate.getDate();
-        if (currentDay.localeCompare(schedule.event[eventIndex].startday) == 0 &&
-            currentTimeMinutes >= schedule.event[eventIndex].starttimeminutes &&
-            currentTimeMinutes <= schedule.event[eventIndex].endtimeminutes){
+        var comparison = currentDay.localeCompare(schedule.events[eventIndex].startday);
+        if (currentDay.localeCompare(schedule.events[eventIndex].startday) == 0 &&
+            currentTimeMinutes >= schedule.events[eventIndex].starttimeminutes &&
+            currentTimeMinutes <= schedule.events[eventIndex].endtimeminutes){
             return true;
         }
         else {
@@ -89,9 +90,9 @@ $(document).ready(function () {
         var currentDate = new Date();
         var currentTimeMinutes = currentDate.getHours() * 60 + currentDate.getMinutes();
         var currentDay = (currentDate.getMonth() + 1) + "/" + currentDate.getDate();
-        if ((currentDay.localeCompare(schedule.event[eventIndex].startday) > 0 ||
-            (currentDay.localeCompare(schedule.event[eventIndex].startday) == 0 &&
-            currentTimeMinutes >= schedule.event[eventIndex].starttimeminutes)) &&
+        if ((currentDay.localeCompare(schedule.events[eventIndex].startday) > 0 ||
+            (currentDay.localeCompare(schedule.events[eventIndex].startday) == 0 &&
+            currentTimeMinutes >= schedule.events[eventIndex].starttimeminutes)) &&
             schedule.events[eventIndex].notificationShown == false) {
             triggerNewEventNotification(schedule, eventIndex);
         }
