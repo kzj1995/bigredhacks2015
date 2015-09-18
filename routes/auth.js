@@ -56,6 +56,8 @@ passport.deserializeUser(function (id, done) {
 });
 
 module.exports = function (io) {
+    io = GLOBAL.io;
+
     var router = express.Router();
 
     /* GET registration page */

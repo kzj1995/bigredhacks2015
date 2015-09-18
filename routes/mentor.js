@@ -6,6 +6,7 @@ var enums = require('../models/enum.js');
 var MentorRequest = require('../models/mentor_request');
 
 module.exports = function (io) {
+    io = GLOBAL.io;
     var router = express.Router();
 
     /* GET dashboard index page */

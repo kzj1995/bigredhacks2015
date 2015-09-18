@@ -35,8 +35,9 @@ server.on('listening', onListening);
 /**
  * Bind socket to server
  */
-var io = app.io;
-io.attach(server);
+
+GLOBAL.io = require('socket.io')(server);
+
 
 /**
  * Normalize a port into a number, string, or false.

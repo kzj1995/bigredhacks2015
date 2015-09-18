@@ -1,6 +1,5 @@
 "use strict";
 var express = require('express');
-var socket_io = require('socket.io');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,18 +12,15 @@ var flash = require('express-flash');
 var compression = require('compression');
 
 var config = require('./config.js');
-
+var http = require('http');
 var app = express();
-var io = socket_io();
-app.io = io;
+
 var subdomain = require('subdomain');
 var routes = require('./routes/index');
-var user = require('./routes/user')(app.io);
-var mentor = require('./routes/mentor')(app.io);
 var admin = require('./routes/admin');
 var apiRoute = require('./routes/api/api');
 var apiAdminRoute = require('./routes/api/admin');
-var authRoute = require('./routes/auth')(app.io);
+
 var middle = require('./routes/middleware');
 
 var passport = require("passport");
@@ -37,6 +33,21 @@ mongoose.connect(process.env.COMPOSE_URI || process.env.MONGOLAB_URI || 'mongodb
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Bind socket to server
+ */
+
+GLOBAL.io = require('socket.io')(server);
+
+var user = require('./routes/user')();
+var mentor = require('./routes/mentor')();
+var authRoute = require('./routes/auth')();
 
 app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -144,4 +155,80 @@ require('./util/load_colleges.js').loadOnce(function (err) {
     }
 });
 
-module.exports = app;
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '3000');
+app.set('port', port);
+
+var ip = process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
+app.set('ip',ip);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port,ip);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    console.log('Listening on ' + bind);
+}
