@@ -66,12 +66,12 @@ $(document).ready(function () {
      * @param eventIndex int represents the index of the given event
      */
     function isCurrentEvent(schedule, eventIndex) {
-        var eventStart = getTimeString(schedule.events[eventIndex].startday, schedule.events[eventIndex].starttime);
-        var eventEnd = getTimeString(schedule.events[eventIndex].endday, schedule.events[eventIndex].endtime);
         var currentDate = new Date();
-        var currentTime = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + " " + currentDate.getHours() + ":"
-            + currentDate.getMinutes();
-        if (currentTime.localeCompare(eventStart) >= 0 && currentTime.localeCompare(eventEnd) < 0) {
+        var currentTimeMinutes = currentDate.getHours() * 60 + currentDate.getMinutes();
+        var currentDay = (currentDate.getMonth() + 1) + "/" + currentDate.getDate();
+        if (currentDay.localeCompare(schedule.event[eventIndex].startday) == 0 &&
+            currentTimeMinutes >= schedule.event[eventIndex].starttimeminutes &&
+            currentTimeMinutes <= schedule.event[eventIndex].endtimeminutes){
             return true;
         }
         else {
@@ -86,41 +86,15 @@ $(document).ready(function () {
      * @param eventIndex int represents the index of the given event
      */
     function checkForNotification(schedule, eventIndex) {
-        var eventStart = getTimeString(schedule.events[eventIndex].startday, schedule.events[eventIndex].starttime);
         var currentDate = new Date();
-        var currentTime = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + " " + currentDate.getHours() + ":"
-            + currentDate.getMinutes();
-        if (currentTime.localeCompare(eventStart) >= 0 && schedule.events[eventIndex].notificationShown == false) {
+        var currentTimeMinutes = currentDate.getHours() * 60 + currentDate.getMinutes();
+        var currentDay = (currentDate.getMonth() + 1) + "/" + currentDate.getDate();
+        if ((currentDay.localeCompare(schedule.event[eventIndex].startday) > 0 ||
+            (currentDay.localeCompare(schedule.event[eventIndex].startday) == 0 &&
+            currentTimeMinutes >= schedule.event[eventIndex].starttimeminutes)) &&
+            schedule.events[eventIndex].notificationShown == false) {
             triggerNewEventNotification(schedule, eventIndex);
         }
-    }
-
-    /**
-     * Given a day and a time in hour and minutes, returns a string with the day and time in military time
-     * @param givenDay String representing a month and day (ex: 9/18)
-     * @param givenHourAndMin String representing hour and minutes of form 9:00 AM
-     * @return String with the day and time in military time (ex: "9/18 23:12")
-     */
-    function getTimeString(givenDay, givenHourAndMin) {
-        givenHourAndMin = givenHourAndMin.trim();
-        var eventHour = parseInt(givenHourAndMin);
-        var eventHourAndMin = ""; //will contain military time representation of givenHourAndMin
-        if (givenHourAndMin.indexOf("AM")) {
-            eventHourAndMin = eventHour + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
-                    givenHourAndMin.indexOf(":") + 3);
-        }
-        else{
-            if (eventHour == 12) {
-                eventHourAndMin = eventHour + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
-                        givenHourAndMin.indexOf(":") + 3);
-            }
-            else {
-                eventHourAndMin = (eventHour + 12) + ":" + givenHourAndMin.substring(givenHourAndMin.indexOf(":") + 1,
-                        givenHourAndMin.indexOf(":") + 3);
-            }
-        }
-        var eventTime = givenDay + " " + eventHourAndMin;
-        return eventTime;
     }
 
     /**

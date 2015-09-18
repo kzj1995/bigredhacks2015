@@ -7,6 +7,7 @@ var eventSchema = new mongoose.Schema({
     starttimeminutes: {type: Number}, //60 * hour of startime + min of starttime
     endday: {type: String}, //ex: 9/18
     endtime: {type: String}, //ex: 12:00 AM
+    endtimeminutes: {type: Number}, //60 * hour of endtime + min of endtime
     description: {type: String}, //description of event
     location: {type: String}, //location of event (ex: PSB 120)
     notificationShown: {type: Boolean, default: false} //whether or not a notification has already been shown for the event
