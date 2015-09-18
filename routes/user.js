@@ -604,7 +604,7 @@ module.exports = function (io) {
 
     /* GET all events on the schedule */
     router.get('/allevents', function (req, res) {
-        Event.find({}).sort({ startday: 1, starttime: 1 }).exec(function(err, events) {
+        Event.find({}).sort({ startday: 1, starttimeminutes: 1 }).exec(function(err, events) {
             var dayCount = []; //will contain the number of events for each day
             async.eachSeries(enums.schedule.days, function (currentDay, callback) {
                 Event.aggregate([
