@@ -90,7 +90,9 @@ module.exports = function (io) {
                 })
             }
 
-            if (middle.helper.isResultsReleased()) {
+            if (middle.helper.isDayof()) {
+                return res.render('dashboard/index_dayof', render_data);
+            } else if (middle.helper.isResultsReleased()) {
                 return res.render('dashboard/results_released/index_general', render_data);
             }
             else {
@@ -473,16 +475,16 @@ module.exports = function (io) {
                 });
                 User.find({role: 'mentor'}).exec(function (err, mentors) {
                     var numMatchingMentors = 0;
-                    async.each(mentors, function(mentor, callback) {
+                    async.each(mentors, function (mentor, callback) {
                         var currentRequest = newMentorRequest.toObject();
                         currentRequest.match = "no";
-                        if(_matchingSkills(mentor.mentorinfo.skills, currentRequest.skills)) {
+                        if (_matchingSkills(mentor.mentorinfo.skills, currentRequest.skills)) {
                             numMatchingMentors = numMatchingMentors + 1;
                             currentRequest.match = "yes";
                         }
                         io.emit('mentor ' + mentor.pubid, currentRequest);
                         callback();
-                    }, function(err) {
+                    }, function (err) {
                         if (err) console.log(err);
                         else {
                             newMentorRequest.nummatchingmentors = numMatchingMentors;
@@ -504,12 +506,12 @@ module.exports = function (io) {
                 if (err) console.error(err);
                 else {
                     User.find({role: 'mentor'}).exec(function (err, mentors) {
-                        async.each(mentors, function(mentor, callback) {
-                            if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                        async.each(mentors, function (mentor, callback) {
+                            if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
                                 io.emit('cancel request ' + mentor.pubid, cancelRequest);
                             }
                             callback();
-                        }, function(err) {
+                        }, function (err) {
                             if (err) console.log(err);
                             else {
                                 MentorRequest.remove({pubid: cancelRequest.mentorRequestPubid}, function (err) {
@@ -532,12 +534,12 @@ module.exports = function (io) {
                         if (err) console.error(err);
                         else {
                             User.find({role: 'mentor'}).exec(function (err, mentors) {
-                                async.each(mentors, function(mentor, callback) {
-                                    if(_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
+                                async.each(mentors, function (mentor, callback) {
+                                    if (_matchingSkills(mentor.mentorinfo.skills, mentorRequest.skills)) {
                                         io.emit('complete request ' + mentor.pubid, completeRequest);
                                     }
                                     callback();
-                                }, function(err) {
+                                }, function (err) {
                                     if (err) console.log(err);
                                 });
                             });
@@ -559,7 +561,7 @@ module.exports = function (io) {
 
     /* GET mentor list page */
     router.get('/dashboard/mentorlist', function (req, res) {
-        User.find({role: "mentor"}).sort("mentorinfo.company").exec(function(err, mentors) {
+        User.find({role: "mentor"}).sort("mentorinfo.company").exec(function (err, mentors) {
             _getSortedCompanyImages(req, function (sortedCompanyList, sortedCompanyImageList) {
                 var companyCount = []; //will contain the number of mentors for each company
                 async.eachSeries(sortedCompanyList, function (company, callback) {
@@ -604,7 +606,7 @@ module.exports = function (io) {
 
     /* GET all events on the schedule */
     router.get('/allevents', function (req, res) {
-        Event.find({}).sort({ startday: 1, starttimeminutes: 1 }).exec(function(err, events) {
+        Event.find({}).sort({startday: 1, starttimeminutes: 1}).exec(function (err, events) {
             var dayCount = []; //will contain the number of events for each day
             async.eachSeries(enums.schedule.days, function (currentDay, callback) {
                 Event.aggregate([
@@ -637,7 +639,7 @@ module.exports = function (io) {
 
     /* POST that an event's notification has been shown */
     router.post('/notificationshown', function (req, res) {
-        Event.findOne({_id: req.body.eventId}, function(err, event) {
+        Event.findOne({_id: req.body.eventId}, function (err, event) {
             event.notificationShown = true;
             event.save(function (err) {
                 if (err) {
@@ -689,7 +691,7 @@ module.exports = function (io) {
             for (var j = 0; j < userSkills.length; j++) {
                 //Check equality of first five characters so there is a match between skills like "mobile app dev"
                 //and "mobile applications"
-                if (mentorSkills[i].toLowerCase().substring(0, 5) == userSkills[j].toLowerCase().substring(0,5)) {
+                if (mentorSkills[i].toLowerCase().substring(0, 5) == userSkills[j].toLowerCase().substring(0, 5)) {
                     return true;
                 }
             }
@@ -749,9 +751,9 @@ module.exports = function (io) {
                                         userbus = bus;
                                         //properly round to two decimal points
                                         var roundedDistance = Math.round((distanceBetweenColleges + 0.00001) *
-                                                100) / 100;
+                                            100) / 100;
                                         userbus.message = "a bus stops near your school at " + stop.collegename +
-                                            " (roughly " + roundedDistance + " miles away):";
+                                        " (roughly " + roundedDistance + " miles away):";
                                         closestdistance = distanceBetweenColleges;
                                     }
                                 }

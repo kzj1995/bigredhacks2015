@@ -1,11 +1,21 @@
 <% include ../_header %>
 <body>
 <div class="container-fluid">
-    <div class="row" data-userpubid="<%= user.pubid %>">
+    <div class="row" data-userpubid=" <%= user.pubid %>">
         <% include _dashboardside.ejs %>
-        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+        <div class="content col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 col-lg-10 col-lg-offset-2">
+
             <div class="header-wrapper-leaf">
-                <h1 class="leaf">schedule</h1>
+                <h1 class="leaf">dashboard</h1>
+            </div>
+
+            <p> welcome back, <%= user.name.first %> <%= user.name.last %>. </p>
+
+
+            <br/>
+
+            <div class="header-wrapper">
+                <h2 class="page-title">schedule</h2>
             </div>
             <p class="long-text">Schedule <a href="/docs/ProgramFall2015.pdf" target="_blank">pdf</a>.</p>
             <div id="events">
