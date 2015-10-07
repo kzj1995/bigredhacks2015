@@ -605,7 +605,8 @@ module.exports = function (io) {
     });
 
     /* GET all events on the schedule */
-    router.get('/allevents', middle.requireDayof, function (req, res) {
+    /*
+    router.get('/allevents', function (req, res) {
         Event.find({}).sort({startday: 1, starttimeminutes: 1}).exec(function (err, events) {
             var dayCount = []; //will contain the number of events for each day
             async.eachSeries(enums.schedule.days, function (currentDay, callback) {
@@ -636,7 +637,7 @@ module.exports = function (io) {
             });
         });
     });
-
+*/
     /* POST that an event's notification has been shown */
     router.post('/notificationshown', function (req, res) {
         Event.findOne({_id: req.body.eventId}, function (err, event) {
