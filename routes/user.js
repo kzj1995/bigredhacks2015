@@ -597,7 +597,7 @@ module.exports = function (io) {
     });
 
     /* GET schedule page */
-    router.get('/dashboard/schedule', function (req, res) {
+    router.get('/dashboard/schedule', middle.requireDayof, function (req, res) {
         res.render('dashboard/schedule', {
             title: "Schedule",
             user: req.user
@@ -605,7 +605,7 @@ module.exports = function (io) {
     });
 
     /* GET all events on the schedule */
-    router.get('/allevents', function (req, res) {
+    router.get('/allevents', middle.requireDayof, function (req, res) {
         Event.find({}).sort({startday: 1, starttimeminutes: 1}).exec(function (err, events) {
             var dayCount = []; //will contain the number of events for each day
             async.eachSeries(enums.schedule.days, function (currentDay, callback) {
