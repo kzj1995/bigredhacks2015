@@ -35,6 +35,8 @@ $(document).ready(function () {
      * Ask server for any new events and potential notifications
      */
     function getEventsAndNotifications() {
+        //Comment out for now.
+        /*
         $.getJSON( "/user/allevents", function(schedule) {
             var scheduleHTML = ""; //will contain actual HTML to fill the schedule page;
             var eventIndex = 0; //contains index of current event being processed
@@ -58,6 +60,7 @@ $(document).ready(function () {
             }
             $("#events").html(scheduleHTML);
         });
+        */
     }
 
     /**
