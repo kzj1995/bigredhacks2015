@@ -1,0 +1,21 @@
+extends ../_layout-navbar
+
+block header
+    link(href='/css/index.css', rel='stylesheet')
+    link(rel='stylesheet', href='/css/login.css')
+
+block append content
+    .container
+        .login.center-block.col-lg-5.col-md-5.col-sm-10
+            h2 reset password
+            br
+
+            if messages.error
+                .alert.alert-danger(role="alert") #{messages.error[0].toLowerCase()}
+
+            form(method='post')
+                .form-group
+                    label(for='email') email address
+                    input#email.form-control(type='email', name='email', placeholder='email', value=email || "", required=true)
+
+                button.btn.btn-primary.center-block(type='submit') submit

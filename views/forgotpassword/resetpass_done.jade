@@ -1,0 +1,15 @@
+extends ../_layout-navbar
+
+block header
+    link(href='/css/index.css', rel='stylesheet')
+    link(rel='stylesheet', href='/css/login.css')
+
+block append content
+    .login.center-block.col-lg-5.col-md-5.col-sm-10
+        h2 reset password
+        br
+        p
+            | Your password has been successfully reset.
+            br
+            a(href='/') Return to BigRed//Hacks Home Page
+            | .

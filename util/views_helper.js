@@ -1,3 +1,6 @@
+/**
+ * DEPRECATED. Use views/mixins.jade instead.
+ */
 "use strict";
 var _export = {};
 var middle = require("../routes/middleware");

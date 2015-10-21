@@ -1,6 +1,6 @@
 //- Default global layout
 
-
+include mixins
 - var bodyAttr = {}; //extra body attributes
 
 //- Block to allow children to pass variables to layout
@@ -48,16 +48,21 @@ html(lang="en")
         link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel="stylesheet")
         link(href="/css/main.css", rel="stylesheet")
 
-        script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
-        script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
-        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
 
         block header
             //- additional css, or priority js
 
+
+
     body&attributes(bodyAttr)
         block content
             //- main content of the page
+
+
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
+        script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
         block footer
             //- additional js

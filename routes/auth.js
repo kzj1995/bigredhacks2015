@@ -144,9 +144,10 @@ module.exports = function (io) {
                     return x.param;
                 });
                 req.body = _.omit(req.body, errorParams.concat(ALWAYS_OMIT));
-                res.render('register', {
+                console.log(errors);
+                req.flash('error', 'The following errors ocurred:');
+                res.render('register_general', {
                     title: 'Register',
-                    message: 'The following errors occurred',
                     errors: errors,
                     input: req.body,
                     enums: enums
@@ -610,7 +611,7 @@ module.exports = function (io) {
                     title: 'Mentor Registration',
                     error: req.flash('error'),
                     input: req.body,
-                    enums: enums,
+                    enums: enums
                 });
             }
             else {

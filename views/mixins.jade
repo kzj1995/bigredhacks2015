@@ -1,0 +1,28 @@
+//-
+    Contains globally available utility functions
+
+//-
+    generate a list of HTML <option> items for a dropdown
+    @param arr array to generate options on
+    @param {object} options
+                    options.selected: string corresponding to default value
+    @returns {buffered html}
+mixin generateOptions(arr, options)
+    -
+        var array = arr.slice(); //clone the array
+        options = options || {};
+        options.selected = options.selected || "";
+
+    if array.length > 0
+        each item in array
+            - var selected = false;
+            if (options.selected + "" === item + "")
+                - selected = true;
+            option(selected=selected, value=item) #{item}
+
+//-
+    returns a self link to a url (href and text are the same)
+    @param {string} url to display and link to
+    @returns {buffered html}
+mixin selflink(url)
+    a(href="#{url}") #{url}

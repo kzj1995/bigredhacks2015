@@ -1,0 +1,29 @@
+extends ../_layout-navbar
+
+block header
+    link(href='/css/index.css', rel='stylesheet')
+    link(rel='stylesheet', href='/css/login.css')
+
+block append content
+    .login.center-block.col-lg-5.col-md-5.col-sm-10
+        h2 reset password
+        br
+
+        if messages.error
+            .alert.alert-danger(role="alert") #{messages.error[0].toLowerCase()}
+
+        form#resetPassForm(method='post')
+            .form-group
+                input#email.form-control(type='email', name='email', placeholder='email', value=email, readonly='')
+            .form-group
+                label(for='password') new password
+                input#password.form-control(type='password', name='password', placeholder='password', required='')
+            .form-group
+                label(for='confirmpassword') confirm password
+                input#confirmpassword.form-control(type='password', name='confirmpassword', placeholder='password', required='')
+            button.btn.btn-primary.center-block(type='submit') Submit
+
+block footer
+    script(src='//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js')
+    script(src='/js/jquery.validate.options.js')
+    //script(src='/js/resetpass_prompt.js')

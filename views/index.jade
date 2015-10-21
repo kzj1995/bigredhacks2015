@@ -57,15 +57,15 @@ block append content
             br/
 
             span.announcement
-                h3 #[a(href="/docs/ProgramFall2015.pdf",target="_blank")] Click Here for Program & Schedule
+                h3 #[a(href="/docs/ProgramFall2015.pdf",target="_blank") Click Here for Program & Schedule]
 
             br
 
             if isUser
                 case userRole
                     when "admin": a.btn.btn-red(href="/admin/dashboard") my dashboard
-                    when "mentor": a.brn.btn-red(href="/admin/dashboard") my dashboard
-                    default: a.brn.btn-red(href="/admin/dashboard") my dashboard
+                    when "mentor": a.btn.btn-red(href="/admin/dashboard") my dashboard
+                    default: a.btn.btn-red(href="/admin/dashboard") my dashboard
             else
                 if middlehelp.isRegistrationOpen()
                     button.btn.btn-red.fixed-width(data-toggle="modal" data-target="#regModal") register
@@ -123,7 +123,7 @@ block append content
                     dt Why can't Cornell students apply yet?
                     dd We're doing applications a little differently this year. General applications are immediately available for all students not at Cornell. In early September, we will open applications to Cornell students, and these will be on a first-come first-serve basis. Add yourself to the mailing list so that you'll know when applications open.
                     dt Have more questions?
-                    dd Send them to @[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us @[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
+                    dd Send them to #[a(href="mailto:info@bigredhacks.com") info@bigredhacks.com], or tweet us #[a(href="http://www.twitter.com/@BigRedHacks", target="_blank") @BigRedHacks].
 
     section#schedule.home-section.text-center
         sectionHeading("Schedule")
@@ -254,13 +254,13 @@ block append content
                     p.footer
                         a(href='http://www.facebook.com/BigRedHacks', target='_blank')
                             img.s-icon(src='img/icon-bf.png', draggable='false')
-                        | &nbsp&nbsp
+                        | &nbsp;&nbsp;
                         a(href='http://www.twitter.com/BigRedHacks', target='_blank')
                             img.s-icon(src='img/icon-wt.png', draggable='false')
-                        | &nbsp&nbsp
+                        | &nbsp;&nbsp;
                         a(href='mailto:info@bigredhacks.com')
                             img.s-icon(src='img/icon-em.png', draggable='false')
-                        | &nbsp&nbsp
+                        | &nbsp;&nbsp;
                     br
                     p.footer
                         | ©2015 BigRed//Hacks
