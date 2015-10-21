@@ -35,7 +35,7 @@ mongoose.connect(process.env.COMPOSE_URI || process.env.MONGOLAB_URI || 'mongodb
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 
 app.use(compression());

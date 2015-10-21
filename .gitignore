@@ -43,3 +43,5 @@ node_modules
 /public/css/_fontawesome-custom.css
 /public/css/_mentor.css
 adhoc
+
+*.html
