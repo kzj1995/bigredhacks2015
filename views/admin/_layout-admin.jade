@@ -1,0 +1,23 @@
+//-
+   Layout that extends global layout for admin pages
+   * Content is extended through block admin_content
+
+extends ../_layout
+
+mixin contentHeading(name)
+    .header-wrapper-leaf
+        h1.leaf #{name}
+
+block header
+    link(href="/css/dashboard.css", rel="stylesheet")
+    link(href="/css/admin.css", rel="stylesheet")
+
+block content
+    .container-fluid
+        .row
+            include _sidebar
+            .content.col-sm-9.col-sm-offset-3.col-md-9.col-md-offset-3.col-lg-10.col-lg-offset-2
+                block admin_content
+block footer
+    script(src="/js/admin.js")
+    script(src="/js/vendor/bootstrap-switch.min.js")

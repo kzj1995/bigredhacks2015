@@ -21,6 +21,21 @@ mixin generateOptions(arr, options)
             option(selected=selected, value=item) #{item}
 
 //-
+    generate <li><a href={url}>{name}</a></li>
+    Used to generate the sidebars
+    @param listItems array of {name,url}
+    @param active url of active item
+mixin generateUrlList(listItems, active)
+    - active = active.split(/[?#]/)[0]; //remove query string, hash
+    for item in listItems
+        -
+            if (item.hasOwnProperty("reg_open") && item.reg_open && !middle.helper.isResultsReleased()) break;
+            if (item.hasOwnProperty("results_released") && item.results_released && !middle.helper.isResultsReleased()) break;
+            var classes = [];
+            if (active == item.url) classes.push("active");
+        li: a(href=item.url,class=classes) #{item.name}
+
+//-
     returns a self link to a url (href and text are the same)
     @param {string} url to display and link to
     @returns {buffered html}

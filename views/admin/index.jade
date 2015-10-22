@@ -1,0 +1,53 @@
+//
+   Admin index page
+
+extends _layout-admin
+
+block append admin_content
+    +contentHeading("Dashboard")
+
+    //- Nav tabs
+    ul.nav.nav-tabs(role='tablist')
+        li.active(role='presentation')
+            a(href='#summary', aria-controls='summary', role='tab', data-toggle='tab') Summary
+        li(role='presentation')
+            a(href='#top-schools', aria-controls='top-schools', role='tab', data-toggle='tab') Top Schools
+
+    //- Tab panes
+    .tab-content
+        #summary.tab-pane.active(role='tabpanel')
+            h2 Applicants
+            h5 Welcome back! There are currently
+            ul
+                li #{applicants.pending} pending review
+                li #{applicants.accepted} accepted
+                li #{applicants.waitlisted} waitlisted
+                li #{applicants.rejected} rejected
+            //- Our max capacity is 410 people. With an estimated 10% attrition rate, we should accept 450 people.
+            h2 Attendees
+            span Out of #{applicants.accepted} we accepted:
+                ul
+                    li x accepted their invitations
+                    li x declined their invitations
+        #top-schools.tab-pane(role='tabpanel')
+            table.table.table-striped
+                tr
+                    th Rank
+                    th School Name
+                    th.text-center Applicants
+                    th.text-center Accepted
+                    th.text-center Waitlisted
+                    th.text-center Rejected
+                    th.text-center Pending
+                for school, i in schools
+                    - var done = (school.total == school.accepted + school.waitlisted + school.rejected);
+                    tr
+                        td(class=done ? "success": "")= i+1
+                        td= school.name
+                        td.text-center= school.total
+                        td.text-center= school.accepted
+                        td.text-center= school.waitlisted
+                        td.text-center= school.rejected
+                        td.text-center= school.pending
+        #messages.tab-pane(role='tabpanel') ...
+        #settings.tab-pane(role='tabpanel') ...
