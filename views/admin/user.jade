@@ -1,0 +1,13 @@
+//-
+   detailed user view
+
+extends _layout-admin
+
+block vars
+    - user = currentUser || {};
+
+
+block admin_content
+    +contentHeading("Review Team")
+    include _usertemplate
+    include _userteamtemplate

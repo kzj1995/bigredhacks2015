@@ -1,0 +1,49 @@
+//-
+   Detailed team view
+
+extends _layout-admin
+
+block vars
+    - teamdecision = teamMembers[0].internal.status; //variable that determines the current decision for the team
+
+
+block admin_content
+    +contentHeading("Review Team")
+    h3 Team Information
+    ul
+        li Team ID: #[span#teamid #{teamMembers[0].internal.teamid}]
+        li No. Members: #{teamMembers.length}
+        li Team with Cornell: #{teamMembers[0].internal.teamwithcornell ? "Yes" : "No"
+    br
+    #accordion.panel-group(role="tablist",aria-multiselectable="true")
+        for member, i in teamMembers
+            - var count = i+1;
+            .panel.panel-default
+                .panel-heading(role="tab",id="user-heading-"+count)
+                    h4.panel-title
+                        a(data-toggle="collapse", data-parent="#accordion", href="#user-collapse-"+count
+                        aria-expanded="true", aria-controls="user-collapse-"+count)
+                        Team Member #{count}
+                        span.status(class=member.internal.status) member.internal.status
+                .panel-collpase.collapse.in(id="user-collapse-"+count,role="tabpanel",aria-labelledby="user-heading-"+count)
+                    .panel-body
+                        ul
+                            li
+                                b Name:&nbsp;
+                                a(href="/admin/user/"+member.pubid) #{member.name.first} #{member.name.last}
+                            li #[b Email: ] member.email
+                            li #[b School: ] member.school.name
+                            li #[b Year: ] member.school.year
+                            li: a(href="http://files.bigredhacks.com/resume/"+member.app.resume) Resume
+    -
+        if (teamMembers[i].internal.status != teamMembers[0].internal.status)
+            teamdecision = "Pending";
+
+    div
+        h3.set-decision Set Decision for Team:&nbsp;
+        form.decision-radio.set-decision.np-enabled
+            +generateInlineRadio(enums.virtual.status.long, {
+            checked: teamdecision, //set default value
+            name: "teamstatus", //name attr of each input
+            label: enums.virtual.status.long //label of the input different from actual input
+            })

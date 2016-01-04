@@ -1,0 +1,26 @@
+//-
+   Box view used to display search results
+
+for app in applicants
+    .applicant(data-pubid=app.pubid)
+        a.page(href="/admin/user/"+app.pubid)
+            .name #{app.name.first} #{app.name.last}
+        ul.info
+            li #[b Email: ] #{app.email}
+            li #[b School: ] #{app.school.name}
+            li #[b Year: ] #{app.school.year}
+            if app.team.length > 0
+                li
+                    b Team Members:&nbsp;
+                    ul
+                        for member in app.team
+                            if member.pubid != app.pubid
+                                li: a(href="/admin/user/"+member.pubid)
+            li: a(href="http://files.bigredhacks.com/resume/"+app.app.resume) Resume
+        .decisionbuttons
+            span.status-text= app.internal.status
+            br/
+            .btn-group.np-enabled(role="group")
+                button.btn.btn-success.btn-accept(data-status="Accepted") Accept
+                button.btn.btn-primary.btn-waitlist(data-status="Waitlisted") Waitlisted
+                button.btn.btn-danger.btn-reject(data-status="Rejected") Reject

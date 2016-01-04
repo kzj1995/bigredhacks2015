@@ -1,0 +1,86 @@
+//-
+   Bus information
+
+extends _layout-admin
+
+block admin_content
+    +contentHeading("Bus Information")
+    if buses.length == 0
+        h3#nobuses No Buses Currently
+    else
+        for bus in buses
+            .businfobox(data-busid=bus.id)
+                form
+                    .form-inline
+                        .form-group.display-group
+                            span.busname= bus.name
+                        .form-group.edit-group
+                            input.newbusname.form-control(type='text', name='newbusname', value='', placeholder='route name')
+                    ul.businfo
+                        li.busstopslist
+                            b Bus Stops:
+                            ul.busstops
+                                for stop in bus.stops
+                                    li(data-collegeid=stop.collegeid)
+                                        span.collegename= stop.collegename
+                                        | &nbsp;&nbsp;
+                                        a.removecollege.edit-group (remove)
+                            .edit-group
+                                label.newcollegesearch(for='newcollegesearch') Search by College
+                                .form-group
+                                    input.newcollege.form-control.typeahead(type='text', name='newcollege', placeholder='School Name', value='')
+                                .form-group
+                                    button.btn.btn-primary.addnewcollege(type='button', name='addnewcollege')
+                                        | add college
+                        li.currentnumber
+                            b Current Number on Bus:&nbsp;
+                            =bus.members.length
+                        li.maxcapacity
+                            .form-inline
+                                .form-group
+                                    b Max Capacity:&nbsp;
+                                .form-group.display-group
+                                    span.maxcapacitynumber #{bus.capacity}
+                                .form-group.edit-group
+                                    input.edit-maxcapacity.form-control(type='number', name='maxcapacitynumber', value='', placeholder='capacity')
+                        li.buscaptain
+                            b Bus Captain:&nbsp;
+                            if bus.buscaptain == null
+                                span No bus captain assigned at the moment.
+                            else
+                                span #{bus.buscaptain.name.last}, #{bus.buscaptain.name.first} (#{bus.buscaptain.email})
+                    .modifybus.display-group
+                        button.btn.btn-success.editbus(type='button', name='editbus') edit
+                        button.btn.btn-danger.removebus(type='button', name='removebus') remove
+                    .modifybus.edit-group
+                        button.btn.btn-success.update(type='button') update
+                        button.btn.btn-danger.cancel(type='button') cancel
+    div
+        h2  Add New Bus
+        form(action='/admin/businfo', method='POST')
+            #addbus
+                .form-group
+                    label.businfolabel(for='busname')
+                        h4 Bus Route Name
+                    input#busname.form-control(type='text', name='busname', value='', placeholder='Enter Route Name')
+                .form-group
+                    label.businfolabel(for='busstops')
+                        h4 Bus Stops
+                    br
+                    label Stops:&nbsp;
+                    span#busstops-display
+                    br
+                    label#collegesearch(for='collegesearch') Search by College
+                    input#collegeidlist.form-control(type='hidden', name='collegeidlist', value='', required='')
+                    input#busstops(type='hidden', name='busstops')
+                    input#college.form-control.typeaheadlist(type='text', name='college', placeholder='School Name', value='')
+                    input#addcollege.btn.btn-primary(type='button', value='add college', name='addcollege')
+                .form-group
+                    label.buscapacitylabel(for='buscapacity')
+                        h4 Bus Capacity
+                    input#buscapacity.form-control(type='text', name='buscapacity', value='', placeholder='Enter Capacity Number')
+                #createbus
+                    input.btn.btn-primary(type='submit', value='create bus', name='createbus')
+block append footer
+    script(src="/js/vendor/typeahead.bundle.min.js")
+    script(src="/js/typeahead_college.js")
