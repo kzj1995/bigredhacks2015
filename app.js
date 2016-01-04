@@ -37,6 +37,11 @@ mongoose.connect(process.env.COMPOSE_URI || process.env.MONGOLAB_URI || 'mongodb
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+//require pretty output for proper html formatting
+//Some elements, i.e. inline forms, require pretty
+//for spaces to properly render.
+app.locals.pretty = false;
+
 
 app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));

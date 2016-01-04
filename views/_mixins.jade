@@ -9,16 +9,42 @@
     @returns {buffered html}
 mixin generateOptions(arr, options)
     -
-        var array = arr.slice(); //clone the array
         options = options || {};
         options.selected = options.selected || "";
 
-    if array.length > 0
-        each item in array
-            - var selected = false;
-            if (options.selected + "" === item + "")
-                - selected = true;
-            option(selected=selected, value=item) #{item}
+    each item in arr
+        - var selected = false;
+        if (options.selected + "" === item + "")
+            - selected = true;
+        option(selected=selected, value=item+"") #{item}
+
+//-
+     generate a list of inline HTML radio inputs w/ a bootstrap wrapper
+     @param arr array to generate options on
+     @param {object} options
+                      options.checked: string corresponding to default value
+                      options.name: "name" of radio button set (string)
+                      options.label: label of radio button set (array)
+     @returns {string}
+mixin generateInlineRadio(arr,options)
+    -
+        options = options || {};
+        options.checked = options.checked || ""; //value of checked item
+        options.name = options.name || ""; //name of inputs
+        options.label = options.label || arr; //text to display next to inputs, defaults to array
+
+    for item,ind in arr
+        -
+            var params = {};
+            if (options.checked === item + "")
+                params.checked = true;
+            if (options.name.length > 0)
+                params.name = options.name;
+            params.value = item
+        label.radio-inline
+            input(type="radio")&attributes(params)
+            |#{options.label[ind]}
+
 
 //-
     generate <li><a href={url}>{name}</a></li>

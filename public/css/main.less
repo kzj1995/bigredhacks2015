@@ -381,3 +381,15 @@ h2, legend {
   border-radius: 0;
   background-color: @white;
 }
+
+
+// Jade-specific formatting
+// Inline HTML used in bootstrap requires spacing in html, which jade strips.
+// We use a css solution instead
+@jade-spacing: 1.5px;
+
+
+.btn, .form-inline .form-group {
+  margin-left: @jade-spacing;
+  margin-right: @jade-spacing;
+}
