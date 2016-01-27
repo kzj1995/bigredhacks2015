@@ -55,8 +55,8 @@ mixin generateUrlList(listItems, active)
     - active = active.split(/[?#]/)[0]; //remove query string, hash
     for item in listItems
         -
-            if (item.hasOwnProperty("reg_open") && item.reg_open && !middle.helper.isResultsReleased()) break;
-            if (item.hasOwnProperty("results_released") && item.results_released && !middle.helper.isResultsReleased()) break;
+            if (item.hasOwnProperty("reg_open") && item.reg_open && !middlehelp.isRegistrationOpen()) continue;
+            if (item.hasOwnProperty("results_released") && item.results_released && !middlehelp.isResultsReleased()) continue;
             var classes = [];
             if (active == item.url) classes.push("active");
         li: a(href=item.url,class=classes) #{item.name}

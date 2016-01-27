@@ -1,0 +1,15 @@
+//-
+   Dayof variant of user dashboard index
+
+extends _layout-dashboard
+
+block dashboard_content
+    +contentHeading("dashboard")
+
+    br
+    +sectionHeading("schedule")
+    p.long-text
+        | Schedule
+        a(href='/docs/ProgramFall2015.pdf', target='_blank') pdf
+        | .
+    #events

@@ -4,12 +4,20 @@
 extends _layout-registration
 
 block vars
-    - var actionUrl = "/register"; //- url the form should submit to
+    - var actionUrl = "/register/" + urlparam; //- url the form should submit to
     - var multipart = true; //- whether the form has multipart data
+    - var cornell_reg = (college.name == "Cornell University");
 
 block append description
-    h1 General Registration
-    p This registration form is only for <emph>non-Cornell</emph> students. If you're a Cornell student, sign up for our mailing list (we'll open registration for you in September).
+    if (cornell_reg)
+        h1 General Registration
+        p Registration for Cornell University (Ithaca campus) students is on a first-come first-serve basis: only the first #{limit} spots are guaranteed.
+        p Any additional registrants will be put on an ordered waitlist. Based on last year, we anticipate that most waitlisted students will be offered a spot at the hackathon.
+        p Don't miss this amazing event, sign up now!
+        p <strong>This registration is only for Cornell students at the Ithaca campus.  Cornell Tech students, please email info@bigredhacks.com and we will provide you an alternative way to register.</strong>
+    else
+        h1 #{college.name} Registration
+        p This is a special case late reigistration form. Registration is by permission only. After registering, you will be automatically waitlisted. If we have given you permission to attend, please leave us some time to unwaitlist you.
 
 block append account-information
     .form-group
@@ -39,11 +47,10 @@ block append basic-information
             +generateOptions(en.gender, {selected: (input.genderDropdown || "")})
 
 block append school
-    input#collegeid.form-control(type='hidden', name='collegeid', value=input.collegeid || '', required=true)
     .form-group
         label(for='college') full school name *
         br
-        input#college.form-control.typeahead(type='text', name='college', placeholder='School Name', value=input.college || '', required=true)
+        input#college.form-control.typeahead(type='text', name='college',value=college.display, readonly=true)
     .form-group
         label(for='yearDropdown') academic year *
         select#yearDropdown.form-control(name='yearDropdown', required='')
@@ -58,12 +65,6 @@ block append background
         label(for='resume') resume (.pdf) *
         .wrapper
             input#resume.form-control.filepicker-bootstrap(data-label='upload', type='file', name='resume', accept='.pdf', required='')
-    .form-group
-        label tell us something interesting about yourself. *
-        textarea#q1.form-control(name='q1', rows='4', required='') #{input.q1 || "" }
-    .form-group
-        label what's a cool project that you've worked on? *
-        textarea#q2.form-control(name='q2', rows='4', required='') #{input.q2 || "" }
     .form-group
         label(for='github') github profile
         .input-group
@@ -95,4 +96,11 @@ block append logistics
         label is there anything else you'd like to tell us?
         textarea#anythingelse.form-control(name='anythingelse', rows='2') #{input.anythingelse || ""}
 
-block no_terms
+block append terms
+    p Please carefully read the two documents below:
+    .form-group
+        a.btn.btn-red(type='button', href='http://www.bigredhacks.com/docs/waiver2015.pdf', target='_blank') liability waiver & release
+        a.btn.btn-red(type='button', href='http://static.mlh.io/docs/mlh-code-of-conduct.pdf', target='_blank') code of conduct
+        br
+        br
+        p: label By registering and taking part in BigRed//Hacks, you affirm that you have read and agree to the BigRed//Hacks Accident Waiver and Release of Liability, and agree to comply with the Major League Hacking Code of Conduct.
