@@ -1,0 +1,68 @@
+//-
+   Mentor requests queue
+
+extends _layout-mentor
+
+
+block mentor_content
+    +contentHeading("Mentor Requests Queue")
+
+    +sectionHeading("Overview")
+
+    p
+        | welcome to your mentor requests queue
+        span#mentorname #{user.name.first} #{user.name.last}
+        | . a request has three possible statuses:
+    span.unclaimed
+        | Unclaimed:
+    |  A request that you may claim below and then visit the student's location to help them.
+    br
+    span.claimed
+        | Claimed:
+    |  A request that has been claimed, and the mentor who claimed it will be shown.
+    br
+    span.completed
+        | Completed:
+    |  A request that has been fully completed after a mentor claimed it and then resolved the student's request.
+    br
+    .header-wrapper
+        h2.page-title requests
+    if mentorRequests.length == 0
+        h3#norequests There are currently no requests that match your skill set. You can add to your
+            | skill set in dashboard home to increase the number of requests that come your way.
+    else
+        #usermentorrequests
+            h5
+                input#onlyunclaimed(type='checkbox', name='onlyunclaimed')
+                |  show only unclaimed requests
+            h5
+                input#onlymatching(type='checkbox', name='onlymatching')
+                |  show only matching requests
+       for request in mentorRequests
+           .mentorrequestbox(data-mentorrequestpubid=request.pubid,data-match=request.match)
+               .mentorrequestboxtitle Request from request.user.name
+               .requeststatus
+                   h3 Status of request:
+                        span(class=request.requeststatus.toLowerCase()) request.requeststatus
+               ul.requestinfo
+                    li.description
+                        b Description of Request:&nbsp;
+                        span.long-text.description #{request.description}
+                    li.desiredskills
+                        b Desired Skills:&nbsp;
+                        ul.skillslist
+                            for skill in request.skills
+                                li.skill #{skill}
+                    li.location <b>Location of User: </b> request.location
+                    li.mentor
+                        b Mentor:&nbsp;
+                        if request.mentor.name == null
+                            | None
+                        else
+                            | #{request.mentor.name} (#{request.mentor.company})
+               if request.requeststatus == "Unclaimed"
+                   .changerequeststatus
+                        input.claim.btn.btn-primary(type='button', value='claim', name='claim')
+               else if request.requeststatus == "Claimed" && request.mentor.id == user.id
+                    .changerequeststatus
+                        input.unclaim.btn.btn-primary(type='button', value='unclaim', name='unclaim')

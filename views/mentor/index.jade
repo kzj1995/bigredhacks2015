@@ -1,0 +1,47 @@
+//-
+   Mentor dashboard index
+-
+    var skillsList = "";
+    for(var i = 0; i < user.mentorinfo.skills.length; i++) {
+        skillsList = skillsList + user.mentorinfo.skills[i];
+        if (i < user.mentorinfo.skills.length - 1) {
+            skillsList = skillsList + ", ";
+        }
+    }
+
+    var companyNames = enums.mentor.companyname;
+
+block mentor_content
+    +contentHeading("dashboard home")
+
+    p welcome back, #{user.name.first} #{user.name.last}.
+
+    +contentHeading("mentor information")
+
+    br
+    +showMessages(messages)
+
+    form#mentorupdateform(action='/mentor/updateinformation', method='POST', autocomplete='on')
+        .form-group
+            label(for='firstname') email
+            input#email.form-control(type='text', name='email', placeholder='email', value=user.email, readonly='')
+        .form-group
+            label(for='firstname') first name
+            input#firstname.form-control(type='text', name='firstname', placeholder='first name', value=user.name.first, readonly='')
+        .form-group
+            label(for='firstname') last name
+            input#lastname.form-control(type='text', name='lastname', placeholder='last name', value=user.name.last, readonly='')
+        .form-group
+            label(for='companyDropdown') company/organization *
+            select#companyDropdown.form-control(name='companyDropdown', readonly='')
+                option(value='') select
+                +generateOptions(companyNames, {selected: (user.mentorinfo.company || "")})
+        .form-group
+            label(for='skills') comma-separated skills (ex: python, java, web applications, etc.) *
+            input#skills.form-control(type='text', name='skills', placeholder='skills', value=skillsList || '',required=true)
+        .form-group
+            label brief bio *
+            textarea#bio.form-control(name='bio', rows='4', required='')= user.mentorinfo.bio || ""
+        #updateinfo
+            input#updateinfobtn.btn.btn-primary(type='submit', value='update information', name='updateinfobtn')
+

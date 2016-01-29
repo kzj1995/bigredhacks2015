@@ -8,7 +8,7 @@ block dashboard_content
 
     +showMessages(messages)
 
-    p welcome back., #{user.name.first} #{user.name.last}.
+    p welcome back, #{user.name.first} #{user.name.last}.
     br
 
     +sectionHeading("status")
@@ -49,7 +49,6 @@ block dashboard_content
     +sectionHeading("resume")
     a.btn.btn-red(href=resumeLink, target='_blank') view my resume
     button#resume-update.btn.btn-red update my resume
-    br
     br
     br
     form#resume-form.form-inline(method='post', action='/user/updateresume', style='display:none', enctype='multipart/form-data')

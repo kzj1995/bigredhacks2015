@@ -1,0 +1,20 @@
+//-
+   User dashboard sidebar
+
+-
+    var urlItems = [
+        {
+            name: "dashboard home",
+            url: "/mentor/dashboard"
+        },
+        {
+            name: "logout",
+            url: "/mentor/logout"
+        }
+    ];
+
+.col-sm-3.col-md-3.col-lg-2.sidebar
+    a.brand(href="/"): img#brand-img(src="/img/logo/brh-logo-beige-full.svg")
+    ul.nav.nav-sidebar
+        +generateUrlList(urlItems, currentUrl)
+
